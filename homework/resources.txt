@@ -1,0 +1,11 @@
+-Lexer, the Tokenizer Component:
+	https://github.com/BlaanTeam/BlaanSh#lexical-analyser
+	https://medium.com/swlh/lets-build-a-linux-shell-part-ii-340ecf471028
+	https://medium.com/@mohammedisam2000/lets-build-a-linux-shell-part-iii-a472c0102849 
+
+				(these two medium articles will give you a hint into what a Tokenizer's
+				job is and how it facilitates the work of the Parser when producing the AST)
+
+
+	
+	

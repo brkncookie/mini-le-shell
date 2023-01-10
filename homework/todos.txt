@@ -1,0 +1,4 @@
+*******the program will be split into three parts: lexer, parser, executor*******
+
+-Lexer (lexical analyser):
+	Tokenizer.
