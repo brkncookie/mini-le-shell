@@ -5,6 +5,11 @@
 
 				(these two medium articles will give you a hint into what a Tokenizer's
 				job is and how it facilitates the work of the Parser when producing the AST)
+-Parser, or simply the Grammar Validator and AST Constructor:
+	https://www.youtube.com/watch?v=foAoAMEObno ( a simple intro to AST )
+	https://www.guru99.com/syntax-analysis-parsing-types.html#5 (a stupid basic and useless into to the Parser job)
+
+
 
 
 	

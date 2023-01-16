@@ -1,1 +1,23 @@
- 
++Lexer, the tokenizer component:
+	-first of all, check that every qoute/double quote/parenthesis is closed properly.
+	-parse the command block given and create a "t_tkns" for each type in the command block, resulting in a linked list of "t_tkns".
+	-for the above step, a fucntion will be created to identify each type, and the needed types are:
+		AND, OR
+		PIPE
+		REDR_O
+		REDR_I
+		HERE_DOC
+		WHITE_SPC
+		QUOTE
+		DQUOTE
+		PARENTHESIS
+		VAR
+		WORD
+	-while identifying the types. the state (whether inside qoute/double quote/parenthesis or not), value and length of the value itself will be set.
+
+	                    ********* keep in mind that no syntax errors are being handled here except the proper checks of *********
+						********* qoute/double quote/parenthesis													    *********
+
+
+	
+
