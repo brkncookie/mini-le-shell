@@ -1,1 +1,4 @@
- 
+Tokenizer:
+	-write a function that converts the "cmds" string input into a
+		linked list "t_tokens" with (type, value) members;
+	-
