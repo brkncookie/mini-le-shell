@@ -6,7 +6,7 @@
 /*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 09:35:44 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/19 09:35:47 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/01/19 11:47:34 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,27 @@ typedef enum e_type
 	APPEND = 1 << 6,
 	QUOTE = 1 << 7,
 	DQUOTE = 1 << 8,
-	OPENPAR = 1 << 9,
-	CLOSEPAR = 1 << 10,
+	OPAR = 1 << 9,
+	CPAR = 1 << 10,
 	VAR = 1 << 11,
 	WORD = 1 << 12,
 	WHITE_SPC = 1 << 13
-}t_type;
+}	t_type;
+
+typedef enum e_stat
+{
+	IN_QUOTE = 1,
+	IN_DQUOTE = 2
+}	t_stat;
 
 typedef struct s_tkns
 {
-	char	*val;
-	t_type	type;
-	int		len;
-	int		stat;
-	t_tkns	*next;
-	t_tkns	*prev;
+	char			*val;
+	t_type			type;
+	int				len;
+	t_stat			stat;
+	struct s_tkns	*next;
+	struct s_tkns	*prev;
 }	t_tkns;
 
 #endif
