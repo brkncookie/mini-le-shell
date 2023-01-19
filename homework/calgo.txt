@@ -17,6 +17,9 @@
 
 	                    ********* keep in mind that no syntax errors are being handled here except the proper checks of *********
 						********* qoute/double quote/parenthesis													    *********
+	-the function that will loop through the command block to identify every type will call/need two other functions:
+		.a function that will be given the TYPE, and start of string to create a t_tkns node and return it and handle everything according to that type.
+		.a second function that will be given the head of the doubly-linkedlist and the node returned by the previuos function to link it to it.
 
 
 	
