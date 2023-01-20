@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/20 09:26:10 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/20 09:28:50 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ t_tkns	*tokenize(char *cmds)
 {
 	t_tkns	*tkns;
 
-	// if (!is_blncd(cmds, 0))
-	// 	error;
+	if (!is_blncd(cmds, 0))
+		return(printf("Syntax Error.\n"), NULL);
 	tkns = NULL;
 	while (*cmds)
 	{
