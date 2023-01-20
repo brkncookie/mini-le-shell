@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 09:35:44 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/20 09:05:59 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/20 09:41:08 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,7 @@ typedef struct s_tkns
 }	t_tkns;
 
 void	tkn_link(t_tkns **lst, t_tkns *tkn);
+int		is_blncd(char *str, char c);
+t_tkns	*tkn_create(char **str, t_type type);
 
 #endif

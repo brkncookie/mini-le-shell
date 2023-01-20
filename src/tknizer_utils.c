@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/20 09:28:50 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/20 10:05:40 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,18 @@ int	is_blncd(char *str, char c)
 	return (1);
 }
 
-int	ft_isspace(char c)
-{
-	if (c == '\n' || c == '\r' || c == '\f' || c == '\t' || c == '\v' || c == ' ')
-		return (1);
-	return (0);
-}
-
-int	glen(char *str)
+int	glen(char *str, t_type type)
 {
 	int	len;
+	int	twochar;
 
 	len = 0;
+	twochar = APPEND | HERE_DOC | OR | AND;
+	if (type & twochar)
+		return (2);
 	while (*str && *str != '|' && *str != '<' && *str != '>' && *str != '&'
-		&& *str != '(' && *str != ')' && *str != '\"' && *str != '\'' && !ft_isspace(*str))
+		&& *str != '(' && *str != ')' && \
+		*str != '\"' && *str != '\'' && !ft_isspace(*str))
 	{
 		str++;
 		len++;
@@ -103,52 +101,11 @@ t_tkns	*tkn_create(char **str, t_type type)
 	else if (type & mchar)
 	{
 		tkn->val = *str;
-		tkn->len = glen(*str);
+		tkn->len = glen(*str, type);
 		tkn->type = type;
 		tkn->stat = gstat(type, &opn);
 	}
 	return (*str += tkn->len, tkn);
-}
-
-t_tkns	*tokenize(char *cmds)
-{
-	t_tkns	*tkns;
-
-	if (!is_blncd(cmds, 0))
-		return(printf("Syntax Error.\n"), NULL);
-	tkns = NULL;
-	while (*cmds)
-	{
-		if (*cmds == ' ')
-			tkn_link(&tkns, tkn_create(&cmds, WHITE_SPC));
-		else if (*cmds == '\'')
-			tkn_link(&tkns, tkn_create(&cmds, QUOTE));
-		else if (*cmds == '\"')
-			tkn_link(&tkns, tkn_create(&cmds, DQUOTE));
-		else if (*cmds == '$')
-			tkn_link(&tkns, tkn_create(&cmds, VAR));
-		else if (*cmds == '(')
-			tkn_link(&tkns, tkn_create(&cmds, OPAR));
-		else if (*cmds == ')')
-			tkn_link(&tkns, tkn_create(&cmds, CPAR));
-		else if (*cmds == '|' && *(cmds + 1) == '|')
-			tkn_link(&tkns, tkn_create(&cmds, OR));
-		else if (*cmds == '|')
-			tkn_link(&tkns, tkn_create(&cmds, PIPE));
-		else if (*cmds == '&' && *(cmds + 1) == '&')
-			tkn_link(&tkns, tkn_create(&cmds, AND));
-		else if (*cmds == '>' && *(cmds + 1) == '>')
-			tkn_link(&tkns, tkn_create(&cmds, APPEND));
-		else if (*cmds == '>')
-			tkn_link(&tkns, tkn_create(&cmds, REDR_O));
-		else if (*cmds == '<' && *(cmds + 1) == '<')
-			tkn_link(&tkns, tkn_create(&cmds, HERE_DOC));
-		else if (*cmds == '<')
-			tkn_link(&tkns, tkn_create(&cmds, REDR_I));
-		else
-			tkn_link(&tkns, tkn_create(&cmds, WORD));
-	}
-	return (tkns);
 }
 
 void	tkn_link(t_tkns **lst, t_tkns *tkn)
@@ -169,24 +126,4 @@ void	tkn_link(t_tkns **lst, t_tkns *tkn)
 		tmp = tmp->next;
 	tmp->next = tkn;
 	tkn->prev = tmp;
-}
-
-int	main(int argc, char **argv)
-{
-	(void)argc;
-	t_tkns	*tkns;
-	int		i;
-
-	tkns = tokenize("ana zwin bzaf | \"bruh\"");
-	while (tkns)
-	{
-		i = 0;
-		while (i < tkns->len)
-			printf("%c", tkns->val[i++]);
-		printf("\n%d\n%d", tkns->type, tkns->stat);
-		printf("\nnext token\n");
-		tkns = tkns->next;
-	}
-	
-	return (0);
 }
