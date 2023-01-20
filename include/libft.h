@@ -45,7 +45,6 @@ int		ft_strncmp(char const *s1, char const *s2, size_t n);
 char	*ft_strnstr(char const *haystack, char const *needle, size_t n);
 char	*ft_strdup(char const *s);
 void	*ft_calloc(size_t nmemb, size_t size);
-t_list	*ft_lstnew(void *content);
 char	**ft_split(char const *str, char c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
