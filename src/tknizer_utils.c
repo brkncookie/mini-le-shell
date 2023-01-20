@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tknizer_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/19 12:48:29 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/01/19 17:04:21 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdio.h>
-#include "../include/lexer.h"
 
-void	*ft_calloc(int nmem, size_t smem);
+#include "../include/lexer.h"
+#include "../libft/libft.h"
+#include <stdio.h>
 
 int	is_blncd(char *str, char c)
 {
@@ -43,13 +43,20 @@ int	is_blncd(char *str, char c)
 	return (1);
 }
 
+int	ft_isspace(char c)
+{
+	if (c == '\n' || c == '\r' || c == '\f' || c == '\t' || c == '\v' || c == ' ')
+		return (1);
+	return (0);
+}
+
 int	glen(char *str)
 {
 	int	len;
 
 	len = 0;
-	while (*str && *str != '|' && *str != '<' && *str != '>' && *str != '&' \
-			&& *str != '(' && *str != ')' && !ft_isspace(*str))
+	while (*str && *str != '|' && *str != '<' && *str != '>' && *str != '&'
+		&& *str != '(' && *str != ')' && !ft_isspace(*str))
 	{
 		str++;
 		len++;
@@ -74,13 +81,14 @@ int	gstat(t_type type, int opn)
 	return (0);
 }
 
-struct s_tkns	*tkn_create(char *str, t_type type)
+t_tkns	*tkn_create(char *str, t_type type)
 {
-	t_tkns			*tkn;
-	int				mchar;
-	int				schar;
-	static int		opn = 0;
+	t_tkns		*tkn;
+	int			mchar;
+	int			schar;
+	static int	opn;
 
+	opn = 0;
 	mchar = WORD | VAR | APPEND | HERE_DOC | OR | AND;
 	schar = PIPE | REDR_O | WHITE_SPC | REDR_I | QUOTE | DQUOTE | OPAR | CPAR;
 	tkn = ft_calloc(1, sizeof(*tkn));
@@ -100,12 +108,81 @@ struct s_tkns	*tkn_create(char *str, t_type type)
 		tkn->type = type;
 		tkn->stat = gstat(type, opn);
 	}
-	return (tkn);
+	return (str += tkn->len, tkn);
+}
+
+t_tkns	*tokenize(char *cmds)
+{
+	t_tkns	*tkns;
+
+	// if (!is_blncd(cmds, 0))
+	// 	error;
+	while (*cmds && *(cmds + 1))
+	{
+		if (*cmds == ' ')
+			tkn_link(tkns, tkn_create(cmds, WHITE_SPC));
+		else if (*cmds == '\'')
+			tkn_link(tkns, tkn_create(cmds, QUOTE));
+		else if (*cmds == '\"')
+			tkn_link(tkns, tkn_create(cmds, DQUOTE));
+		else if (*cmds == '$')
+			tkn_link(tkns, tkn_create(cmds, VAR));
+		else if (*cmds == '(')
+			tkn_link(tkns, tkn_create(cmds, OPAR));
+		else if (*cmds == ')')
+			tkn_link(tkns, tkn_create(cmds, CPAR));
+		else if (*cmds == '|' && *(cmds + 1) == '|')
+			tkn_link(tkns, tkn_create(cmds, OR));
+		else if (*cmds == '|')
+			tkn_link(tkns, tkn_create(cmds, PIPE));
+		else if (*cmds == '&' && *(cmds + 1) == '&')
+			tkn_link(tkns, tkn_create(cmds, AND));
+		else if (*cmds == '>' && *(cmds + 1) == '>')
+			tkn_link(tkns, tkn_create(cmds, APPEND));
+		else if (*cmds == '>')
+			tkn_link(tkns, tkn_create(cmds, REDR_O));
+		else if (*cmds == '<' && *(cmds + 1) == '<')
+			tkn_link(tkns, tkn_create(cmds, HERE_DOC));
+		else if (*cmds == '<')
+			tkn_link(tkns, tkn_create(cmds, REDR_I));
+		else
+			tkn_link(tkns, tkn_create(cmds, WORD));
+	}
+	return (tkns);
+}
+
+void	tkn_link(t_tkns *lst, t_tkns *tkn)
+{
+	tkn->prev = NULL;
+	if (tkn == NULL)
+		return ;
+	if (!lst)
+	{
+		lst = tkn;
+		return ;
+	}
+	while (lst->next)
+		lst = lst->next;
+	lst->next = tkn;
+	tkn->prev = lst;
+	tkn->next = NULL;
 }
 
 int	main(int argc, char **argv)
 {
 	(void)argc;
-	printf("%d\n", is_blncd(argv[1], 0));
+	t_tkns	*tkns;
+	int		i;
+
+	tkns = tokenize("ana zwin bzaf | \"bruh\"");
+	while (tkns)
+	{
+		i = 0;
+		while (i < tkns->len)
+			printf("%c", tkns->val[i++]);
+		printf("\nnext token\n");
+		tkns = tkns->next;
+	}
+	
 	return (0);
 }
