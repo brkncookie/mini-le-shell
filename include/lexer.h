@@ -34,7 +34,8 @@ typedef enum e_type
 typedef enum e_stat
 {
 	IN_QUOTE = 1,
-	IN_DQUOTE = 2
+	IN_DQUOTE = 2,
+	IN_PAR = 3
 }	t_stat;
 
 typedef struct s_tkns
@@ -43,6 +44,7 @@ typedef struct s_tkns
 	t_type			type;
 	int				len;
 	t_stat			stat;
+	t_stat			sbsh;
 	struct s_tkns	*next;
 	struct s_tkns	*prev;
 }	t_tkns;
@@ -52,3 +54,4 @@ int		is_blncd(char *str, char c);
 t_tkns	*tkn_create(char **str, t_type type);
 
 #endif
+

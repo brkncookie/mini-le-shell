@@ -67,9 +67,10 @@ int	main(int argc, char **argv)
 		i = 0;
 		while (i < tkns->len)
 			printf("%c", tkns->val[i++]);
-		printf("\n%d\n%d", tkns->type, tkns->stat);
+		printf("\n%d\n%d\n%d", tkns->type, tkns->stat, tkns->sbsh);
 		printf("\n----NEXT TOKEN----\n");
 		tkns = tkns->next;
 	}
 	return (0);
 }
+

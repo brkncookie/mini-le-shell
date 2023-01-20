@@ -62,8 +62,16 @@ int	glen(char *str, t_type type)
 	return (len);
 }
 
-int	gstat(t_type type, int *opn)
+int	gstat(t_type type, int *opn, int *par)
 {
+	if (par && (type & OPAR) && !*par)
+		*par = 1;
+	else if (par && (type & CPAR) && *par == 1)
+		*par = 0;
+	if (par && *par == 1 && !(type & OPAR) && !(type & CPAR))
+		return (IN_PAR);
+	if (!opn)
+		return (0);
 	if ((type & QUOTE) && !*opn)
 		*opn = 1;
 	else if ((type & QUOTE) && *opn == 1)
@@ -85,6 +93,7 @@ t_tkns	*tkn_create(char **str, t_type type)
 	int			mchar;
 	int			schar;
 	static int	opn = 0;
+	static int	par = 0;
 
 	mchar = WORD | VAR | APPEND | HERE_DOC | OR | AND;
 	schar = PIPE | REDR_O | WHITE_SPC | REDR_I | QUOTE | DQUOTE | OPAR | CPAR;
@@ -96,14 +105,16 @@ t_tkns	*tkn_create(char **str, t_type type)
 		tkn->val = *str;
 		tkn->len = 1;
 		tkn->type = type;
-		tkn->stat = gstat(type, &opn);
+		tkn->stat = gstat(type, &opn, NULL);
+		tkn->sbsh = gstat(type, NULL, &par);
 	}
 	else if (type & mchar)
 	{
 		tkn->val = *str;
 		tkn->len = glen(*str, type);
 		tkn->type = type;
-		tkn->stat = gstat(type, &opn);
+		tkn->stat = gstat(type, &opn, NULL);
+		tkn->sbsh = gstat(type, NULL, &par);
 	}
 	return (*str += tkn->len, tkn);
 }
@@ -127,3 +138,4 @@ void	tkn_link(t_tkns **lst, t_tkns *tkn)
 	tmp->next = tkn;
 	tkn->prev = tmp;
 }
+
