@@ -52,8 +52,8 @@ int	glen(char *str, t_type type)
 	twochar = APPEND | HERE_DOC | OR | AND;
 	if (type & twochar)
 		return (2);
-	while (*str && *str != '|' && *str != '<' && *str != '>' && *str != '&'
-		&& *str != '(' && *str != ')' && \
+	while (*str && *str != '|' && *str != '<' && *str != '>' && \
+		(*str != '&' || *(str + 1) != '&') && *str != '(' && *str != ')' && \
 		*str != '\"' && *str != '\'' && !ft_isspace(*str))
 	{
 		str++;
