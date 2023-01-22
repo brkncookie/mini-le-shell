@@ -42,7 +42,7 @@ typedef struct s_tkns
 {
 	char			*val;
 	t_type			type;
-	int				len;
+	int			len;
 	t_stat			stat;
 	t_stat			sbsh;
 	struct s_tkns	*next;

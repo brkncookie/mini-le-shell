@@ -20,7 +20,18 @@
 	-the function that will loop through the command block to identify every type will call/need two other functions:
 		.a function that will be given the TYPE, and start of string to create a t_tkns node and return it and handle everything according to that type.
 		.a second function that will be given the head of the doubly-linkedlist and the node returned by the previuos function to link it to it.
-
-
-	
-
++Parser, the AST generator:
+	-the whole logic will be composed of 6 functions, from which 5 will be for each token type.
+	-we will pass the token list to the first main function which will call the other lower function below it and so every other fucntion will do.
+	-but also keep in mind that other lower functions can call functions above them (subshell case).
+		.ft_givtree()
+		.ft_logops()
+		.ft_pipe()
+		.ft_cmd()
+		.ft_cmdlst()
+		.ft_redir()
+	-5 of the fucntions will have a set of delimiters to break down the whole command line, each function will handle the delimters differently.
+	-the recursion that will happen here is a result of the functions treating every delimiter differently, for example:
+		.when ft_logops() is given this "ls && echo hello && echo joo" as a list of tokens, it will break it down using the '&&' token
+		 and ft_logops() is called on every token that is followed by a '&&' token and for everything that is not followed by it will
+		 be passed directly to a function below it.
