@@ -27,8 +27,8 @@
 		.ft_givtree()
 		.ft_logops()
 		.ft_pipe()
-		.ft_cmd()
 		.ft_cmdlst()
+		.ft_cmd()
 		.ft_redir()
 	-5 of the fucntions will have a set of delimiters to break down the whole command line, each function will handle the delimters differently.
 	-the recursion that will happen here is a result of the functions treating every delimiter differently, for example:
