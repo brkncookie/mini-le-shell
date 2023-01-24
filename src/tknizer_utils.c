@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/20 10:05:40 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/01/24 11:50:18 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,10 @@ void	tkn_link(t_tkns **lst, t_tkns *tkn)
 	tkn->prev = NULL;
 	tmp = *lst;
 	if (tkn == NULL)
+	{
+		freelst(lst);
 		return ;
+	}
 	if (!*lst)
 	{
 		*lst = tkn;
@@ -138,4 +141,3 @@ void	tkn_link(t_tkns **lst, t_tkns *tkn)
 	tmp->next = tkn;
 	tkn->prev = tmp;
 }
-
