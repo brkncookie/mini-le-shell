@@ -19,5 +19,7 @@ typedef struct s_tree
 	t_tkns	*tkn;
 	t_tree	*limn;
 	t_tree	*lisr;
+	t_tree	*redr;
 }		t_tree;
 #endif
+

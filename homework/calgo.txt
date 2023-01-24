@@ -24,12 +24,12 @@
 	-the whole logic will be composed of 6 functions, from which 5 will be for each token type.
 	-we will pass the token list to the first main function which will call the other lower function below it and so every other fucntion will do.
 	-but also keep in mind that other lower functions can call functions above them (subshell case).
-		.ft_givtree()
-		.ft_logops()
-		.ft_pipe()
-		.ft_cmdlst()
-		.ft_cmd()
-		.ft_redir()
+		.givtree()
+		.logops()
+		.pipe()
+		.cmdlst()
+		.cmd()
+		.redir()
 	-5 of the fucntions will have a set of delimiters to break down the whole command line, each function will handle the delimters differently.
 	-the recursion that will happen here is a result of the functions treating every delimiter differently, for example:
 		.when ft_logops() is given this "ls && echo hello && echo joo" as a list of tokens, it will break it down using the '&&' token
