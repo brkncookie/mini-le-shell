@@ -15,7 +15,7 @@
 
 typedef enum e_type
 {
-	AND	= 1 << 0,
+	AND = 1 << 0,
 	OR = 1 << 1,
 	PIPE = 1 << 2,
 	REDR_O = 1 << 3,
