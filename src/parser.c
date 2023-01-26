@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/26 14:40:17 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/26 18:54:32 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,13 @@ t_tree	*logops(t_tkns *tkns)
 	treenode = malloc(sizeof(t_tree));
 	tmp = tkns;
 	subsh = tmp->sbsh;
-	while (tmp && !(subsh && !tmp->sbsh))
+	while (tmp && !((subsh & IN_PAR) && !(tmp->sbsh & IN_PAR)))
 	{
-		if ((tmp->type & (AND | OR)) && subsh)
+		if (!subsh && tmp->sbsh)
+			tmp = tmp->next;
+		if (!subsh && tmp->sbsh)
+			continue;
+		if ((tmp->type & (AND | OR)) && (subsh & IN_PAR))
 		{
 			if (!tmp->prev || !tmp->next)
 			{
@@ -76,8 +80,13 @@ t_tree	*pipe(t_tkns *tkns)
 		return (cmdlist(tkns));
 	treenode = malloc(sizeof(t_tree));
 	subsh = tmp->sbsh;
-	while (tmp && !(tmp->type & (AND | OR)) && !(subsh && !tmp->sbsh))
+	while (tmp && !(tmp->type & (AND | OR)) && !((subsh & IN_PAR)
+			&& !(tmp->sbsh & IN_PAR)))
 	{
+		if (!(subsh & IN_PAR) && (tmp->sbsh & IN_PAR))
+			tmp = tmp->next;
+		if (!(subsh & IN_PAR) && (tmp->sbsh & IN_PAR))
+			continue;
 		if (tmp->type & PIPE)
 		{
 			if (!tmp->prev || !tmp->next)
@@ -91,9 +100,3 @@ t_tree	*pipe(t_tkns *tkns)
 	}
 	return (treenode);
 }
-//search for && ||
-//the left pointer of the tree node will point at the start of the tkns list
-//the right pointer of the tree node will point at the token coming after the the node
-//we will pass the left pointer to a function which will look for |
-//we will pass the right pointer to the same function (giv_tree) too look for potential	|| &&(recursion)
-//create a function for each
