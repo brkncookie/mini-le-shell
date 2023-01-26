@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 13:23:15 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/23 13:27:08 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:51:24 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef PARSER_H
 # define PARSER_H
 # include "lexer.h"
-
-# include "lexer.h"
+# include <stdlib.h>
 
 typedef struct s_tree
 {
@@ -22,5 +22,14 @@ typedef struct s_tree
 	t_tree	*lisr;
 	t_tree	*redr;
 }		t_tree;
+
+t_tree	*giv_tree(t_tkns *tkns);
+t_tree	*logops(t_tkns *tkns);
+t_tree	*pipe(t_tkns *tkns);
+int		no_delims(t_tkns *tkns, int delim);
+t_tree	*cmdlst(t_tkns *tkn);
+t_tree	*redir(t_tkns *tkn);
+t_tree	*cmd(t_tkns *tkn);
+
 #endif
 

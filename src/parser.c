@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/24 16:37:59 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/26 14:40:17 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_tree	*logops(t_tkns *tkns)
 	subsh = tmp->sbsh;
 	while (tmp && !(subsh && !tmp->sbsh))
 	{
-		if (tmp->type & AND || tmp->type & OR)
+		if ((tmp->type & (AND | OR)) && subsh)
 		{
 			if (!tmp->prev || !tmp->next)
 			{
@@ -62,18 +62,21 @@ t_tree	*logops(t_tkns *tkns)
 		}
 		tmp = tmp->next;
 	}
+	return (treenode);
 }
 
 t_tree	*pipe(t_tkns *tkns)
 {
 	t_tkns	*tmp;
 	t_tree	*treenode;
+	int		subsh;
 
 	tmp = tkns;
 	if (no_delims(tkns, PIPE))
 		return (cmdlist(tkns));
 	treenode = malloc(sizeof(t_tree));
-	while (tmp && !(tmp->type & AND) && !(tmp->type & OR))
+	subsh = tmp->sbsh;
+	while (tmp && !(tmp->type & (AND | OR)) && !(subsh && !tmp->sbsh))
 	{
 		if (tmp->type & PIPE)
 		{
@@ -93,4 +96,4 @@ t_tree	*pipe(t_tkns *tkns)
 //the right pointer of the tree node will point at the token coming after the the node
 //we will pass the left pointer to a function which will look for |
 //we will pass the right pointer to the same function (giv_tree) too look for potential	|| &&(recursion)
-	//create a function for each
+//create a function for each

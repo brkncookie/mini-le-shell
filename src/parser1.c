@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/23 13:48:36 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/01/26 09:56:01 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ t_tree	*redir(t_tkns *tkn)
 t_tree	*cmdlst(t_tkns *tkn)
 {
 	t_tree	*cmdlst;
-	tkns	*tmp;
+	t_tkns	*tmp;
 	int	type;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
-	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)
+	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)//??
 	{
 		tkn = tkn->next;
 		cmdlst = logops(tkn);
@@ -86,13 +86,14 @@ t_tree	*cmdlst(t_tkns *tkn)
 
 t_tree	*cmd(t_tkns *tkn)
 {
-	t_tkns	tmp;
-	int	type;
+	t_tkns	*tmp;
+	int		type;
 	t_tree  *cmd;
 	t_tree  *redr;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	cmd = NULL;
+	tmp = tkn;
 	if (!(tkn->type & type))
 	{
 		cmd = ft_calloc(1, sizeof(*cmd));
@@ -101,7 +102,7 @@ t_tree	*cmd(t_tkns *tkn)
 		cmd->tkn = tkn;
 	}
 	while (tmp && !(tmp->type & type) &&\
-		!(tmp->type & (PIPE | AND | OR) && (tmp->type & WHITE_SPC)
+		!(tmp->type & (PIPE | AND | OR) && (tmp->type & WHITE_SPC)))
 		tmp = tmp->next;
 	if (tmp && (tmp->type & type))
 	{
@@ -109,7 +110,7 @@ t_tree	*cmd(t_tkns *tkn)
 		if(!redr)
 			return(free(cmd), NULL);
 		if(cmd)
-			return(cmd->redr = redr, cmd)
+			return(cmd->redr = redr, cmd);
 		else
 			return (redr);
 	}
