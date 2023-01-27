@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/27 10:51:10 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/27 14:31:07 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 int	no_delims(t_tkns *tkns, int delim)
 {
+	int	subsh;
+
+	subsh = tkns->sbsh;
 	while (tkns)
 	{
-		if (!tkns->sbsh && (tkns->type & delim))
+		if (!(subsh && !tkns->sbsh) && (tkns->type & delim))
 			return (0);
 		tkns = tkns->next;
 	}
@@ -39,6 +42,7 @@ t_tree	*giv_tree(t_tkns *tkns)
 		else if (error == 1)
 			printf("Allocation Error\n");
 		freetree(treenode);
+		freelst(tkns);
 	}
 	return (treenode);
 }
@@ -69,9 +73,13 @@ t_tree	*logops(t_tkns *tkns, int *error)
 				return (*error = 2, treenode);
 			treenode->tkn = tmp;
 			treenode->lisr = pipe(tkns, error);
+			if (*error)
+				return (treenode);
 			while (tmp->next->type & WHITE_SPC)
 				tmp = tmp->next;
 			treenode->limn = logops(tmp->next, error);
+			if (*error)
+				return (treenode);
 			break ;
 		}
 		tmp = tmp->next;
@@ -105,9 +113,13 @@ t_tree	*pipe(t_tkns *tkns, int *error)
 				return (*error = 2, treenode);
 			treenode->tkn = tmp;
 			treenode->lisr = cmdlist(tkns, error);
+			if (*error)
+				return (treenode);
 			while (tmp->next->type & WHITE_SPC)
 				tmp = tmp->next;
 			treenode->limn = pipe(tmp->next, error);
+			if (*error)
+				return (treenode);
 			break ;
 		}
 		tmp = tmp->next;

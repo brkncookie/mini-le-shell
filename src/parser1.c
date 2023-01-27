@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/27 10:44:00 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/27 14:37:33 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 		if (tkn->type & type)
 		{
 			cmdlst->redr = redir(tkn, error);
-			if (!cmdlst->redr)
-				return (*error = 2, cmdlst);
+			if (*error)
+				return (cmdlst);
 			tmp = cmdlst->redr->limn->tkn->next;
 			while (tmp && (tmp->type & WHITE_SPC))
 				tmp = tmp->next;
@@ -73,8 +73,8 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	else
 	{
 		cmdlst = cmd(tkn, error);
-		if (!cmdlst)
-			return (*error = 1, cmdlst);
+		if (*error)
+			return (cmdlst);
 		if (cmdlst->redr)
 			tmp = cmdlst->redr->limn->tkn->next;
 		while (tmp && (tmp->type & WHITE_SPC))
@@ -108,8 +108,8 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	if (tmp && (tmp->type & type))
 	{
 		redr = redir(tmp, error);
-		if (!redr)
-			return (cmd);
+		if (*error)
+			return (free(cmd), redr);
 		if (cmd)
 			return (cmd->redr = redr, cmd);
 		else
