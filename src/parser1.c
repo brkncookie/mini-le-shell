@@ -6,18 +6,20 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/26 09:56:01 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/27 10:44:00 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
 
-t_tree	*redir(t_tkns *tkn)
+t_tree	*redir(t_tkns *tkn, int *error)
 {
 	t_tree	*redr;
 	t_tree	*file;
 
 	redr = ft_calloc(1, sizeof(*redr));
+	if (!redr)
+		return (*error = 1, redr);
 	redr->tkn = tkn;
 	while (tkn)
 	{
@@ -26,70 +28,69 @@ t_tree	*redir(t_tkns *tkn)
 		else if (tkn->type & WHITE_SPC)
 			tkn = tkn->next;
 		else
-			return (free(redr), NULL);
+			return (*error = 2, redr);
 	}
-	if(!tkn)
-		return (free(redr), NULL);
+	if (!tkn)
+		return (*error = 2, redr);
 	file = ft_calloc(1, sizeof(*file));
+	if (!file)
+		return (*error = 1, redr);
 	file->tkn = tkn;
 	redr->limn = file;
 	return (redr);
 }
 
-t_tree	*cmdlst(t_tkns *tkn)
+t_tree	*cmdlst(t_tkns *tkn, int *error)
 {
 	t_tree	*cmdlst;
 	t_tkns	*tmp;
-	int	type;
+	int		type;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
-	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)//??
+	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)
 	{
 		tkn = tkn->next;
-		cmdlst = logops(tkn);
-		while(tkn->sbsh & IN_PAR)
+		cmdlst = logops(tkn, error);
+		while (tkn->sbsh & IN_PAR)
 			tkn = tkn->next;
 		tkn = tkn->next;
-		while(tkn->type & WHITE_SPC)
+		while (tkn->type & WHITE_SPC)
 			tkn = tkn->next;
 		if (tkn->type & type)
 		{
-			cmdlst->redr = redir(tkn);
+			cmdlst->redr = redir(tkn, error);
 			if (!cmdlst->redr)
-			/* here we need to free *cmdlst */
-				return (NULL);
+				return (*error = 2, cmdlst);
 			tmp = cmdlst->redr->limn->tkn->next;
 			while (tmp && (tmp->type & WHITE_SPC))
 				tmp = tmp->next;
-			if(!(tmp->type & (PIPE | AND | OR)))
-			/* here we need to free *cmdlst */
-				return (NULL);
+			if (!(tmp->type & (PIPE | AND | OR)))
+				return (*error = 2, cmdlst);
 		}
-		else (!(tkn->type & (PIPE | AND | OR)))
-			/* here we need to free *cmdlst */
-			return (NULL);
+		else if (!(tkn->type & (PIPE | AND | OR)))
+			return (*error = 2, cmdlst);
 	}
 	else
 	{
-		cmdlst = cmd(tkn);
+		cmdlst = cmd(tkn, error);
 		if (!cmdlst)
-			return (NULL);
+			return (*error = 1, cmdlst);
 		if (cmdlst->redr)
 			tmp = cmdlst->redr->limn->tkn->next;
 		while (tmp && (tmp->type & WHITE_SPC))
 			tmp = tmp->next;
-		if((tmp->sbsh & IN_PAR))
-			return (free(cmdlst), NULL);
+		if ((tmp->sbsh & IN_PAR))
+			return (*error = 2, cmdlst);
 	}
 	return (cmdlst);
 }
 
-t_tree	*cmd(t_tkns *tkn)
+t_tree	*cmd(t_tkns *tkn, int *error)
 {
 	t_tkns	*tmp;
 	int		type;
-	t_tree  *cmd;
-	t_tree  *redr;
+	t_tree	*cmd;
+	t_tree	*redr;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	cmd = NULL;
@@ -97,23 +98,22 @@ t_tree	*cmd(t_tkns *tkn)
 	if (!(tkn->type & type))
 	{
 		cmd = ft_calloc(1, sizeof(*cmd));
-		if(!cmd)
-			return (NULL);
+		if (!cmd)
+			return (*error = 1, cmd);
 		cmd->tkn = tkn;
 	}
-	while (tmp && !(tmp->type & type) &&\
-		!(tmp->type & (PIPE | AND | OR) && (tmp->type & WHITE_SPC)))
+	while (tmp && !(tmp->type & type) &&
+			!(tmp->type & (PIPE | AND | OR) && (tmp->type & WHITE_SPC)))
 		tmp = tmp->next;
 	if (tmp && (tmp->type & type))
 	{
-		redr = redir(tmp);
-		if(!redr)
-			return(free(cmd), NULL);
-		if(cmd)
-			return(cmd->redr = redr, cmd);
+		redr = redir(tmp, error);
+		if (!redr)
+			return (cmd);
+		if (cmd)
+			return (cmd->redr = redr, cmd);
 		else
 			return (redr);
 	}
 	return (cmd);
 }
-
