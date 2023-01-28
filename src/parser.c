@@ -19,8 +19,15 @@ int	no_delims(t_tkns *tkns, int delim)
 	subsh = tkns->sbsh;
 	while (tkns)
 	{
-		if (!(subsh && !tkns->sbsh) && (tkns->type & delim))
+		if (tkns->type & delim)
+		{
+			if(!subsh && tkns->sbsh)
+			{
+				tkns = tkns->next;
+				continue;
+			}
 			return (0);
+		}
 		tkns = tkns->next;
 	}
 	return (1);
@@ -28,12 +35,12 @@ int	no_delims(t_tkns *tkns, int delim)
 
 t_tree	*giv_tree(t_tkns *tkns)
 {
-	t_tkns	*tmp;
 	t_tree	*treenode;
-	int		error;
+	int	error;
 
-	tmp = tkns;
 	error = 0;
+	while (tkn->type & WHITE_SPC)
+		tkn = tkn->next;
 	treenode = logops(tkns, &error);
 	if (error)
 	{
@@ -41,8 +48,7 @@ t_tree	*giv_tree(t_tkns *tkns)
 			printf("Syntax Error\n");
 		else if (error == 1)
 			printf("Allocation Error\n");
-		freetree(treenode);
-		freelst(tkns);
+		return(freetree(treenode), freelst(tkns), NULL);
 	}
 	return (treenode);
 }
@@ -127,11 +133,3 @@ t_tree	*pipe(t_tkns *tkns, int *error)
 	return (treenode);
 }
 
-void	freetree(t_tree *tree)
-{
-	if (!tree)
-		return ;
-	freetree(tree->limn);
-	freetree(tree->lisr);
-	free(tree);
-}

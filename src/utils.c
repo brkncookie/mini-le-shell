@@ -31,3 +31,13 @@ void	freelst(t_tkns **lst)
 		(*lst) = tmp;
 	}
 }
+
+void	freetree(t_tree *tree)
+{
+	if (!tree)
+		return ;
+	freetree(tree->limn);
+	freetree(tree->lisr);
+	free(tree);
+}
+

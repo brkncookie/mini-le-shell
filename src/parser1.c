@@ -44,7 +44,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 {
 	t_tree	*cmdlst;
 	t_tkns	*tmp;
-	int		type;
+	int	type;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)
@@ -88,9 +88,9 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 t_tree	*cmd(t_tkns *tkn, int *error)
 {
 	t_tkns	*tmp;
-	int		type;
 	t_tree	*cmd;
 	t_tree	*redr;
+	int	type;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	cmd = NULL;
@@ -117,3 +117,4 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	}
 	return (cmd);
 }
+
