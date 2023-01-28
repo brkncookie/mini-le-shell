@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tknizer_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/24 11:50:18 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/28 14:31:33 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/lexer.h"
-#include "../include/libft.h"
 #include <stdio.h>
 
 int	is_blncd(char *str, char c)

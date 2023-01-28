@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:38:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/24 11:54:28 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/28 16:07:42 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,22 +56,22 @@ t_tkns	*tokenize(char *cmds)
 	//might need to add return value to tkn_link to return NULL if 
 }
 
-int	main(int argc, char **argv)
-{
-	t_tkns	*tkns;
-	int		i;
+// int	main(int argc, char **argv)
+// {
+// 	t_tkns	*tkns;
+// 	int		i;
 
-	(void)argc;
-	tkns = tokenize(argv[1]);
-	while (tkns)
-	{
-		i = 0;
-		while (i < tkns->len)
-			printf("%c", tkns->val[i++]);
-		printf("\n%d\n%d\n%d", tkns->type, tkns->stat, tkns->sbsh);
-		printf("\n----NEXT TOKEN----\n");
-		tkns = tkns->next;
-	}
-	return (0);
-}
+// 	(void)argc;
+// 	tkns = tokenize(argv[1]);
+// 	while (tkns)
+// 	{
+// 		i = 0;
+// 		while (i < tkns->len)
+// 			printf("%c", tkns->val[i++]);
+// 		printf("\n%d\n%d\n%d", tkns->type, tkns->stat, tkns->sbsh);
+// 		printf("\n----NEXT TOKEN----\n");
+// 		tkns = tkns->next;
+// 	}
+// 	return (0);
+// }
 

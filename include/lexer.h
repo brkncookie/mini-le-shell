@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 09:35:44 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/24 16:52:54 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/28 15:26:51 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
+# include "libft.h"
 
 typedef enum e_type
 {
@@ -53,5 +54,6 @@ void	tkn_link(t_tkns **lst, t_tkns *tkn);
 int		is_blncd(char *str, char c);
 t_tkns	*tkn_create(char **str, t_type type);
 void	freelst(t_tkns **lst);
+t_tkns	*tokenize(char *cmds);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/27 14:37:33 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/01/28 17:33:37 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_tree	*redir(t_tkns *tkn, int *error)
 	if (!redr)
 		return (*error = 1, redr);
 	redr->tkn = tkn;
+	tkn = tkn->next;
 	while (tkn)
 	{
 		if (tkn->type & (WORD | VAR))
@@ -46,6 +47,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	t_tkns	*tmp;
 	int	type;
 
+	tmp = NULL;
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)
 	{
@@ -79,7 +81,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			tmp = cmdlst->redr->limn->tkn->next;
 		while (tmp && (tmp->type & WHITE_SPC))
 			tmp = tmp->next;
-		if ((tmp->sbsh & IN_PAR))
+		if (tmp && (tmp->sbsh & IN_PAR))
 			return (*error = 2, cmdlst);
 	}
 	return (cmdlst);
