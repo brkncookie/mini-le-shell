@@ -103,6 +103,9 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 		if (!cmd)
 			return (*error = 1, cmd);
 		cmd->tkn = tkn;
+		cmd->arg = get_arg(tkn->next, error);
+		if (*error)
+			return (cmd);
 	}
 	while (tmp && !(tmp->type & type) &&
 			!(tmp->type & (PIPE | AND | OR) && (tmp->type & WHITE_SPC)))
