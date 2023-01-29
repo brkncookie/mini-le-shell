@@ -19,6 +19,11 @@ void	print_tree(t_tree *tree, int spaces)
 	i = 0;
 	while (i < tree->tkn->len)
 		printf("%c", tree->tkn->val[i++]);
+	// if (!tree->limn && !tree->lisr)
+	// {
+	// 	tree->
+	// }
+	
 	printf("\n");
 	print_tree(tree->lisr, spaces);
 }

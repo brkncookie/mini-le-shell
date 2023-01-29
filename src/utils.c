@@ -6,12 +6,13 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:39:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/28 15:50:56 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/29 12:33:48 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/lexer.h"
 #include "../include/parser.h"
+#include <string.h>
 
 int	ft_isspace(char c)
 {
@@ -55,11 +56,11 @@ int	count_arg(t_tkns *tkn)
 	{
 		if (tkn->type & (VAR | WORD) || (tkn->type & WHITE_SPC && tkn->stat & (IN_DQUOTE | IN_QUOTE)))
 		{
-			if (!flag && (tkn->stat & (IN_DQUOTE | IN_QUOTE) && cnt++)
+			if (!flag && (tkn->stat & (IN_DQUOTE | IN_QUOTE) && cnt++))
 				flag = 1;
-			else if(flag && !(tkn->stat & (IN_DQUOTE | IN_QUOTE))
+			else if(flag && !(tkn->stat & (IN_DQUOTE | IN_QUOTE)))
       				flag = 0;
-			else if (!(flag && (tkn->stat & (IN_DQUOTE | IN_QUOTE)))
+			else if (!(flag && (tkn->stat & (IN_DQUOTE | IN_QUOTE))))
 				cnt++;
 		}
 		tkn = tkn->next;
@@ -100,7 +101,7 @@ char	**get_arg(t_tkns *tkn, int *error)
 					tkn = tkn->next;
 				}
 			}
-			arg[i] = ft_strndup(str, len);
+			arg[i] = strndup(str, len);
 			if(!arg[i])
 				return(*error = 1, arg);
 
