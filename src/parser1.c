@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/28 17:33:37 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/29 11:26:41 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	{
 		tkn = tkn->next;
 		cmdlst = logops(tkn, error);
-		while (tkn->sbsh & IN_PAR)
+		while (tkn && (tkn->sbsh & IN_PAR))
 			tkn = tkn->next;
 		tkn = tkn->next;
-		while (tkn->type & WHITE_SPC)
+		while (tkn && (tkn->type & WHITE_SPC))
 			tkn = tkn->next;
-		if (tkn->type & type)
+		if (tkn && (tkn->type & type))
 		{
 			cmdlst->redr = redir(tkn, error);
 			if (*error)
@@ -69,7 +69,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			if (!(tmp->type & (PIPE | AND | OR)))
 				return (*error = 2, cmdlst);
 		}
-		else if (!(tkn->type & (PIPE | AND | OR)))
+		else if (tkn && !(tkn->type & (PIPE | AND | OR)))
 			return (*error = 2, cmdlst);
 	}
 	else
