@@ -28,7 +28,7 @@ typedef struct s_tree
 t_tree	*giv_tree(t_tkns *tkns);
 t_tree	*logops(t_tkns *tkns, int *error);
 t_tree	*lqados(t_tkns *tkns, int *error);
-int		no_delims(t_tkns *tkns, int delim);
+int	no_delims(t_tkns *tkns, int delim, int stop);
 t_tree	*cmdlst(t_tkns *tkn, int *error);
 t_tree	*redir(t_tkns *tkn, int *error);
 t_tree	*cmd(t_tkns *tkn, int *error);

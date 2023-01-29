@@ -12,13 +12,15 @@
 
 #include "../include/parser.h"
 
-int	no_delims(t_tkns *tkns, int delim)
+int	no_delims(t_tkns *tkns, int delim, int stop)
 {
 	int	subsh;
 
 	subsh = tkns->sbsh;
 	while (tkns)
 	{
+		if(tkns->type & stop)
+			return (1);
 		if (tkns->type & delim)
 		{
 			if(!subsh && tkns->sbsh)
@@ -57,9 +59,9 @@ t_tree	*logops(t_tkns *tkns, int *error)
 {
 	t_tkns	*tmp;
 	t_tree	*treenode;
-	int		subsh;
+	int	subsh;
 
-	if (no_delims(tkns, AND | OR))
+	if (no_delims(tkns, AND | OR, 0))
 		return (lqados(tkns, error));
 	treenode = ft_calloc(1, sizeof(t_tree));
 	if (!treenode)
@@ -100,7 +102,7 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	int		subsh;
 
 	tmp = tkns;
-	if (no_delims(tkns, PIPE))
+	if (no_delims(tkns, PIPE, AND | OR))
 		return (cmdlst(tkns, error));
 	treenode = ft_calloc(1, sizeof(t_tree));
 	if (!treenode)
@@ -132,3 +134,4 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	}
 	return (treenode);
 }
+
