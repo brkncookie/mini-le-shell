@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/28 17:40:27 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/29 17:41:47 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,15 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 	subsh = tkns->sbsh;
 	while (tkns)
 	{
-		if(tkns->type & stop)
+		if (!subsh && tkns->sbsh)
+		{
+			tkns = tkns->next;
+			continue ;
+		}
+		if (tkns->type & stop)
 			return (1);
 		if (tkns->type & delim)
-		{
-			if(!subsh && tkns->sbsh)
-			{
-				tkns = tkns->next;
-				continue;
-			}
 			return (0);
-		}
 		tkns = tkns->next;
 	}
 	return (1);
@@ -38,7 +36,7 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 t_tree	*giv_tree(t_tkns *tkns)
 {
 	t_tree	*treenode;
-	int	error;
+	int		error;
 
 	error = 0;
 	while (tkns->type & WHITE_SPC)
@@ -50,7 +48,7 @@ t_tree	*giv_tree(t_tkns *tkns)
 			printf("Syntax Error\n");
 		else if (error == 1)
 			printf("Allocation Error\n");
-		return(freetree(treenode), freelst(&tkns), NULL);
+		return (freetree(treenode), freelst(&tkns), NULL);
 	}
 	return (treenode);
 }
@@ -59,7 +57,7 @@ t_tree	*logops(t_tkns *tkns, int *error)
 {
 	t_tkns	*tmp;
 	t_tree	*treenode;
-	int	subsh;
+	int		subsh;
 
 	if (no_delims(tkns, AND | OR, 0))
 		return (lqados(tkns, error));
@@ -77,14 +75,16 @@ t_tree	*logops(t_tkns *tkns, int *error)
 		}
 		if (tmp->type & (AND | OR))
 		{
-			if (!tmp->prev || !tmp->next)
+			if (!tmp->prev || !tmp->next || (tkns->type & (AND | OR)))
 				return (*error = 2, treenode);
 			treenode->tkn = tmp;
 			treenode->lisr = lqados(tkns, error);
 			if (*error)
 				return (treenode);
-			while (tmp->next->type & WHITE_SPC)
+			while (tmp->next && tmp->next->type & WHITE_SPC)
 				tmp = tmp->next;
+			if (!tmp->next)
+				return (*error = 2, treenode);
 			treenode->limn = logops(tmp->next, error);
 			if (*error)
 				return (treenode);
@@ -117,14 +117,16 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 		}
 		if (tmp->type & PIPE)
 		{
-			if (!tmp->prev || !tmp->next)
+			if (!tmp->prev || !tmp->next || (tkns->type & PIPE))
 				return (*error = 2, treenode);
 			treenode->tkn = tmp;
 			treenode->lisr = cmdlst(tkns, error);
 			if (*error)
 				return (treenode);
-			while (tmp->next->type & WHITE_SPC)
+			while (tmp->next && tmp->next->type & WHITE_SPC)
 				tmp = tmp->next;
+			if (!tmp->next)
+				return (*error = 2, treenode);
 			treenode->limn = lqados(tmp->next, error);
 			if (*error)
 				return (treenode);
@@ -134,4 +136,3 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	}
 	return (treenode);
 }
-

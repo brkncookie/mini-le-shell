@@ -5,6 +5,7 @@
 void	print_tree(t_tree *tree, int spaces)
 {
 	int	i;
+	int	j;
 
 	if (!tree || !tree->tkn)
 		return ;
@@ -19,6 +20,18 @@ void	print_tree(t_tree *tree, int spaces)
 	i = 0;
 	while (i < tree->tkn->len)
 		printf("%c", tree->tkn->val[i++]);
+	i = 0;
+	if (!tree->limn && !tree->lisr)
+	{
+		while (tree->arg && tree->arg[i])
+		{
+			j = 0;
+			printf(" ");
+			while (tree->arg[i][j])
+				printf("%c", tree->arg[i][j++]);
+			i++;
+		}
+	}
 	printf("\n");
 	print_tree(tree->lisr, spaces);
 }
