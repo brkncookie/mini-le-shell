@@ -22,6 +22,7 @@ typedef struct s_tree
 	struct s_tree	*limn;
 	struct s_tree	*lisr;
 	struct s_tree	*redr;
+	char		**arg;
 }		t_tree;
 
 t_tree	*giv_tree(t_tkns *tkns);
@@ -32,6 +33,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error);
 t_tree	*redir(t_tkns *tkn, int *error);
 t_tree	*cmd(t_tkns *tkn, int *error);
 void	freetree(t_tree *tree);
+char	**get_arg(t_tkns *tkn, int *error);
 
 #endif
 
