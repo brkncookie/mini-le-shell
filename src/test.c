@@ -31,6 +31,17 @@ void	print_tree(t_tree *tree, int spaces)
 				printf("%c", tree->arg[i][j++]);
 			i++;
 		}
+		i = 0;
+		if(tree->redr)
+		{
+			printf(" ");
+			while (i < tree->redr->tkn->len)
+				printf("%c", tree->redr->tkn->val[i++]);
+			i = 0;
+			printf(" ");
+			while (i < tree->redr->limn->tkn->len)
+				printf("%c", tree->redr->limn->tkn->val[i++]);
+		}
 	}
 	printf("\n");
 	print_tree(tree->lisr, spaces);
@@ -40,9 +51,11 @@ int main(int ac, char **av)
 {
 	t_tkns	*tkns;
 	t_tree	*tree;
+	int	error;
 
+	error = 0;
 	tkns = tokenize(av[1]);
-	tree = giv_tree(tkns);
+	tree = giv_tree(tkns, &error);
 	print_tree(tree, 0);
 	return (0);
 }

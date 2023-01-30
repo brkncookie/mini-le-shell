@@ -52,7 +52,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)
 	{
 		tkn = tkn->next;
-		cmdlst = logops(tkn, error);
+		cmdlst = giv_tree(tkn, error);
 		while (tkn && (tkn->sbsh & IN_PAR))
 			tkn = tkn->next;
 		tkn = tkn->next;

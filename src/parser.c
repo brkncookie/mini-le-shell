@@ -26,27 +26,27 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 		}
 		if (tkns->type & stop)
 			return (1);
-		if (tkns->type & delim)
+		if (tkns->type & delim && !tkns->stat)
 			return (0);
 		tkns = tkns->next;
 	}
 	return (1);
 }
 
-t_tree	*giv_tree(t_tkns *tkns)
+t_tree	*giv_tree(t_tkns *tkns, int *error)
 {
 	t_tree	*treenode;
-	int		error;
+	int	subsh;
 
-	error = 0;
-	while (tkns->type & WHITE_SPC)
+	subsh = tkns->sbsh;
+	while (tkns && tkns->type & WHITE_SPC )
 		tkns = tkns->next;
-	treenode = logops(tkns, &error);
-	if (error)
+	treenode = logops(tkns, error);
+	if (*error && !subsh)
 	{
-		if (error == 2)
+		if (*error == 2)
 			printf("Syntax Error\n");
-		else if (error == 1)
+		else if (*error == 1)
 			printf("Allocation Error\n");
 		return (freetree(treenode), freelst(&tkns), NULL);
 	}
@@ -57,7 +57,7 @@ t_tree	*logops(t_tkns *tkns, int *error)
 {
 	t_tkns	*tmp;
 	t_tree	*treenode;
-	int		subsh;
+	int	subsh;
 
 	if (no_delims(tkns, AND | OR, 0))
 		return (lqados(tkns, error));
@@ -81,7 +81,7 @@ t_tree	*logops(t_tkns *tkns, int *error)
 			treenode->lisr = lqados(tkns, error);
 			if (*error)
 				return (treenode);
-			while (tmp->next && tmp->next->type & WHITE_SPC)
+			while (tmp->next && (tmp->next->type & WHITE_SPC || (subsh && tmp->next->type & CPAR)))
 				tmp = tmp->next;
 			if (!tmp->next)
 				return (*error = 2, treenode);
@@ -123,7 +123,7 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 			treenode->lisr = cmdlst(tkns, error);
 			if (*error)
 				return (treenode);
-			while (tmp->next && tmp->next->type & WHITE_SPC)
+			while (tmp->next && (tmp->next->type & WHITE_SPC || (subsh && tmp->next->type & CPAR)))
 				tmp = tmp->next;
 			if (!tmp->next)
 				return (*error = 2, treenode);
@@ -136,3 +136,4 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	}
 	return (treenode);
 }
+
