@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:38:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/30 17:50:06 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/30 18:00:36 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_tkns	*tokenize(char *cmds)
 			tkn_link(&tkns, tkn_create(&cmds, WORD));
 	}
 	return (tkns);
-	//might need to add return value to tkn_link to return NULL if 
+	//might need to add return value to tkn_link to return NULL if
 }
 
 // int	main(int argc, char **argv)
