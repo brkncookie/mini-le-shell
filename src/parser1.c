@@ -55,8 +55,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 		cmdlst = giv_tree(tkn, error);
 		while (tkn && (tkn->sbsh & IN_PAR))
 			tkn = tkn->next;
-		tkn = tkn->next;
-		while (tkn && (tkn->type & WHITE_SPC))
+		while (tkn && (tkn->type & WHITE_SPC || tkn->type & CPAR))
 			tkn = tkn->next;
 		if (tkn && (tkn->type & type))
 		{
@@ -79,9 +78,11 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			return (cmdlst);
 		if (cmdlst->redr)
 			tmp = cmdlst->redr->limn->tkn->next;
-		while (tmp && (tmp->type & WHITE_SPC))
+		else
+			tmp = tkn->next;
+		while (tmp && tmp->type & WHITE_SPC)
 			tmp = tmp->next;
-		if (tmp && (tmp->next->sbsh & IN_PAR))
+		if (tmp && (tmp->type & OPAR && !tmp->stat))
 			return (*error = 2, cmdlst);
 	}
 	return (cmdlst);

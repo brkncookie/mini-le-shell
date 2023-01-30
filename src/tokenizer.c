@@ -18,8 +18,8 @@ t_tkns	*tokenize(char *cmds)
 {
 	t_tkns	*tkns;
 
-	if (!is_blncd(cmds, 0))
-		return (printf("Syntax Error.\n"), NULL);
+	/* if (!is_blncd(cmds, 0)) */
+	/* 	return (printf("Syntax Error.\n"), NULL); */
 	tkns = NULL;
 	while (*cmds)
 	{
@@ -53,7 +53,7 @@ t_tkns	*tokenize(char *cmds)
 			tkn_link(&tkns, tkn_create(&cmds, WORD));
 	}
 	return (tkns);
-	//might need to add return value to tkn_link to return NULL if 
+	//might need to add return value to tkn_link to return NULL if
 }
 
 // int	main(int argc, char **argv)
