@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/30 11:53:57 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/30 17:58:34 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,11 @@
 
 int	no_delims(t_tkns *tkns, int delim, int stop)
 {
-	int	subsh;
-
-	subsh = tkns->sbsh;
-	while (tkns && !(subsh && !tkns->sbsh))
+	while (tkns && !(tkns->type & CPAR)) //quote dquote problem still here
 	{
-		if (!subsh && tkns->sbsh)
-		{
-			tkns = tkns->next;
-			continue ;
-		}
+		if (tkns->type & OPAR)
+			while (!(tkns->type & CPAR))
+				tkns = tkns->next;
 		if (tkns->type & stop)
 			return (1);
 		if (tkns->type & delim && !tkns->stat)
@@ -66,13 +61,11 @@ t_tree	*logops(t_tkns *tkns, int *error)
 		return (*error = 1, treenode);
 	tmp = tkns;
 	subsh = tmp->sbsh;
-	while (tmp && !(subsh && !tmp->sbsh))
+	while (tmp && !(tkns->type & CPAR))//quote dquote problem still here
 	{
-		if (!subsh && tmp->sbsh)
-		{
-			tmp = tmp->next;
-			continue ;
-		}
+		if (tmp->type & OPAR)
+			while (!(tmp->type & CPAR))
+				tmp = tmp->next;
 		if (tmp->type & (AND | OR))
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & (AND | OR)))
@@ -108,13 +101,11 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	if (!treenode)
 		return (*error = 1, treenode);
 	subsh = tmp->sbsh;
-	while (tmp && !(tmp->type & (AND | OR)) && !(subsh && !tmp->sbsh))
+	while (tmp && !(tmp->type & (AND | OR)) && !(tmp->type & CPAR)) //quote dquote problem still here
 	{
-		if (!subsh && tmp->sbsh)
-		{
-			tmp = tmp->next;
-			continue ;
-		}
+		if (tmp->type & OPAR)
+			while (!(tmp->type & CPAR))
+				tmp = tmp->next;
 		if (tmp->type & PIPE)
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & PIPE))

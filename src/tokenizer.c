@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:38:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/28 16:07:42 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/30 17:50:06 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ t_tkns	*tokenize(char *cmds)
 {
 	t_tkns	*tkns;
 
-	if (!is_blncd(cmds, 0))
-		return (printf("Syntax Error.\n"), NULL);
+	// if (!is_blncd(cmds, 0))
+	// 	return (printf("Syntax Error.\n"), NULL);
 	tkns = NULL;
 	while (*cmds)
 	{
