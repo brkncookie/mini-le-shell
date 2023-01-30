@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/29 17:41:47 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/30 11:53:57 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 	int	subsh;
 
 	subsh = tkns->sbsh;
-	while (tkns)
+	while (tkns && !(subsh && !tkns->sbsh))
 	{
 		if (!subsh && tkns->sbsh)
 		{

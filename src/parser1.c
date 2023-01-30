@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/29 11:26:41 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/30 12:12:55 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			tmp = cmdlst->redr->limn->tkn->next;
 		while (tmp && (tmp->type & WHITE_SPC))
 			tmp = tmp->next;
-		if (tmp && (tmp->sbsh & IN_PAR))
+		if (tmp && (tmp->next->sbsh & IN_PAR))
 			return (*error = 2, cmdlst);
 	}
 	return (cmdlst);
