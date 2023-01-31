@@ -49,11 +49,11 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 
 	tmp = NULL;
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
-	if (tkn->type & OPAR && tkn->next->sbsh & IN_PAR)
+	if (tkn->type & OPAR && !(tkn->stat))
 	{
 		tkn = tkn->next;
 		cmdlst = giv_tree(tkn, error);
-		while (tkn && (tkn->sbsh & IN_PAR))
+		while (tkn && (tkn->sbsh & IN_PAR || (tkn->type & OPAR && tkn->next->sbsh)))
 			tkn = tkn->next;
 		while (tkn && (tkn->type & WHITE_SPC || tkn->type & CPAR))
 			tkn = tkn->next;
