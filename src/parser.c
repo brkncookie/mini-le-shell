@@ -14,16 +14,24 @@
 
 int	no_delims(t_tkns *tkns, int delim, int stop)
 {
-	while (tkns && !(tkns->type & CPAR)) //quote dquote problem still here
+	while (tkns) //quote dquote problem still here
 	{
 		if (tkns->type & OPAR)
-			while (!(tkns->type & CPAR))
+		{
+			while (tkns && !(tkns->type & CPAR))
+			{
+				if (tkns->type & OPAR)
+					while (!(tkns->type & CPAR))
+						tkns = tkns->next;
 				tkns = tkns->next;
-		if (tkns->type & stop)
+			}
+		}
+		if (tkns && tkns->type & stop)
 			return (1);
-		if (tkns->type & delim && !tkns->stat)
+		if (tkns && tkns->type & delim && !tkns->stat)
 			return (0);
-		tkns = tkns->next;
+		if (tkns)
+			tkns = tkns->next;
 	}
 	return (1);
 }
