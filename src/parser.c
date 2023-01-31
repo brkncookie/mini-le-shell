@@ -6,11 +6,21 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/31 11:49:49 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/31 16:55:16 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
+
+// void	skip_pars(t_tkns **tkns)
+// {
+// 	while (*tkns && !((*tkns)->type & CPAR))
+// 	{
+// 		if ((*tkns)->type & OPAR)
+// 			skip_pars(tkns);
+// 		*tkns = (*tkns)->next;
+// 	}
+// }
 
 int	no_delims(t_tkns *tkns, int delim, int stop)
 {
@@ -21,7 +31,7 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 			while (tkns && !(tkns->type & CPAR))
 			{
 				if (tkns->type & OPAR)
-					while (!(tkns->type & CPAR))
+					while (tkns && !(tkns->type & CPAR))
 						tkns = tkns->next;
 				tkns = tkns->next;
 			}
@@ -39,10 +49,10 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 t_tree	*giv_tree(t_tkns *tkns, int *error)
 {
 	t_tree	*treenode;
-	int	subsh;
+	int		subsh;
 
 	subsh = tkns->sbsh;
-	while (tkns && tkns->type & WHITE_SPC )
+	while (tkns && tkns->type & WHITE_SPC)
 		tkns = tkns->next;
 	treenode = logops(tkns, error);
 	if (*error && !subsh)
@@ -60,7 +70,7 @@ t_tree	*logops(t_tkns *tkns, int *error)
 {
 	t_tkns	*tmp;
 	t_tree	*treenode;
-	int	subsh;
+	int		subsh;
 
 	if (no_delims(tkns, AND | OR, 0))
 		return (lqados(tkns, error));
@@ -69,7 +79,7 @@ t_tree	*logops(t_tkns *tkns, int *error)
 		return (*error = 1, treenode);
 	tmp = tkns;
 	subsh = tmp->sbsh;
-	while (tmp && !(tkns->type & CPAR))//quote dquote problem still here
+	while (tmp && !(tkns->type & CPAR)) //quote dquote problem still here
 	{
 		if (tmp->type & OPAR)
 			while (!(tmp->type & CPAR))
@@ -82,7 +92,8 @@ t_tree	*logops(t_tkns *tkns, int *error)
 			treenode->lisr = lqados(tkns, error);
 			if (*error)
 				return (treenode);
-			while (tmp->next && (tmp->next->type & WHITE_SPC || (subsh && tmp->next->type & CPAR)))
+			while (tmp->next && (tmp->next->type & WHITE_SPC || (subsh
+						&& tmp->next->type & CPAR)))
 				tmp = tmp->next;
 			if (!tmp->next)
 				return (*error = 2, treenode);
@@ -109,7 +120,8 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	if (!treenode)
 		return (*error = 1, treenode);
 	subsh = tmp->sbsh;
-	while (tmp && !(tmp->type & (AND | OR)) && !(tmp->type & CPAR)) //quote dquote problem still here
+	while (tmp && !(tmp->type & (AND | OR)) && !(tmp->type & CPAR))
+	//quote dquote problem still here
 	{
 		if (tmp->type & OPAR && !(tmp->stat & (IN_DQUOTE | IN_QUOTE)))
 			while (!(tmp->type & CPAR))
@@ -122,7 +134,8 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 			treenode->lisr = cmdlst(tkns, error);
 			if (*error)
 				return (treenode);
-			while (tmp->next && (tmp->next->type & WHITE_SPC || (subsh && tmp->next->type & CPAR)))
+			while (tmp->next && (tmp->next->type & WHITE_SPC || (subsh
+						&& tmp->next->type & CPAR)))
 				tmp = tmp->next;
 			if (!tmp->next)
 				return (*error = 2, treenode);
@@ -135,4 +148,3 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	}
 	return (treenode);
 }
-
