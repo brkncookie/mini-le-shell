@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/30 17:58:34 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/31 11:49:49 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	subsh = tmp->sbsh;
 	while (tmp && !(tmp->type & (AND | OR)) && !(tmp->type & CPAR)) //quote dquote problem still here
 	{
-		if (tmp->type & OPAR)
+		if (tmp->type & OPAR && !(tmp->stat & (IN_DQUOTE | IN_QUOTE)))
 			while (!(tmp->type & CPAR))
 				tmp = tmp->next;
 		if (tmp->type & PIPE)

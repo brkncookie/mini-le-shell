@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/30 12:12:55 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/01/31 11:33:22 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 			return (cmd);
 	}
 	while (tmp && !(tmp->type & type) &&
-			!(tmp->type & (PIPE | AND | OR) && (tmp->type & WHITE_SPC)))
+			!(tmp->type & (PIPE | AND | OR)) && (tmp->type & WHITE_SPC))
 		tmp = tmp->next;
 	if (tmp && (tmp->type & type))
 	{
