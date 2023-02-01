@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/01/31 16:55:16 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/01 15:36:48 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@
 
 int	no_delims(t_tkns *tkns, int delim, int stop)
 {
-	while (tkns) //quote dquote problem still here
+	while (tkns && !(tkns->type & CPAR)) //quote dquote problem still here
 	{
 		if (tkns->type & OPAR)
 		{
 			while (tkns && !(tkns->type & CPAR))
 			{
+				tkns = tkns->next;
 				if (tkns->type & OPAR)
 					while (tkns && !(tkns->type & CPAR))
 						tkns = tkns->next;
@@ -79,9 +80,9 @@ t_tree	*logops(t_tkns *tkns, int *error)
 		return (*error = 1, treenode);
 	tmp = tkns;
 	subsh = tmp->sbsh;
-	while (tmp && !(tkns->type & CPAR)) //quote dquote problem still here
+	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
 	{
-		if (tmp->type & OPAR)
+		if (tmp->type & OPAR && !(tmp->stat & (IN_DQUOTE | IN_QUOTE)))
 			while (!(tmp->type & CPAR))
 				tmp = tmp->next;
 		if (tmp->type & (AND | OR))

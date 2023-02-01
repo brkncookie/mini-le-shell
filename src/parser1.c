@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/31 11:33:22 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/01 15:42:58 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	{
 		tkn = tkn->next;
 		cmdlst = giv_tree(tkn, error);
-		while (tkn && (tkn->sbsh & IN_PAR || (tkn->type & OPAR && tkn->next->sbsh)))
+		while (tkn && (tkn->sbsh & IN_PAR || (tkn->type & OPAR && !(tkn->stat))))
 			tkn = tkn->next;
 		while (tkn && (tkn->type & WHITE_SPC || tkn->type & CPAR))
 			tkn = tkn->next;
