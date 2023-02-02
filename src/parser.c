@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/02 17:42:47 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/02 18:25:28 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 	while (tkns && !(tkns->type & CPAR)) //quote dquote problem still here
 	{
 		if (tkns && tkns->type & OPAR)
+		{
 			skip_pars(&tkns);
+			continue;
+		}
 		if (tkns && tkns->type & stop)
 			return (1);
 		if (tkns && tkns->type & delim && !tkns->stat)
@@ -76,7 +79,10 @@ t_tree	*logops(t_tkns *tkns, int *error)
 	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
 	{
 		if (tmp && tmp->type & OPAR)
+		{
 			skip_pars(&tmp);
+			continue;
+		}
 		if (tmp->type & (AND | OR))
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & (AND | OR)))
@@ -117,7 +123,10 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	//quote dquote problem still here
 	{
 		if (tmp && tmp->type & OPAR)
+		{
 			skip_pars(&tmp);
+			continue;
+		}
 		if (tmp->type & PIPE)
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & PIPE))
