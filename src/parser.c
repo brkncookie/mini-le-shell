@@ -6,46 +6,36 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/02 13:46:34 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:42:47 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
 
-// void	skip_pars(t_tkns **tkns)
-// {
-// 	while (*tkns && !((*tkns)->type & CPAR))
-// 	{
-// 		if ((*tkns)->type & OPAR)
-// 			skip_pars(tkns);
-// 		*tkns = (*tkns)->next;
-// 	}
-// }
+void	skip_pars(t_tkns **tkns)
+{
+	while (*tkns && !((*tkns)->type & CPAR))
+	{
+		*tkns = (*tkns)->next;
+		if ((*tkns) && (*tkns)->type & OPAR)
+			skip_pars(tkns);
+	}
+	if ((*tkns) && (*tkns)->type & CPAR)
+		*tkns = (*tkns)->next;
+}
 
 int	no_delims(t_tkns *tkns, int delim, int stop)
 {
-	t_tkns	*tmp;
-
-	tmp = tkns;
-	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
+	while (tkns && !(tkns->type & CPAR)) //quote dquote problem still here
 	{
-		while (tkns)
-		{
-			if (tkns->type & OPAR)
-			{
-				while (tmp && !(tmp->type & CPAR))
-					tmp = tmp->next;
-				if (tmp && (tmp->type & CPAR))
-					tmp = tmp->next;
-			}
-			tkns = tkns->next;
-		}
-		if (tmp && tmp->type & stop)
+		if (tkns && tkns->type & OPAR)
+			skip_pars(&tkns);
+		if (tkns && tkns->type & stop)
 			return (1);
-		if (tmp && tmp->type & delim && !tmp->stat)
+		if (tkns && tkns->type & delim && !tkns->stat)
 			return (0);
-		if (tmp && !(tmp->type & CPAR))
-			tmp = tmp->next;
+		if (tkns)
+			tkns = tkns->next;
 	}
 	return (1);
 }
@@ -85,20 +75,8 @@ t_tree	*logops(t_tkns *tkns, int *error)
 	subsh = tmp->sbsh;
 	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
 	{
-		if (tmp->type & OPAR)
-		{
-			while (tmp && !(tmp->type & CPAR))
-			{
-				tmp = tmp->next;
-				if (tmp->type & OPAR)
-				{
-					while (tmp && !(tmp->type & CPAR))
-						tmp = tmp->next;
-					if (tmp && (tmp->type & CPAR))
-						tmp = tmp->next;
-				}
-			}
-		}
+		if (tmp && tmp->type & OPAR)
+			skip_pars(&tmp);
 		if (tmp->type & (AND | OR))
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & (AND | OR)))
@@ -138,20 +116,8 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	while (tmp && !(tmp->type & (AND | OR)) && !(tmp->type & CPAR))
 	//quote dquote problem still here
 	{
-		if (tmp->type & OPAR)
-		{
-			while (tmp && !(tmp->type & CPAR))
-			{
-				tmp = tmp->next;
-				if (tmp->type & OPAR)
-				{
-					while (tmp && !(tmp->type & CPAR))
-						tmp = tmp->next;
-					if (tmp && (tmp->type & CPAR))
-						tmp = tmp->next;
-				}
-			}
-		}
+		if (tmp && tmp->type & OPAR)
+			skip_pars(&tmp);
 		if (tmp->type & PIPE)
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & PIPE))
