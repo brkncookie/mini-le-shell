@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/02 11:48:52 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/02 13:46:34 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 			{
 				while (tmp && !(tmp->type & CPAR))
 					tmp = tmp->next;
-				if (tmp && tmp->type & CPAR)
+				if (tmp && (tmp->type & CPAR))
 					tmp = tmp->next;
 			}
 			tkns = tkns->next;
@@ -44,7 +44,7 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 			return (1);
 		if (tmp && tmp->type & delim && !tmp->stat)
 			return (0);
-		if (tmp)
+		if (tmp && !(tmp->type & CPAR))
 			tmp = tmp->next;
 	}
 	return (1);

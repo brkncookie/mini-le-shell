@@ -56,6 +56,8 @@ int main(int ac, char **av)
 
 	error = 0;
 	tkns = tokenize(av[1]);
+	if (!tkns)
+		return (0);
 	tree = giv_tree(tkns, &error);
 	print_tree(tree, 0);
 	return (0);

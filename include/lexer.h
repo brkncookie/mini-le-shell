@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 09:35:44 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/28 15:26:51 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/02 15:32:22 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_tkns
 {
 	char			*val;
 	t_type			type;
-	int			len;
+	int				len;
 	t_stat			stat;
 	t_stat			sbsh;
 	struct s_tkns	*next;
@@ -51,7 +51,7 @@ typedef struct s_tkns
 }	t_tkns;
 
 void	tkn_link(t_tkns **lst, t_tkns *tkn);
-int		is_blncd(char *str, char c);
+int		is_blncd(char **str, char c);
 t_tkns	*tkn_create(char **str, t_type type);
 void	freelst(t_tkns **lst);
 t_tkns	*tokenize(char *cmds);

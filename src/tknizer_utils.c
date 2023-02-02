@@ -6,38 +6,42 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/28 14:31:33 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/02 15:57:37 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/lexer.h"
 #include <stdio.h>
 
-int	is_blncd(char *str, char c)
+int	is_blncd(char **str, char c)
 {
 	char	tmp;
 
 	if (c)
-		while (*str && *str != c)
-			str++;
-	if (c)
-		return (!(*str == 0));
-	while (*str)
 	{
-		tmp = *str;
+		*str = *str + 1;
+		while (**str && **str != c)
+		{
+			if (**str == '(')
+				if (!(is_blncd(str, ')')))
+						break ;
+			(*str)++;
+		}
+		return (!(**str == 0));
+	}
+	while (**str)
+	{
+		tmp = **str;
 		if (tmp == '\'' || tmp == '\"' || tmp == '(')
 		{
 			if (tmp == '(')
 				tmp = ')';
-			if (is_blncd(str + 1, tmp) && str++)
-				while (*str && *str != tmp)
-					str++;
-			else
+			if (!(is_blncd(str, tmp)))
 				return (0);
 		}
 		else if (tmp == ')')
 			return (0);
-		str++;
+		(*str)++;
 	}
 	return (1);
 }
