@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/01 15:36:48 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/02 11:48:52 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,28 @@
 
 int	no_delims(t_tkns *tkns, int delim, int stop)
 {
-	while (tkns && !(tkns->type & CPAR)) //quote dquote problem still here
+	t_tkns	*tmp;
+
+	tmp = tkns;
+	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
 	{
-		if (tkns->type & OPAR)
+		while (tkns)
 		{
-			while (tkns && !(tkns->type & CPAR))
+			if (tkns->type & OPAR)
 			{
-				tkns = tkns->next;
-				if (tkns->type & OPAR)
-					while (tkns && !(tkns->type & CPAR))
-						tkns = tkns->next;
-				tkns = tkns->next;
+				while (tmp && !(tmp->type & CPAR))
+					tmp = tmp->next;
+				if (tmp && tmp->type & CPAR)
+					tmp = tmp->next;
 			}
-		}
-		if (tkns && tkns->type & stop)
-			return (1);
-		if (tkns && tkns->type & delim && !tkns->stat)
-			return (0);
-		if (tkns)
 			tkns = tkns->next;
+		}
+		if (tmp && tmp->type & stop)
+			return (1);
+		if (tmp && tmp->type & delim && !tmp->stat)
+			return (0);
+		if (tmp)
+			tmp = tmp->next;
 	}
 	return (1);
 }
@@ -82,9 +85,20 @@ t_tree	*logops(t_tkns *tkns, int *error)
 	subsh = tmp->sbsh;
 	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
 	{
-		if (tmp->type & OPAR && !(tmp->stat & (IN_DQUOTE | IN_QUOTE)))
-			while (!(tmp->type & CPAR))
+		if (tmp->type & OPAR)
+		{
+			while (tmp && !(tmp->type & CPAR))
+			{
 				tmp = tmp->next;
+				if (tmp->type & OPAR)
+				{
+					while (tmp && !(tmp->type & CPAR))
+						tmp = tmp->next;
+					if (tmp && (tmp->type & CPAR))
+						tmp = tmp->next;
+				}
+			}
+		}
 		if (tmp->type & (AND | OR))
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & (AND | OR)))
@@ -124,9 +138,20 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	while (tmp && !(tmp->type & (AND | OR)) && !(tmp->type & CPAR))
 	//quote dquote problem still here
 	{
-		if (tmp->type & OPAR && !(tmp->stat & (IN_DQUOTE | IN_QUOTE)))
-			while (!(tmp->type & CPAR))
+		if (tmp->type & OPAR)
+		{
+			while (tmp && !(tmp->type & CPAR))
+			{
 				tmp = tmp->next;
+				if (tmp->type & OPAR)
+				{
+					while (tmp && !(tmp->type & CPAR))
+						tmp = tmp->next;
+					if (tmp && (tmp->type & CPAR))
+						tmp = tmp->next;
+				}
+			}
+		}
 		if (tmp->type & PIPE)
 		{
 			if (!tmp->prev || !tmp->next || (tkns->type & PIPE))
