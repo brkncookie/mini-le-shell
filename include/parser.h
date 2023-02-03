@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 13:23:15 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/28 15:49:41 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/03 19:56:12 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ t_tree	*redir(t_tkns *tkn, int *error);
 t_tree	*cmd(t_tkns *tkn, int *error);
 void	freetree(t_tree *tree);
 char	**get_arg(t_tkns *tkn, int *error);
+void	skip_pars(t_tkns **tkns);
 
 #endif
 

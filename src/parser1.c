@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/03 10:09:21 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/03 20:11:35 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,8 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	if (tkn->type & OPAR && !(tkn->stat))
 	{
-		tkn = tkn->next;
-		cmdlst = logops(tkn, error);
-		while (tkn && (tkn->sbsh & IN_PAR || (tkn->type & OPAR && !(tkn->stat))))
-			tkn = tkn->next;
+		cmdlst = logops(tkn->next, error);
+		skip_pars(&tkn);
 		while (tkn && (tkn->type & WHITE_SPC || tkn->type & CPAR))
 			tkn = tkn->next;
 		if (tkn && (tkn->type & type))
