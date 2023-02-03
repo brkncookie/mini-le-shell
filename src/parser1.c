@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/01 15:42:58 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/03 10:09:21 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	if (tkn->type & OPAR && !(tkn->stat))
 	{
 		tkn = tkn->next;
-		cmdlst = giv_tree(tkn, error);
+		cmdlst = logops(tkn, error);
 		while (tkn && (tkn->sbsh & IN_PAR || (tkn->type & OPAR && !(tkn->stat))))
 			tkn = tkn->next;
 		while (tkn && (tkn->type & WHITE_SPC || tkn->type & CPAR))
@@ -65,7 +65,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			tmp = cmdlst->redr->limn->tkn->next;
 			while (tmp && (tmp->type & WHITE_SPC))
 				tmp = tmp->next;
-			if (!(tmp->type & (PIPE | AND | OR)))
+			if (tmp && !(tmp->type & (PIPE | AND | OR)))
 				return (*error = 2, cmdlst);
 		}
 		else if (tkn && !(tkn->type & (PIPE | AND | OR)))
@@ -109,7 +109,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 			return (cmd);
 	}
 	while (tmp && !(tmp->type & type) &&
-			!(tmp->type & (PIPE | AND | OR)) && (tmp->type & WHITE_SPC))
+			!(tmp->type & (PIPE | AND | OR | CPAR)))
 		tmp = tmp->next;
 	if (tmp && (tmp->type & type))
 	{

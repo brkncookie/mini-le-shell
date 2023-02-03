@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:39:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/01/29 16:05:39 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/03 09:33:06 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,14 @@ char	**get_arg(t_tkns *tkn, int *error)
 					tkn = tkn->next;
 				}
 			}
+			/* replace strndup with ft_strndup */
 			arg[i] = strndup(str, len);
 			if(!arg[i])
 				return(*error = 1, arg);
 			i++;
 		}
-		tkn = tkn->next;
+		if (tkn)
+			tkn = tkn->next;
 	}
 	return (arg);
 }

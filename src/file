@@ -1,0 +1,7 @@
+10:06  up 11:37, 3 users, load averages: 1.06 1.08 1.08
+USER     TTY      FROM              LOGIN@  IDLE WHAT
+mnadir   console  -                 8:07    1:59 -
+mnadir   s000     -                 8:07       - w
+mnadir   s001     -                 8:48       3 vi parser.c
+hey
+       1       0       1

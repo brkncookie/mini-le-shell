@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/02 18:25:28 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/03 10:03:00 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,9 @@ int	no_delims(t_tkns *tkns, int delim, int stop)
 t_tree	*giv_tree(t_tkns *tkns, int *error)
 {
 	t_tree	*treenode;
-	int		subsh;
 
-	subsh = tkns->sbsh;
-	while (tkns && tkns->type & WHITE_SPC)
-		tkns = tkns->next;
 	treenode = logops(tkns, error);
-	if (*error && !subsh)
+	if (*error)
 	{
 		if (*error == 2)
 			printf("Syntax Error\n");
@@ -74,6 +70,8 @@ t_tree	*logops(t_tkns *tkns, int *error)
 	treenode = ft_calloc(1, sizeof(t_tree));
 	if (!treenode)
 		return (*error = 1, treenode);
+	while (tkns && tkns->type & WHITE_SPC)
+		tkns = tkns->next;
 	tmp = tkns;
 	subsh = tmp->sbsh;
 	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
