@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/03 10:03:00 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/03 10:18:08 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,13 @@ t_tree	*logops(t_tkns *tkns, int *error)
 	t_tree	*treenode;
 	int		subsh;
 
+	while (tkns && tkns->type & WHITE_SPC)
+		tkns = tkns->next;
 	if (no_delims(tkns, AND | OR, 0))
 		return (lqados(tkns, error));
 	treenode = ft_calloc(1, sizeof(t_tree));
 	if (!treenode)
 		return (*error = 1, treenode);
-	while (tkns && tkns->type & WHITE_SPC)
-		tkns = tkns->next;
 	tmp = tkns;
 	subsh = tmp->sbsh;
 	while (tmp && !(tmp->type & CPAR)) //quote dquote problem still here
