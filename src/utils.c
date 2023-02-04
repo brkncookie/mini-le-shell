@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:39:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/03 09:33:06 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/04 12:31:53 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	freetree(t_tree *tree)
 	freetree(tree->lisr);
 	while (tree->arg && tree->arg[i])
 		free(tree->arg[i++]);
+	if (tree->redr)
+		free(tree->redr);
 	free(tree->arg);
 	free(tree);
 }

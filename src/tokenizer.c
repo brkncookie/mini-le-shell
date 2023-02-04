@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:38:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/02 15:33:32 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/04 13:12:51 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_tkns	*tokenize(char *cmds)
 			tkn_link(&tkns, tkn_create(&cmds, WORD));
 	}
 	return (tkns);
-	//might need to add return value to tkn_link to return NULL if
+	//WILL need to add return value to tkn_link to return NULL in case of error
 }
 
 // int	main(int argc, char **argv)

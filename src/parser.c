@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/03 18:29:35 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/04 11:56:10 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,7 @@ t_tree	*logops(t_tkns *tkns, int *error)
 			treenode->lisr = lqados(tkns, error);
 			if (*error)
 				return (treenode);
-			while (tmp->next && (tmp->next->type & WHITE_SPC || (subsh
-						&& tmp->next->type & CPAR)))
+			while (tmp->next && (tmp->next->type & WHITE_SPC || (tmp->next->type & CPAR)))
 				tmp = tmp->next;
 			if (!tmp->next)
 				return (*error = 2, treenode);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tknizer_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/02 15:57:37 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/04 13:10:50 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,12 @@ t_tkns	*tkn_create(char **str, t_type type)
 	int			schar;
 	static int	opn = 0;
 	static int	par = 0;
+	int			i;
 
 	mchar = WORD | VAR | APPEND | HERE_DOC | OR | AND;
 	schar = PIPE | REDR_O | WHITE_SPC | REDR_I | QUOTE | DQUOTE | OPAR | CPAR;
 	tkn = ft_calloc(1, sizeof(*tkn));
+	i = 0;
 	if (!tkn)
 		return (NULL);
 	if (type & schar)
@@ -119,6 +121,9 @@ t_tkns	*tkn_create(char **str, t_type type)
 		tkn->stat = gstat(type, &opn, NULL);
 		tkn->sbsh = gstat(type, NULL, &par);
 	}
+	while (i + 1 < tkn->len)
+		if (tkn->val[i++] == ';' && tkn->val[i] == ';' && !tkn->stat)
+			return (printf("Syntax error"), NULL);
 	return (*str += tkn->len, tkn);
 }
 
