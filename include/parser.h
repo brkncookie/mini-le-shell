@@ -13,7 +13,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 # include "lexer.h"
-# include "stdio.h"
+# include <stdio.h>
 # include <stdlib.h>
 
 typedef struct s_tree
@@ -37,4 +37,3 @@ char	**get_arg(t_tkns *tkn, int *error);
 void	skip_pars(t_tkns **tkns);
 
 #endif
-

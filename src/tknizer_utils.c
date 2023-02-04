@@ -123,7 +123,7 @@ t_tkns	*tkn_create(char **str, t_type type)
 	}
 	while (i + 1 < tkn->len)
 		if (tkn->val[i++] == ';' && tkn->val[i] == ';' && !tkn->stat)
-			return (printf("Syntax error"), NULL);
+			return (printf("Syntax Error\n"), exit(0), NULL);
 	return (*str += tkn->len, tkn);
 }
 
