@@ -53,7 +53,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	{
 		cmdlst = logops(tkn->next, error);
 		skip_pars(&tkn);
-		while (tkn && (tkn->type & WHITE_SPC || tkn->type & CPAR))
+		while (tkn && (tkn->type & WHITE_SPC))
 			tkn = tkn->next;
 		if (tkn && (tkn->type & type))
 		{
@@ -63,11 +63,12 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			tmp = cmdlst->redr->limn->tkn->next;
 			while (tmp && (tmp->type & WHITE_SPC))
 				tmp = tmp->next;
-			if (tmp && !(tmp->type & (PIPE | AND | OR)))
+			if (tmp && !(tmp->type & (PIPE | AND | OR | CPAR)))
 				return (*error = 2, cmdlst);
 		}
-		else if (tkn && !(tkn->type & (PIPE | AND | OR)))
+		else if (tkn && !(tkn->type & (PIPE | AND | OR | CPAR)))
 			return (*error = 2, cmdlst);
+
 	}
 	else
 	{
@@ -121,4 +122,3 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	}
 	return (cmd);
 }
-

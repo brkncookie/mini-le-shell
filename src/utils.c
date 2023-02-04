@@ -87,7 +87,7 @@ char	**get_arg(t_tkns *tkn, int *error)
 	cnt = count_arg(tkn);
 	if(!cnt)
 		return (NULL);
-	arg = ft_calloc(cnt, sizeof(*arg));
+	arg = ft_calloc(cnt + 1, sizeof(*arg));
 	if(!arg)
 		return(*error = 1, NULL);
 	i = 0;
@@ -116,6 +116,6 @@ char	**get_arg(t_tkns *tkn, int *error)
 		if (tkn)
 			tkn = tkn->next;
 	}
+	arg[i] = NULL;
 	return (arg);
 }
-
