@@ -14,6 +14,36 @@
 #include "../include/libft.h"
 #include <stdio.h>
 
+int id_type(char *cmds)
+{
+	if (*cmds == ' ')
+		return(WHITE_SPC);
+	else if (*cmds == '\'')
+		return(QUOTE);
+	else if (*cmds == '\"')
+		return(DQUOTE);
+	else if (*cmds == '$')
+		return(VAR);
+	else if (*cmds == '(')
+		return(OPAR);
+	else if (*cmds == ')')
+		return(CPAR);
+	else if (*cmds == '|' && *(cmds + 1) == '|')
+		return(OR);
+	else if (*cmds == '|')
+		return(PIPE);
+	else if (*cmds == '&' && *(cmds + 1) == '&')
+		return(AND);
+	else if (*cmds == '>' && *(cmds + 1) == '>')
+		return(APPEND);
+	else if (*cmds == '>')
+		return(REDR_O);
+	else if (*cmds == '<' && *(cmds + 1) == '<')
+		return(HERE_DOC);
+	else if (*cmds == '<')
+		return(REDR_I);
+	return (0);
+}
 t_tkns	*tokenize(char *cmds)
 {
 	t_tkns	*tkns;
@@ -25,55 +55,33 @@ t_tkns	*tokenize(char *cmds)
 	tkns = NULL;
 	while (*cmds)
 	{
-		if (*cmds == ' ')
-			tkn_link(&tkns, tkn_create(&cmds, WHITE_SPC));
-		else if (*cmds == '\'')
-			tkn_link(&tkns, tkn_create(&cmds, QUOTE));
-		else if (*cmds == '\"')
-			tkn_link(&tkns, tkn_create(&cmds, DQUOTE));
-		else if (*cmds == '$')
-			tkn_link(&tkns, tkn_create(&cmds, VAR));
-		else if (*cmds == '(')
-			tkn_link(&tkns, tkn_create(&cmds, OPAR));
-		else if (*cmds == ')')
-			tkn_link(&tkns, tkn_create(&cmds, CPAR));
-		else if (*cmds == '|' && *(cmds + 1) == '|')
-			tkn_link(&tkns, tkn_create(&cmds, OR));
-		else if (*cmds == '|')
-			tkn_link(&tkns, tkn_create(&cmds, PIPE));
-		else if (*cmds == '&' && *(cmds + 1) == '&')
-			tkn_link(&tkns, tkn_create(&cmds, AND));
-		else if (*cmds == '>' && *(cmds + 1) == '>')
-			tkn_link(&tkns, tkn_create(&cmds, APPEND));
-		else if (*cmds == '>')
-			tkn_link(&tkns, tkn_create(&cmds, REDR_O));
-		else if (*cmds == '<' && *(cmds + 1) == '<')
-			tkn_link(&tkns, tkn_create(&cmds, HERE_DOC));
-		else if (*cmds == '<')
-			tkn_link(&tkns, tkn_create(&cmds, REDR_I));
+
+		if(*cmds == ' ' || *cmds == '\'' || *cmds == '\"' || *cmds == '$' || \
+		*cmds == '(' || *cmds == ')' || (*cmds == '|' && *(cmds + 1) == '|') || \
+		*cmds == '|' || (*cmds == '&' && *(cmds + 1) == '&') || (*cmds == '>' && *(cmds + 1) == '>') || \
+		*cmds == '>' || (*cmds == '<' && *(cmds + 1) == '<') || *cmds == '<')
+			tkn_link(&tkns, tkn_create(&cmds, id_type(cmds), NULL));
 		else
-			tkn_link(&tkns, tkn_create(&cmds, WORD));
+			tkn_link(&tkns, tkn_create(&cmds, WORD, NULL));
 	}
 	return (tkns);
-	//WILL need to add return value to tkn_link to return NULL in case of error
 }
 
-// int	main(int argc, char **argv)
-// {
-// 	t_tkns	*tkns;
-// 	int		i;
+ /* int	main(int argc, char **argv) */
+ /* { */
+ /* 	t_tkns	*tkns; */
+ /* 	int		i; */
 
-// 	(void)argc;
-// 	tkns = tokenize(argv[1]);
-// 	while (tkns)
-// 	{
-// 		i = 0;
-// 		while (i < tkns->len)
-// 			printf("%c", tkns->val[i++]);
-// 		printf("\n%d\n%d\n%d", tkns->type, tkns->stat, tkns->sbsh);
-// 		printf("\n----NEXT TOKEN----\n");
-// 		tkns = tkns->next;
-// 	}
-// 	return (0);
-// }
-
+ /* 	(void)argc; */
+ /* 	tkns = tokenize(argv[1]); */
+ /* 	while (tkns) */
+ /* 	{ */
+ /* 		i = 0; */
+ /* 		while (i < tkns->len) */
+ /* 			printf("%c", tkns->val[i++]); */
+ /* 		printf("\n%d\n%d\n%d", tkns->type, tkns->stat, tkns->sbsh); */
+ /* 		printf("\n----NEXT TOKEN----\n"); */
+ /* 		tkns = tkns->next; */
+ /* 	} */
+ /* 	return (0); */
+ /* } */

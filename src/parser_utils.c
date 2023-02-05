@@ -60,12 +60,34 @@ int	count_arg(t_tkns *tkn)
 	return (cnt);
 }
 
+char	**fill_arg(t_tkns *tkn, char **arg, int i)
+{
+	char	*str;
+	int	len;
+
+	len = 0;
+	str = tkn->val;
+	if(!(tkn->stat & (IN_DQUOTE | IN_QUOTE)))
+		len = tkn->len;
+	if (tkn->stat & (IN_DQUOTE | IN_QUOTE))
+	{
+		while (tkn && (tkn->stat & (IN_DQUOTE | IN_QUOTE)))
+		{
+			len += tkn->len;
+			tkn = tkn->next;
+		}
+	}
+	/* replace strndup with ft_strndup */
+	arg[i] = strndup(str, len);
+	if(!arg[i])
+		return(NULL);
+	return(arg);
+}
+
 char	**get_arg(t_tkns *tkn, int *error)
 {
 	char	**arg;
-	char	*str;
 	int	delim;
-	int	len;
 	int	i;
 	int	cnt;
 
@@ -79,28 +101,10 @@ char	**get_arg(t_tkns *tkn, int *error)
 	i = 0;
 	while(tkn && !(tkn->type & delim) && i < cnt)
 	{
-		len = 0;
 		if (tkn->type & (VAR | WORD) || (tkn->type & WHITE_SPC && tkn->stat & (IN_DQUOTE | IN_QUOTE)))
-		{
-			str = tkn->val;
-			if(!(tkn->stat & (IN_DQUOTE | IN_QUOTE)))
-				len = tkn->len;
-			if (tkn->stat & (IN_DQUOTE | IN_QUOTE))
-			{
-				while (tkn && (tkn->stat & (IN_DQUOTE | IN_QUOTE)))
-				{
-					len += tkn->len;
-					tkn = tkn->next;
-				}
-			}
-			/* replace strndup with ft_strndup */
-			arg[i] = strndup(str, len);
-			if(!arg[i])
-				return(*error = 1, arg);
-			i++;
-		}
-		if (tkn)
-			tkn = tkn->next;
+			if (!(fill_arg(tkn, arg, i++)))
+					return(*error = 1, arg);
+		tkn = tkn->next;
 	}
 	arg[i] = NULL;
 	return (arg);

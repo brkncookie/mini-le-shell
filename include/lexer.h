@@ -51,8 +51,8 @@ typedef struct s_tkns
 }	t_tkns;
 
 void	tkn_link(t_tkns **lst, t_tkns *tkn);
-int		is_blncd(char **str, char c);
-t_tkns	*tkn_create(char **str, t_type type);
+int	is_blncd(char **str, char c);
+t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn);
 void	freelst(t_tkns **lst);
 t_tkns	*tokenize(char *cmds);
 

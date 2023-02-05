@@ -17,28 +17,18 @@ int	is_blncd(char **str, char c)
 {
 	char	tmp;
 
+	while (c && (*str)++ && **str && **str != c)
+		if (**str == '(')
+			if (!(is_blncd(str, ')')))
+					break ;
 	if (c)
-	{
-		*str = *str + 1;
-		while (**str && **str != c)
-		{
-			if (**str == '(')
-				if (!(is_blncd(str, ')')))
-						break ;
-			(*str)++;
-		}
 		return (!(**str == 0));
-	}
 	while (**str)
 	{
 		tmp = **str;
 		if (tmp == '\'' || tmp == '\"' || tmp == '(')
-		{
-			if (tmp == '(')
-				tmp = ')';
-			if (!(is_blncd(str, tmp)))
+			if (!(is_blncd(str, (tmp == '(') + tmp)))
 				return (0);
-		}
 		else if (tmp == ')')
 			return (0);
 		(*str)++;
@@ -90,14 +80,13 @@ int	gstat(t_type type, int *opn, int *par)
 	return (0);
 }
 
-t_tkns	*tkn_create(char **str, t_type type)
+t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 {
-	t_tkns		*tkn;
-	int			mchar;
-	int			schar;
+	int		mchar;
+	int		schar;
 	static int	opn = 0;
 	static int	par = 0;
-	int			i;
+	int		i;
 
 	mchar = WORD | VAR | APPEND | HERE_DOC | OR | AND;
 	schar = PIPE | REDR_O | WHITE_SPC | REDR_I | QUOTE | DQUOTE | OPAR | CPAR;
@@ -105,22 +94,13 @@ t_tkns	*tkn_create(char **str, t_type type)
 	i = 0;
 	if (!tkn)
 		return (NULL);
-	if (type & schar)
-	{
-		tkn->val = *str;
-		tkn->len = 1;
-		tkn->type = type;
-		tkn->stat = gstat(type, &opn, NULL);
-		tkn->sbsh = gstat(type, NULL, &par);
-	}
-	else if (type & mchar)
-	{
-		tkn->val = *str;
+	tkn->val = *str;
+	if(type & mchar)
 		tkn->len = glen(*str, type);
-		tkn->type = type;
-		tkn->stat = gstat(type, &opn, NULL);
-		tkn->sbsh = gstat(type, NULL, &par);
-	}
+	else if(type & schar)
+		tkn->len = 1;
+	tkn->type = type;
+	tkn->stat = gstat(type, &opn, NULL);
 	while (i + 1 < tkn->len)
 		if (tkn->val[i++] == ';' && tkn->val[i] == ';' && !tkn->stat)
 			return (printf("Syntax Error\n"), exit(0), NULL);
