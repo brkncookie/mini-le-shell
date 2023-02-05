@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/05 16:34:49 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/05 16:36:15 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,8 @@ int	is_blncd(char **str, char c)
 		tmp = **str;
 		if (tmp == '\'' || tmp == '\"' || tmp == '(')
 		{
-		{
 			if (!(is_blncd(str, (tmp == '(') + tmp)))
 				return (0);
-		}
 		}
 		else if (tmp == ')')
 			return (0);
