@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/05 11:12:26 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/05 16:34:49 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ int	is_blncd(char **str, char c)
 		tmp = **str;
 		if (tmp == '\'' || tmp == '\"' || tmp == '(')
 		{
+		{
 			if (!(is_blncd(str, (tmp == '(') + tmp)))
 				return (0);
+		}
 		}
 		else if (tmp == ')')
 			return (0);
@@ -103,6 +105,7 @@ t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 		tkn->len = 1;
 	tkn->type = type;
 	tkn->stat = gstat(type, &opn, NULL);
+	tkn->stat = gstat(type, NULL, &par);
 	while (i + 1 < tkn->len)
 		if (tkn->val[i++] == ';' && tkn->val[i] == ';' && !tkn->stat)
 			return (printf("Syntax Error\n"), exit(0), NULL);
