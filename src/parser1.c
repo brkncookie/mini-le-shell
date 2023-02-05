@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/03 20:11:35 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/05 16:13:51 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 {
 	t_tree	*cmdlst;
 	t_tkns	*tmp;
-	int	type;
+	int		type;
 
 	tmp = NULL;
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
@@ -68,7 +68,6 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 		}
 		else if (tkn && !(tkn->type & (PIPE | AND | OR | CPAR)))
 			return (*error = 2, cmdlst);
-
 	}
 	else
 	{
@@ -92,7 +91,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	t_tkns	*tmp;
 	t_tree	*cmd;
 	t_tree	*redr;
-	int	type;
+	int		type;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	cmd = NULL;
@@ -107,7 +106,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 		if (*error)
 			return (cmd);
 	}
-	while (tmp && !(tmp->type & type) &&
+	while (tmp && !(tmp->type & type) && \
 			!(tmp->type & (PIPE | AND | OR | CPAR)))
 		tmp = tmp->next;
 	if (tmp && (tmp->type & type))

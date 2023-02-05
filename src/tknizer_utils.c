@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/04 13:10:50 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/05 11:12:26 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,17 @@ int	is_blncd(char **str, char c)
 	while (c && (*str)++ && **str && **str != c)
 		if (**str == '(')
 			if (!(is_blncd(str, ')')))
-					break ;
+				break ;
 	if (c)
 		return (!(**str == 0));
 	while (**str)
 	{
 		tmp = **str;
 		if (tmp == '\'' || tmp == '\"' || tmp == '(')
+		{
 			if (!(is_blncd(str, (tmp == '(') + tmp)))
 				return (0);
+		}
 		else if (tmp == ')')
 			return (0);
 		(*str)++;
@@ -82,11 +84,11 @@ int	gstat(t_type type, int *opn, int *par)
 
 t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 {
-	int		mchar;
-	int		schar;
+	int			mchar;
+	int			schar;
 	static int	opn = 0;
 	static int	par = 0;
-	int		i;
+	int			i;
 
 	mchar = WORD | VAR | APPEND | HERE_DOC | OR | AND;
 	schar = PIPE | REDR_O | WHITE_SPC | REDR_I | QUOTE | DQUOTE | OPAR | CPAR;
@@ -95,9 +97,9 @@ t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 	if (!tkn)
 		return (NULL);
 	tkn->val = *str;
-	if(type & mchar)
+	if (type & mchar)
 		tkn->len = glen(*str, type);
-	else if(type & schar)
+	else if (type & schar)
 		tkn->len = 1;
 	tkn->type = type;
 	tkn->stat = gstat(type, &opn, NULL);
