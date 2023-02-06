@@ -38,25 +38,6 @@ int	is_blncd(char **str, char c)
 	return (1);
 }
 
-int	glen(char *str, t_type type)
-{
-	int	len;
-	int	twochar;
-
-	len = 0;
-	twochar = APPEND | HERE_DOC | OR | AND;
-	if (type & twochar)
-		return (2);
-	while (*str && *str != '|' && *str != '<' && *str != '>' && \
-		(*str != '&' || *(str + 1) != '&') && *str != '(' && *str != ')' && \
-		*str != '\"' && *str != '\'' && !ft_isspace(*str))
-	{
-		str++;
-		len++;
-	}
-	return (len);
-}
-
 int	gstat(t_type type, int *opn, int *par)
 {
 	if (par && (type & OPAR) && !*par)
@@ -82,13 +63,42 @@ int	gstat(t_type type, int *opn, int *par)
 	return (0);
 }
 
+int	glen(char *str, t_tkns *tkn, int *opn)
+{
+	int	len;
+	int	twochar;
+	int	sopn;
+
+	len = 0;
+	sopn = *opn;
+	twochar = APPEND | HERE_DOC | OR | AND;
+	if (tkn->type & twochar && !gstat(tkn->type, opn, NULL))
+		return (2);
+	while (*str)
+	{
+		if ((*str == '|' || *str == '<' || *str == '>' || \
+		(*str == '&' && *(str + 1) == '&') || *str == '(' || *str == ')' || \
+		*str == '\"' || *str == '\'' || ft_isspace(*str)) && !gstat(id_type(str), opn, NULL))
+		{
+			gstat(id_type(str), opn, NULL);
+			break;
+		}
+		else if (str++)
+			len++;
+	}
+	if (!(tkn->type & WORD) && sopn)
+		tkn->type = WORD;
+	return (len);
+}
+
+
 t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 {
-	int			mchar;
-	int			schar;
 	static int	opn = 0;
 	static int	par = 0;
 	int			i;
+	int		mchar;
+	int		schar;
 
 	mchar = WORD | VAR | APPEND | HERE_DOC | OR | AND;
 	schar = PIPE | REDR_O | WHITE_SPC | REDR_I | QUOTE | DQUOTE | OPAR | CPAR;
@@ -97,13 +107,13 @@ t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 	if (!tkn)
 		return (NULL);
 	tkn->val = *str;
-	if (type & mchar)
-		tkn->len = glen(*str, type);
-	else if (type & schar)
-		tkn->len = 1;
 	tkn->type = type;
 	tkn->stat = gstat(type, &opn, NULL);
-	tkn->stat = gstat(type, NULL, &par);
+	tkn->sbsh = gstat(type, NULL, &par);
+	if (type & mchar || (type & schar) && tkn->stat)
+		tkn->len = glen(*str, tkn, &opn);
+	else if (type & schar)
+		tkn->len = 1;
 	while (i + 1 < tkn->len)
 		if (tkn->val[i++] == ';' && tkn->val[i] == ';' && !tkn->stat)
 			return (printf("Syntax Error\n"), exit(0), NULL);

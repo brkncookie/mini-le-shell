@@ -55,5 +55,6 @@ int		is_blncd(char **str, char c);
 t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn);
 void	freelst(t_tkns **lst);
 t_tkns	*tokenize(char *cmds);
+int	id_type(char *cmds);
 
 #endif

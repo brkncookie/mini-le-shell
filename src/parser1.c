@@ -96,6 +96,8 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	cmd = NULL;
 	tmp = tkn;
+	while(tkn && (tkn->type & (DQUOTE | QUOTE) || tkn->type & WHITE_SPC))
+		tkn = tkn->next;
 	if (!(tkn->type & type))
 	{
 		cmd = ft_calloc(1, sizeof(*cmd));

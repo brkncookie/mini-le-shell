@@ -58,7 +58,24 @@ void	print_tree(t_tree *tree, int spaces)
 	printf("\n");
 	print_tree(tree->lisr, spaces);
 }
+/* int	main(int argc, char **argv) */
+/* { */
+/*  	t_tkns	*tkns; */
+/*  	int		i; */
 
+/*  	(void)argc; */
+/*  	tkns = tokenize(argv[1]); */
+/*  	while (tkns) */
+/*  	{ */
+/*  		i = 0; */
+/*  		while (i < tkns->len) */
+/*  			printf("%c", tkns->val[i++]); */
+/*  		printf("\n%d\n%d\n%d", tkns->type, tkns->stat, tkns->sbsh); */
+/*  		printf("\n----NEXT TOKEN----\n"); */
+/*  		tkns = tkns->next; */
+/*  	} */
+/*  	return (0); */
+/* } */
 int	main(int ac, char **av)
 {
 	t_tkns	*tkns;
