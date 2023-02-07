@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/05 16:36:15 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/07 11:28:00 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	is_blncd(char **str, char c)
 	char	tmp;
 
 	while (c && (*str)++ && **str && **str != c)
-		if (**str == '(')
+		if (**str == '(' && c == ')')
 			if (!(is_blncd(str, ')')))
 				break ;
 	if (c)
@@ -110,7 +110,7 @@ t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 	tkn->type = type;
 	tkn->stat = gstat(type, &opn, NULL);
 	tkn->sbsh = gstat(type, NULL, &par);
-	if (type & mchar || (type & schar) && tkn->stat)
+	if (type & mchar || ((type & schar) && tkn->stat))
 		tkn->len = glen(*str, tkn, &opn);
 	else if (type & schar)
 		tkn->len = 1;
