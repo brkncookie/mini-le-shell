@@ -24,7 +24,7 @@ char	*ft_strndup(const char *s1, size_t l)
 	char	*p;
 
 	len = ft_strlen(s1);
-	if(len < l)
+	if (len < l)
 		l = len;
 	p = ft_calloc(l + 1, sizeof(char));
 	if (!p)

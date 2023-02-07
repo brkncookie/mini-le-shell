@@ -91,6 +91,5 @@ char	**get_arg(t_tkns *tkn, int *error)
 		}
 		tkn = tkn->next;
 	}
-	arg[i] = NULL;
-	return (arg);
+	return (arg[i] = NULL, arg);
 }

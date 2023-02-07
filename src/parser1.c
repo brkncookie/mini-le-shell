@@ -41,6 +41,32 @@ t_tree	*redir(t_tkns *tkn, int *error)
 	return (redr);
 }
 
+t_tree	*get_subsh(t_tkns *tkn, int type, int *error)
+{
+	t_tree	*cmdlst;
+	t_tkns	*tmp;
+
+	tmp = NULL;
+	cmdlst = logops(tkn->next, error);
+	skip_pars(&tkn);
+	while (tkn && (tkn->type & WHITE_SPC))
+		tkn = tkn->next;
+	if (tkn && (tkn->type & type))
+	{
+		cmdlst->redr = redir(tkn, error);
+		if (*error)
+			return (cmdlst);
+		tmp = cmdlst->redr->limn->tkn->next;
+		while (tmp && (tmp->type & WHITE_SPC))
+			tmp = tmp->next;
+		if (tmp && !(tmp->type & (PIPE | AND | OR | CPAR)))
+			return (*error = 2, cmdlst);
+	}
+	else if (tkn && !(tkn->type & (PIPE | AND | OR | CPAR)))
+		return (*error = 2, cmdlst);
+	return (cmdlst);
+}
+
 t_tree	*cmdlst(t_tkns *tkn, int *error)
 {
 	t_tree	*cmdlst;
@@ -50,25 +76,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	tmp = NULL;
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	if (tkn->type & OPAR && !(tkn->stat))
-	{
-		cmdlst = logops(tkn->next, error);
-		skip_pars(&tkn);
-		while (tkn && (tkn->type & WHITE_SPC))
-			tkn = tkn->next;
-		if (tkn && (tkn->type & type))
-		{
-			cmdlst->redr = redir(tkn, error);
-			if (*error)
-				return (cmdlst);
-			tmp = cmdlst->redr->limn->tkn->next;
-			while (tmp && (tmp->type & WHITE_SPC))
-				tmp = tmp->next;
-			if (tmp && !(tmp->type & (PIPE | AND | OR | CPAR)))
-				return (*error = 2, cmdlst);
-		}
-		else if (tkn && !(tkn->type & (PIPE | AND | OR | CPAR)))
-			return (*error = 2, cmdlst);
-	}
+		return (get_subsh(tkn, type, error));
 	else
 	{
 		cmdlst = cmd(tkn, error);
@@ -86,17 +94,34 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	return (cmdlst);
 }
 
+t_tree	*get_redr(t_tkns *tkn, int type, int *error, t_tree *cmd)
+{
+	t_tree	*redr;
+
+	while (tkn && !(tkn->type & type) && \
+			!(tkn->type & (PIPE | AND | OR | CPAR)))
+		tkn = tkn->next;
+	if (tkn && (tkn->type & type))
+	{
+		redr = redir(tkn, error);
+		if (*error)
+			return (free(cmd), redr);
+		if (cmd)
+			return (cmd->redr = redr, cmd);
+		else
+			return (redr);
+	}
+	return (cmd);
+}
+
 t_tree	*cmd(t_tkns *tkn, int *error)
 {
-	t_tkns	*tmp;
 	t_tree	*cmd;
-	t_tree	*redr;
 	int		type;
 
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	cmd = NULL;
-	tmp = tkn;
-	while(tkn && (tkn->type & (DQUOTE | QUOTE) || tkn->type & WHITE_SPC))
+	while (tkn && (tkn->type & (DQUOTE | QUOTE) || tkn->type & WHITE_SPC))
 		tkn = tkn->next;
 	if (!(tkn->type & type))
 	{
@@ -108,18 +133,5 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 		if (*error)
 			return (cmd);
 	}
-	while (tmp && !(tmp->type & type) && \
-			!(tmp->type & (PIPE | AND | OR | CPAR)))
-		tmp = tmp->next;
-	if (tmp && (tmp->type & type))
-	{
-		redr = redir(tmp, error);
-		if (*error)
-			return (free(cmd), redr);
-		if (cmd)
-			return (cmd->redr = redr, cmd);
-		else
-			return (redr);
-	}
-	return (cmd);
+	return (get_redr(tkn, type, error, cmd));
 }
