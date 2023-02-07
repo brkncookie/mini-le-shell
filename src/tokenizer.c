@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:38:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/05 11:06:54 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/07 12:44:35 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,8 @@ int	id_type(char *cmds)
 		return (DQUOTE);
 	else if (*cmds == '$')
 		return (VAR);
-	else if (*cmds == '(')
-		return (OPAR);
-	else if (*cmds == ')')
-		return (CPAR);
+	else if (*cmds == '(' || *cmds == ')')
+		return ((*cmds == '(') * OPAR + (*cmds == ')') * CPAR);
 	else if (*cmds == '|' && *(cmds + 1) == '|')
 		return (OR);
 	else if (*cmds == '|')
