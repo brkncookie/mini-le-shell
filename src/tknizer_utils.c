@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/07 11:50:56 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/07 16:45:29 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ int	glen(char *str, t_tkns *tkn, int *opn)
 
 t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 {
-	int		i;
-	int		mchar;
-	int		schar;
+	int			i;
+	int			mchar;
+	int			schar;
 	static int	opn = 0;
 	static int	par = 0;
 
