@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/05 11:08:09 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/08 12:29:15 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,23 @@ char	**get_arg(t_tkns *tkn, int *error)
 		tkn = tkn->next;
 	}
 	return (arg[i] = NULL, arg);
+}
+
+int	no_delims(t_tkns *tkns, int delim, int stop)
+{
+	while (tkns && (!(tkns->type & CPAR) || (tkns->type & CPAR && tkns->stat)))
+	{
+		if (tkns && tkns->type & OPAR)
+		{
+			skip_pars(&tkns);
+			continue ;
+		}
+		if (tkns && tkns->type & stop)
+			return (1);
+		if (tkns && tkns->type & delim && !tkns->stat)
+			return (0);
+		if (tkns)
+			tkns = tkns->next;
+	}
+	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 09:35:44 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/05 11:09:20 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/08 12:48:57 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,6 @@ int		is_blncd(char **str, char c);
 t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn);
 void	freelst(t_tkns **lst);
 t_tkns	*tokenize(char *cmds);
-int	id_type(char *cmds);
+int		id_type(char *cmds);
 
 #endif
