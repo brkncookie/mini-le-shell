@@ -4,3 +4,5 @@
 	create a function that returns a list of tokens when given a cmdblock.
 -Parser (AST generator):
 	create a function that takes the tokens list and return an AST.
+-Executor (AST Parser):
+	create a function/functions that parse the resulting AST and execute it accordingly.

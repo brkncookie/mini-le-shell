@@ -21,12 +21,12 @@
 		.a function that will be given the TYPE, and start of string to create a t_tkns node and return it and handle everything according to that type.
 		.a second function that will be given the head of the doubly-linkedlist and the node returned by the previuos function to link it to it.
 +Parser, the AST generator:
-	-the whole logic will be composed of 6 functions, from which 5 will be for each token type.
+	-the whole logic will be composed of 6 functions, from which 5 will be for some of the token type.
 	-we will pass the token list to the first main function which will call the other lower function below it and so every other fucntion will do.
 	-but also keep in mind that other lower functions can call functions above them (subshell case).
 		.givtree()
 		.logops()
-		.pipe()
+		.lqados()
 		.cmdlst()
 		.cmd()
 		.redir()
