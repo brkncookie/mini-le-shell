@@ -6,13 +6,13 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/08 12:35:44 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/08 13:40:31 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
 
-void	skip_pars(t_tkns **tkns)
+int	skip_pars(t_tkns **tkns)
 {
 	while (*tkns && !((*tkns)->type & CPAR))
 	{
@@ -22,6 +22,7 @@ void	skip_pars(t_tkns **tkns)
 	}
 	if ((*tkns) && (*tkns)->type & CPAR)
 		*tkns = (*tkns)->next;
+	return (1);
 }
 
 t_tree	*giv_tree(t_tkns *tkns, int *error)
@@ -49,31 +50,14 @@ t_tree	*logops(t_tkns *tkns, int *error)
 		tkns = tkns->next;
 	if (no_delims(tkns, AND | OR, 0))
 		return (lqados(tkns, error));
-	treenode = ft_calloc(1, sizeof(t_tree));
-	if (!treenode)
-		return (*error = 1, treenode);
 	tmp = tkns;
 	while (tmp && (!(tmp->type & CPAR) || (tmp->type & CPAR && tmp->stat)))
 	{
-		if (tmp && tmp->type & OPAR)
-		{
-			skip_pars(&tmp);
+		if (tmp && tmp->type & OPAR && skip_pars(&tmp))
 			continue ;
-		}
 		if (tmp->type & (AND | OR))
 		{
-			if (!tmp->prev || !tmp->next || (tkns->type & (AND | OR)))
-				return (*error = 2, treenode);
-			treenode->tkn = tmp;
-			treenode->lisr = lqados(tkns, error);
-			if (*error)
-				return (treenode);
-			while (tmp->next && (tmp->next->type & WHITE_SPC
-					|| (tmp->next->type & CPAR)))
-				tmp = tmp->next;
-			if (!tmp->next)
-				return (*error = 2, treenode);
-			treenode->limn = logops(tmp->next, error);
+			treenode = node_create(&tmp, tkns, error, lqados, logops);
 			if (*error)
 				return (treenode);
 			break ;
@@ -91,36 +75,38 @@ t_tree	*lqados(t_tkns *tkns, int *error)
 	tmp = tkns;
 	if (no_delims(tkns, PIPE, AND | OR))
 		return (cmdlst(tkns, error));
-	treenode = ft_calloc(1, sizeof(t_tree));
-	if (!treenode)
-		return (*error = 1, treenode);
 	while (tmp && (!(tmp->type & (CPAR | AND | OR))
 			|| (tmp->type & (CPAR | AND | OR) && tmp->stat)))
 	{
-		if (tmp && tmp->type & OPAR)
-		{
-			skip_pars(&tmp);
+		if (tmp && tmp->type & OPAR && skip_pars(&tmp))
 			continue ;
-		}
 		if (tmp->type & PIPE)
 		{
-			if (!tmp->prev || !tmp->next || (tkns->type & PIPE))
-				return (*error = 2, treenode);
-			treenode->tkn = tmp;
-			treenode->lisr = cmdlst(tkns, error);
-			if (*error)
-				return (treenode);
-			while (tmp->next && (tmp->next->type & WHITE_SPC
-					|| (tmp->next->type & CPAR)))
-				tmp = tmp->next;
-			if (!tmp->next)
-				return (*error = 2, treenode);
-			treenode->limn = lqados(tmp->next, error);
+			treenode = node_create(&tmp, tkns, error, cmdlst, lqados);
 			if (*error)
 				return (treenode);
 			break ;
 		}
 		tmp = tmp->next;
 	}
+	return (treenode);
+}
+
+t_tree	*node_create(t_tkns **tmp, t_tkns *tkns, int *error,
+		t_tree *(*lyasar)(t_tkns *, int *), t_tree *(*lyamin)(t_tkns *, int *))
+{
+	t_tree	*treenode;
+
+	treenode = ft_calloc(1, sizeof(t_tree));
+	if (!treenode)
+		return (*error = 1, treenode);
+	treenode->tkn = (*tmp);
+	treenode->lisr = lyasar(tkns, error);
+	while ((*tmp)->next && ((*tmp)->next->type & WHITE_SPC
+			|| ((*tmp)->next->type & CPAR)))
+		(*tmp) = (*tmp)->next;
+	if (!(*tmp)->next || (tkns->type & PIPE))
+		return (*error = 2, treenode);
+	treenode->limn = lyamin((*tmp)->next, error);
 	return (treenode);
 }
