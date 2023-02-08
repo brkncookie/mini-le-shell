@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/05 16:07:34 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/08 12:35:44 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,6 @@ void	skip_pars(t_tkns **tkns)
 	}
 	if ((*tkns) && (*tkns)->type & CPAR)
 		*tkns = (*tkns)->next;
-}
-
-int	no_delims(t_tkns *tkns, int delim, int stop)
-{
-	while (tkns && (!(tkns->type & CPAR) || (tkns->type & CPAR && tkns->stat)))
-	{
-		if (tkns && tkns->type & OPAR)
-		{
-			skip_pars(&tkns);
-			continue ;
-		}
-		if (tkns && tkns->type & stop)
-			return (1);
-		if (tkns && tkns->type & delim && !tkns->stat)
-			return (0);
-		if (tkns)
-			tkns = tkns->next;
-	}
-	return (1);
 }
 
 t_tree	*giv_tree(t_tkns *tkns, int *error)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tknizer_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/07 11:50:56 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/07 13:10:09 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	is_blncd(char **str, char c)
 	char	tmp;
 
 	while (c && (*str)++ && **str && **str != c)
-		if ((**str == '(' && c == ')') || (**str == '\'' && c == ')') || (**str == '\"'&& c == ')'))
+		if ((**str == '(' && c == ')') || \
+		(**str == '\'' && c == ')') || (**str == '\"' && c == ')'))
 			if (!(is_blncd(str, (**str == '(') + **str)))
 				break ;
 	if (c)
@@ -78,10 +79,11 @@ int	glen(char *str, t_tkns *tkn, int *opn)
 	{
 		if ((*str == '|' || *str == '<' || *str == '>' || \
 		(*str == '&' && *(str + 1) == '&') || *str == '(' || *str == ')' || \
-		*str == '\"' || *str == '\'' || ft_isspace(*str)) && !gstat(id_type(str), opn, NULL))
+		*str == '\"' || *str == '\'' || ft_isspace(*str)) && \
+		!gstat(id_type(str), opn, NULL))
 		{
 			gstat(id_type(str), opn, NULL);
-			break;
+			break ;
 		}
 		else if (str++)
 			len++;
@@ -91,14 +93,13 @@ int	glen(char *str, t_tkns *tkn, int *opn)
 	return (len);
 }
 
-
 t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 {
 	static int	opn = 0;
 	static int	par = 0;
 	int			i;
-	int		mchar;
-	int		schar;
+	int			mchar;
+	int			schar;
 
 	mchar = WORD | VAR | APPEND | HERE_DOC | OR | AND;
 	schar = PIPE | REDR_O | WHITE_SPC | REDR_I | QUOTE | DQUOTE | OPAR | CPAR;

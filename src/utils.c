@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:39:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/04 12:31:53 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/07 13:10:26 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strndup(const char *s1, size_t l)
 	char	*p;
 
 	len = ft_strlen(s1);
-	if(len < l)
+	if (len < l)
 		l = len;
 	p = ft_calloc(l + 1, sizeof(char));
 	if (!p)

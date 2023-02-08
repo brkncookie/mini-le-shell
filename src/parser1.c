@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/05 16:13:51 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/07 13:10:40 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	cmd = NULL;
 	tmp = tkn;
-	while(tkn && (tkn->type & (DQUOTE | QUOTE) || tkn->type & WHITE_SPC))
+	while (tkn && (tkn->type & (DQUOTE | QUOTE) || tkn->type & WHITE_SPC))
 		tkn = tkn->next;
 	if (!(tkn->type & type))
 	{
