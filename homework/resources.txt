@@ -12,3 +12,5 @@
 -Executor, AST Parser:
 	https://cs61.seas.harvard.edu/site/2019/Section7 (specifically read the "Process I/O and redirections", "Pipes" and "Putting commands together" part)
 	https://youtu.be/hgFBRZmwpSM?t=290 (a brief intro into how the shell looks for program names and how it excutes them)
+	https://youtu.be/GA2mIUQq48s?list=PLFAC320731F539902 (a brief intro into pipes/redirections)
+	https://youtu.be/GA2mIUQq48s?list=PLFAC320731F539902 (a brief intro into how command processes are spawned and how subshells work)
