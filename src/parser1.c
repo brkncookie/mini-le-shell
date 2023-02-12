@@ -6,16 +6,35 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/08 12:37:42 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/12 10:38:39 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
 
+t_tree	*get_redr(t_tkns *tkn, int type, int *error, t_tree *cmd)
+{
+	t_tree	*redr;
+
+	while (tkn && !(tkn->type & type) && \
+			!(tkn->type & (PIPE | AND | OR | CPAR)))
+		tkn = tkn->next;
+	if (tkn && (tkn->type & type))
+	{
+		redr = redir(tkn, error);
+		if (*error)
+			return (free(cmd), redr);
+		if (cmd)
+			return (cmd->redr = redr, cmd);
+		else
+			return (redr);
+	}
+	return (cmd);
+}
+
 t_tree	*redir(t_tkns *tkn, int *error)
 {
 	t_tree	*redr;
-	t_tree	*file;
 
 	redr = ft_calloc(1, sizeof(*redr));
 	if (!redr)
@@ -24,20 +43,19 @@ t_tree	*redir(t_tkns *tkn, int *error)
 	tkn = tkn->next;
 	while (tkn)
 	{
-		if (tkn->type & (WORD | VAR))
-			break ;
-		else if (tkn->type & WHITE_SPC)
+		if (tkn->type & WHITE_SPC)
 			tkn = tkn->next;
-		else
-			return (*error = 2, redr);
+		else if (tkn->type & (WORD | VAR) || !(tkn->type & (WORD | VAR)))
+			break ;
 	}
-	if (!tkn)
+	if (!tkn || !(tkn->type & (WORD | VAR)))
 		return (*error = 2, redr);
-	file = ft_calloc(1, sizeof(*file));
-	if (!file)
+	redr->limn = ft_calloc(1, sizeof(*redr));
+	if (!redr->limn)
 		return (*error = 1, redr);
-	file->tkn = tkn;
-	redr->limn = file;
+	redr->limn->tkn = tkn;
+	redr->redr = get_redr(tkn, (HERE_DOC | APPEND | REDR_O | REDR_I), \
+			error, NULL);
 	return (redr);
 }
 
@@ -92,26 +110,6 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			return (*error = 2, cmdlst);
 	}
 	return (cmdlst);
-}
-
-t_tree	*get_redr(t_tkns *tkn, int type, int *error, t_tree *cmd)
-{
-	t_tree	*redr;
-
-	while (tkn && !(tkn->type & type) && \
-			!(tkn->type & (PIPE | AND | OR | CPAR)))
-		tkn = tkn->next;
-	if (tkn && (tkn->type & type))
-	{
-		redr = redir(tkn, error);
-		if (*error)
-			return (free(cmd), redr);
-		if (cmd)
-			return (cmd->redr = redr, cmd);
-		else
-			return (redr);
-	}
-	return (cmd);
 }
 
 t_tree	*cmd(t_tkns *tkn, int *error)
