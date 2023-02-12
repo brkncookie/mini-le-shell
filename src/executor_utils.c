@@ -6,7 +6,7 @@
 /*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/12 12:28:36 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/12 16:45:44 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,47 @@ int	*rslv_redr(t_tree *redr)
 		free(file);
 	}
 	return (fds);
+}
+
+void	fre2d(char **path)
+{
+	int	i;
+
+	i = 0;
+	while (path[i])
+		free(path[i++]);
+	free(path);
+}
+
+char	*is_vld_exc(char	*path)
+{
+	char	*ppath;
+	char	**paths;
+	char	*npath;
+	int		i;
+
+	if (ft_strchr(path, '/') && *(ft_strchr(path, '/') + 1))
+		return (path);
+	ppath = getenv("PATH");
+	if (!ppath)
+		return (perror(NULL), NULL);
+	paths = ft_split(ppath, ':');
+	if (!paths)
+		return (NULL);
+	i = 0;
+	while (paths[i])
+	{
+		npath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2, \
+				sizeof(*npath));
+		if (!npath)
+			return (fre2d(paths), NULL);
+		ft_strlcpy(npath, paths[i], ft_strlen(paths[i]) + ft_strlen(path) + 2);
+		*(npath + ft_strlen(paths[i])) = '/';
+		ft_strlcat(npath, path, ft_strlen(paths[i]) + ft_strlen(path) + 2);
+		if (!access(npath, F_OK) && !access(npath, X_OK))
+			return (fre2d(paths), free(path), npath);
+		free(npath);
+		i++;
+	}
+	return (fre2d(paths), free(path), NULL);
 }
