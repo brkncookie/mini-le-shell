@@ -24,14 +24,31 @@
 	-the whole logic will be composed of 6 functions, from which 5 will be for some of the token type.
 	-we will pass the token list to the first main function which will call the other lower function below it and so every other fucntion will do.
 	-but also keep in mind that other lower functions can call functions above them (subshell case).
+
 		.givtree()
 		.logops()
 		.lqados()
 		.cmdlst()
 		.cmd()
 		.redir()
+
 	-5 of the fucntions will have a set of delimiters to break down the whole command line, each function will handle the delimters differently.
 	-the recursion that will happen here is a result of the functions treating every delimiter differently, for example:
 		.when ft_logops() is given this "ls && echo hello && echo joo" as a list of tokens, it will break it down using the '&&' token
 		 and ft_logops() is called on every token that is followed by a '&&' token and for everything that is not followed by it will
 		 be passed directly to a function below it.
++Executor, The AST Parser:
+	-the executor will walk through the AST in a similar fashion to how the parser generated the AST, fork()'ing and execve()'ing each command accordingly.
+	-we will have five main functions from which two will be recursive functions:
+
+		.rslv_redr(), this function will resolve the redirection, and return the needed data for that matter.
+		.executor(), this will be the function that we call first to trigger other lower functions and might also use it to handle/manage errors.
+		.do_orand(), handles the AND/OR, it checks if the node passed to it is an OR/AND and then call itself again on both the right/left of that node.
+		.do_lqados(), handles the PIPE, it will be called if do_orand doesn't get the OR/AND as the root node and it will work in a similar fashion.
+		.do_cmd(), handles a CMD which has no left nor right nodes, fork()'ing and execve()'ing for the CMD and also handling redirections for that CMD.
+
+	-now for the execution we have to keep track of the exit status of every command process so the 3 do_xxxx() functions will share the exit status through
+	 their arguments.
+	-finally for the redirection, it will be resolved by the rslv_redr(), and it will be called by either one of these 3 do_xxxx() functions or by all of them
+	 based on where the redirection is (whethere for a whole subshell or a single command), and the resolved redirection will also be shared between the 3 do_xxxx()
+	 functions using their arguments.
