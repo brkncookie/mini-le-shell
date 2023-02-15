@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/15 15:07:54 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/15 15:07:55 by alemsafi         ###   ########.fr       */
+/*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
+/*   Updated: 2023/02/15 15:58:27 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	do_cmd(t_tree *cmdtree, int	*redr_fds)
 	pid = fork();
 	if (!pid)
 	{
-		(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
+		if (redr_fds)
+			(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
 		prgm = is_vld_exc(prgm);
 		if (!prgm)
 			exit(EXIT_FAILURE);

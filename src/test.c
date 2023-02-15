@@ -6,13 +6,14 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/15 15:23:11 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/15 16:02:33 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/lexer.h"
 #include "../include/libft.h"
 #include "../include/parser.h"
+#include "../include/executor.h"
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
