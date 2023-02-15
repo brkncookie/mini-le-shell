@@ -6,13 +6,14 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/05 15:57:36 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/15 15:30:44 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/lexer.h"
 #include "../include/libft.h"
 #include "../include/parser.h"
+#include "../include/executor.h"
 
 void	print_tree(t_tree *tree, int spaces)
 {
@@ -88,6 +89,7 @@ int	main(int ac, char **av)
 	if (!tkns)
 		return (0);
 	tree = giv_tree(tkns, &error);
-	print_tree(tree, 0);
+	/* print_tree(tree, 0); */
+	executor(tree);
 	return (0);
 }

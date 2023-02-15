@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
+/*   Updated: 2023/02/15 15:53:53 by mnadir           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/executor.h"
 
 int	do_cmd(t_tree *cmdtree, int	*redr_fds)
@@ -12,7 +24,8 @@ int	do_cmd(t_tree *cmdtree, int	*redr_fds)
 	pid = fork();
 	if (!pid)
 	{
-		(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
+		if (redr_fds)
+			(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
 		prgm = is_vld_exc(prgm);
 		if (!prgm)
 			exit(EXIT_FAILURE);
