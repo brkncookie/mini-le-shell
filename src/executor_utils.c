@@ -12,12 +12,14 @@
 
 #include "../include/executor.h"
 
-int	*rslv_redr(t_tree *redr)
+int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 {
 	int		*fds;
 	char	*file;
 
 	fds = ft_calloc(2, sizeof(*fds));
+	fds[0] = 0;
+	fds[1] = 1;
 	while (redr)
 	{
 		file = ft_strndup(redr->limn->tkn->val, redr->limn->tkn->len);
@@ -33,6 +35,16 @@ int	*rslv_redr(t_tree *redr)
 			return (free(fds), free(file), perror(NULL), NULL);
 		redr = redr->redr;
 		free(file);
+	}
+	if (redr_fds)
+	{
+		if (!limn && fds[0] != 0)
+			redr_fds[0] = fds[0];
+		if (limn && fds[1] != 1)
+			redr_fds[1] = fds[0];
+		if (cmd && fds[1] != 1)
+			redr_fds[1] = fds[0];
+		return (free(fds), redr_fds);
 	}
 	return (fds);
 }
@@ -77,5 +89,5 @@ char	*is_vld_exc(char	*path)
 		free(npath);
 		i++;
 	}
-	return (fre2d(paths), free(path), NULL);
+	return (fre2d(paths), free(path), printf("Not a valid executable\n"), NULL);
 }

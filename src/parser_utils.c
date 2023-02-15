@@ -76,11 +76,11 @@ char	**get_arg(t_tkns *tkn, int *error)
 	cnt = count_arg(tkn);
 	if (!cnt)
 		return (NULL);
-	arg = ft_calloc(cnt + 1, sizeof(*arg));
+	arg = ft_calloc(cnt + 2, sizeof(*arg));
 	if (!arg)
 		return (*error = 1, NULL);
 	i = 0;
-	while (tkn && !(tkn->type & delim) && i < cnt)
+	while (tkn && !(tkn->type & delim) && i < cnt + 1)
 	{
 		if (tkn->type & (VAR | WORD))
 		{

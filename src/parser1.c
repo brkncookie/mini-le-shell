@@ -126,8 +126,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 		cmd = ft_calloc(1, sizeof(*cmd));
 		if (!cmd)
 			return (*error = 1, cmd);
-		cmd->tkn = tkn;
-		cmd->arg = get_arg(tkn->next, error);
+		cmd->arg = get_arg(cmd->tkn = tkn, error);
 		if (*error)
 			return (cmd);
 	}

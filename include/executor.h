@@ -14,5 +14,10 @@
 # define EXECUTOR_H
 # include "parser.h"
 # include <fcntl.h>
+# include <sys/wait.h>
+
+int		do_logops(t_tree *cmdtree, int	*redr_fds);
+int		*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd);
+char	*is_vld_exc(char *path);
 
 #endif

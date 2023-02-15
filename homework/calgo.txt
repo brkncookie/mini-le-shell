@@ -43,12 +43,12 @@
 
 		.rslv_redr(), this function will resolve the redirection, and return the needed data for that matter.
 		.executor(), this will be the function that we call first to trigger other lower functions and might also use it to handle/manage errors.
-		.do_orand(), handles the AND/OR, it checks if the node passed to it is an OR/AND and then call itself again on both the right/left of that node.
-		.do_lqados(), handles the PIPE, it will be called if do_orand doesn't get the OR/AND as the root node and it will work in a similar fashion.
+		.do_logops(), handles the AND/OR, it checks if the node passed to it is an OR/AND and then call itself again on both the right/left of that node.
+		.do_lqados(), handles the PIPE, it will be called if do_logops doesn't get the OR/AND as the root node and it will work in a similar fashion.
 		.do_cmd(), handles a CMD which has no left nor right nodes, fork()'ing and execve()'ing for the CMD and also handling redirections for that CMD.
 
 	-now for the execution we have to keep track of the exit status of every command process so the 3 do_xxxx() functions will share the exit status through
-	 their arguments.
+	 their return value.
 	-finally for the redirection, it will be resolved by the rslv_redr(), and it will be called by either one of these 3 do_xxxx() functions or by all of them
 	 based on where the redirection is (whethere for a whole subshell or a single command), and the resolved redirection will also be shared between the 3 do_xxxx()
 	 functions using their arguments.
