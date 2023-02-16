@@ -11,13 +11,16 @@
 /* ************************************************************************** */
 
 #include "../include/executor.h"
+#include <sys/errno.h>
 
 int	do_cmd(t_tree *cmdtree, int	*redr_fds)
 {
 	int		r_val;
 	int		pid;
 	char	*prgm;
-
+	
+	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND)))
+		return(free(rslv_redr(cmdtree, redr_fds, 0, 1)), errno);
 	prgm = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);

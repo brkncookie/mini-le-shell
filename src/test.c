@@ -82,12 +82,12 @@ void	print_tree(t_tree *tree, int spaces)
 /*  	return (0); */
 /* } */
 
-int	main(void)
-{
-	t_tkns	*tkns;
-	t_tree	*tree;
-	int		error;
-	char	*cmd_buf;
+/* int	main(void) */
+/* { */
+/* 	t_tkns	*tkns; */
+/* 	t_tree	*tree; */
+/* 	int		error; */
+/* 	char	*cmd_buf; */
 
 	while (1)
 	{
