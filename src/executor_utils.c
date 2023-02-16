@@ -41,9 +41,9 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 		if (!limn && fds[0] != 0)
 			redr_fds[0] = fds[0];
 		if (limn && fds[1] != 1)
-			redr_fds[1] = fds[0];
+			redr_fds[1] = fds[1];
 		if (cmd && fds[1] != 1)
-			redr_fds[1] = fds[0];
+			redr_fds[1] = fds[1];
 		return (free(fds), redr_fds);
 	}
 	return (fds);

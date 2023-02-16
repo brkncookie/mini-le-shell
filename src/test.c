@@ -105,3 +105,18 @@ int	main(void)
 	}
 	return (0);
 }
+
+/* int	main(int ac, char **av) */
+/* { */
+/* 	t_tkns	*tkns; */
+/* 	t_tree	*tree; */
+/* 	int		error; */
+/* 	(void)ac; */
+/* 	error = 0; */
+/* 	tkns = tokenize(av[1]); */
+/* 	if (!tkns) */
+/* 		return (0); */
+/* 	tree = giv_tree(tkns, &error); */
+/* 	executor(tree); */
+/* 	return (0); */
+/* } */
