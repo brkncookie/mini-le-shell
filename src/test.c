@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/15 16:02:33 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/02/17 11:37:47 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,34 +89,34 @@ void	print_tree(t_tree *tree, int spaces)
 /* 	int		error; */
 /* 	char	*cmd_buf; */
 
-	while (1)
-	{
-		error = 0;
-		cmd_buf = readline("Mini-le-Shell> ");
-		if (!(ft_strncmp(cmd_buf, "exit", 4)))
-			break ;
-		if (ft_strlen(cmd_buf) > 0)
-			add_history(cmd_buf);
-		tkns = tokenize(cmd_buf);
-		if (!tkns)
-			continue ;
-		tree = giv_tree(tkns, &error);
-		print_tree(tree, 0);
-	}
-	return (0);
-}
-
-/* int	main(int ac, char **av) */
-/* { */
-/* 	t_tkns	*tkns; */
-/* 	t_tree	*tree; */
-/* 	int		error; */
-/* 	(void)ac; */
-/* 	error = 0; */
-/* 	tkns = tokenize(av[1]); */
-/* 	if (!tkns) */
-/* 		return (0); */
-/* 	tree = giv_tree(tkns, &error); */
-/* 	executor(tree); */
+/* 	while (1) */
+/* 	{ */
+/* 		error = 0; */
+/* 		cmd_buf = readline("Mini-le-Shell> "); */
+/* 		if (!(ft_strncmp(cmd_buf, "exit", 4))) */
+/* 			break ; */
+/* 		if (ft_strlen(cmd_buf) > 0) */
+/* 			add_history(cmd_buf); */
+/* 		tkns = tokenize(cmd_buf); */
+/* 		if (!tkns) */
+/* 			continue ; */
+/* 		tree = giv_tree(tkns, &error); */
+/* 		print_tree(tree, 0); */
+/* 	} */
 /* 	return (0); */
 /* } */
+
+int	main(int ac, char **av)
+{
+	t_tkns	*tkns;
+	t_tree	*tree;
+	int		error;
+	(void)ac;
+	error = 0;
+	tkns = tokenize(av[1]);
+	if (!tkns)
+		return (0);
+	tree = giv_tree(tkns, &error);
+	executor(tree);
+	return (0);
+}

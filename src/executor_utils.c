@@ -6,11 +6,26 @@
 /*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/12 16:45:44 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/17 12:06:35 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
+void pipe_close(int *pipefd, int limn)
+{
+	struct stat read;
+	struct stat write;
+
+	if (!pipefd || !limn)
+		return ;
+	fstat(pipefd[0], &read);
+	fstat(pipefd[1], &write);
+
+	if((read.st_mode & S_IFMT) == S_IFIFO)
+		close(pipefd[0]);
+	if((write.st_mode & S_IFMT) == S_IFIFO)
+		close(pipefd[1]);
+}
 
 int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 {
@@ -28,9 +43,9 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 		if (redr->tkn->type & REDR_I)
 			fds[0] = open(file, O_RDONLY);
 		else if (redr->tkn->type & REDR_O)
-			fds[1] = open(file, O_WRONLY | O_CREAT);
+			fds[1] = open(file, O_WRONLY | O_CREAT, 0666);
 		else if (redr->tkn->type & APPEND)
-			fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND);
+			fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		if (fds[1] < 0 || fds[0] < 0)
 			return (free(fds), free(file), perror(NULL), NULL);
 		redr = redr->redr;
