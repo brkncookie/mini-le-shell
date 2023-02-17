@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/12 10:38:39 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/17 15:04:45 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,10 @@ t_tree	*get_subsh(t_tkns *tkn, int type, int *error)
 		tmp = cmdlst->redr->limn->tkn->next;
 		while (tmp && (tmp->type & WHITE_SPC))
 			tmp = tmp->next;
-		if (tmp && !(tmp->type & (PIPE | AND | OR | CPAR)))
+		if (tmp && !(tmp->type & (PIPE | AND | OR | CPAR | type)))
 			return (*error = 2, cmdlst);
 	}
-	else if (tkn && !(tkn->type & (PIPE | AND | OR | CPAR)))
+	else if (tkn && !(tkn->type & (PIPE | AND | OR | CPAR | type)))
 		return (*error = 2, cmdlst);
 	return (cmdlst);
 }

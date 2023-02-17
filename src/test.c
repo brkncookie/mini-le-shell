@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/17 11:37:47 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/17 14:59:00 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ int	main(int ac, char **av)
 	if (!tkns)
 		return (0);
 	tree = giv_tree(tkns, &error);
+	if (!tree)
+		return (1);
 	executor(tree);
 	return (0);
 }
