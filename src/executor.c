@@ -3,25 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/17 12:09:26 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/25 18:03:50 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 #include <sys/errno.h>
 
+int	do_builtin(t_tree *cmdtree)
+{
+	if (!ft_strncmp(cmdtree->tkn->val, "echo", 4))
+		return (1, do_echo(cmdtree));
+	else if (!ft_strncmp(cmdtree->tkn->val, "cd", 2))
+		return (1, do_cd(cmdtree));
+	else if (!ft_strncmp(cmdtree->tkn->val, "pwd", 3))
+		return (1, do_pwd(cmdtree));
+	// else if (!ft_strncmp(cmdtree->tkn->val, "env", 4))
+	// 	return (1, do_env(cmdtree));
+	// else if (!ft_strncmp(cmdtree->tkn->val, "export", 7))
+	// 	return (1, do_export(cmdtree));
+	// else if (!ft_strncmp(cmdtree->tkn->val, "unset", 6))
+	// 	return (1, do_unset(cmdtree));
+	else
+		return (0);
+}
+
 int	do_cmd(t_tree *cmdtree, int	*redr_fds, int limn)
 {
 	int		r_val;
 	int		pid;
 	char	*prgm;
-	
+
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND)))
-		return(free(rslv_redr(cmdtree, redr_fds, 0, 1)), errno);
+		return (free(rslv_redr(cmdtree, redr_fds, 0, 1)), errno);
 	prgm = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
+	// if (do_builtin(cmdtree))
+	// 	return (0);
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
 	pid = fork();

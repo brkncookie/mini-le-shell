@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/17 14:59:00 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/25 17:51:18 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,43 +82,47 @@ void	print_tree(t_tree *tree, int spaces)
 /*  	return (0); */
 /* } */
 
-/* int	main(void) */
-/* { */
-/* 	t_tkns	*tkns; */
-/* 	t_tree	*tree; */
-/* 	int		error; */
-/* 	char	*cmd_buf; */
-
-/* 	while (1) */
-/* 	{ */
-/* 		error = 0; */
-/* 		cmd_buf = readline("Mini-le-Shell> "); */
-/* 		if (!(ft_strncmp(cmd_buf, "exit", 4))) */
-/* 			break ; */
-/* 		if (ft_strlen(cmd_buf) > 0) */
-/* 			add_history(cmd_buf); */
-/* 		tkns = tokenize(cmd_buf); */
-/* 		if (!tkns) */
-/* 			continue ; */
-/* 		tree = giv_tree(tkns, &error); */
-/* 		print_tree(tree, 0); */
-/* 	} */
-/* 	return (0); */
-/* } */
-
-int	main(int ac, char **av)
+int	main(void)
 {
 	t_tkns	*tkns;
 	t_tree	*tree;
 	int		error;
-	(void)ac;
-	error = 0;
-	tkns = tokenize(av[1]);
-	if (!tkns)
-		return (0);
-	tree = giv_tree(tkns, &error);
-	if (!tree)
-		return (1);
-	executor(tree);
+	char	*cmd_buf;
+	char	*pwd;
+
+	while (1)
+	{
+		pwd = getcwd(0, 500);
+		ft_strlcat(pwd, "> ", ft_strlen(pwd) + 3);
+		error = 0;
+		cmd_buf = readline(pwd);
+		if (!(ft_strncmp(cmd_buf, "exit", 4)))
+			break ;
+		if (ft_strlen(cmd_buf) > 0)
+			add_history(cmd_buf);
+		tkns = tokenize(cmd_buf);
+		if (!tkns)
+			continue ;
+		tree = giv_tree(tkns, &error);
+		executor(tree);
+		free(pwd);
+	}
 	return (0);
 }
+
+// int	main(int ac, char **av)
+// {
+// 	t_tkns	*tkns;
+// 	t_tree	*tree;
+// 	int		error;
+// 	(void)ac;
+// 	error = 0;
+// 	tkns = tokenize(av[1]);
+// 	if (!tkns)
+// 		return (0);
+// 	tree = giv_tree(tkns, &error);
+// 	if (!tree)
+// 		return (1);
+// 	executor(tree);
+// 	return (0);
+// }

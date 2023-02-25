@@ -3,27 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/17 12:06:35 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/02/25 11:24:01 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
-void pipe_close(int *pipefd, int limn)
+
+void	pipe_close(int *pipefd, int limn)
 {
-	struct stat read;
-	struct stat write;
+	struct stat	read;
+	struct stat	write;
 
 	if (!pipefd || !limn)
 		return ;
 	fstat(pipefd[0], &read);
 	fstat(pipefd[1], &write);
-
-	if((read.st_mode & S_IFMT) == S_IFIFO)
+	if ((read.st_mode & S_IFMT) == S_IFIFO)
 		close(pipefd[0]);
-	if((write.st_mode & S_IFMT) == S_IFIFO)
+	if ((write.st_mode & S_IFMT) == S_IFIFO)
 		close(pipefd[1]);
 }
 
