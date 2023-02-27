@@ -6,17 +6,17 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/25 17:51:18 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/27 15:11:15 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/lexer.h"
-#include "../include/libft.h"
-#include "../include/parser.h"
+#include <signal.h>
 #include "../include/executor.h"
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+
+int	g_flag = 0;
 
 void	print_tree(t_tree *tree, int spaces)
 {
@@ -82,7 +82,26 @@ void	print_tree(t_tree *tree, int spaces)
 /*  	return (0); */
 /* } */
 
-int	main(void)
+void	action(int sig)
+{
+	char	*pwd;
+
+	pwd = getcwd(0, 500);
+	ft_strlcat(pwd, "> ", ft_strlen(pwd) + 3);
+	if (sig == SIGQUIT)
+	{
+		g_flag = 127;
+		return ;
+	}
+	if (sig == SIGINT)
+	{
+		printf("\n%s", pwd);
+		g_flag = 1;
+		return ;
+	}
+}
+
+int	main(int ac, char **av, char **envp)
 {
 	t_tkns	*tkns;
 	t_tree	*tree;
@@ -90,22 +109,30 @@ int	main(void)
 	char	*cmd_buf;
 	char	*pwd;
 
+	signal(SIGQUIT, action);
+	signal(SIGINT, action);
+	(void)ac;
+	(void)av;
 	while (1)
 	{
 		pwd = getcwd(0, 500);
 		ft_strlcat(pwd, "> ", ft_strlen(pwd) + 3);
 		error = 0;
 		cmd_buf = readline(pwd);
-		if (!(ft_strncmp(cmd_buf, "exit", 4)))
+		free(pwd);
+		if (!cmd_buf || !(ft_strncmp(cmd_buf, "exit", 5)))
+		{
+			printf("exit\n");
 			break ;
+		}
 		if (ft_strlen(cmd_buf) > 0)
 			add_history(cmd_buf);
 		tkns = tokenize(cmd_buf);
 		if (!tkns)
 			continue ;
 		tree = giv_tree(tkns, &error);
-		executor(tree);
-		free(pwd);
+		executor(tree, envp);
+		free(cmd_buf);
 	}
 	return (0);
 }
