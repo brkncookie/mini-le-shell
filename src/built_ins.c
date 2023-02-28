@@ -10,21 +10,16 @@ int	dir_exists(const char *path)
 	return (0);
 }
 
-int	do_echo(t_tree *cmdtree, int *redr_fds)
+void	do_echo(t_tree *cmdtree)
 {
 	int	i;
-	int	in;
-	int	out;
 
 	i = 1;
-	if (redr_fds)
-	{
-		in = dup(0);
-		out = dup(1);
-		(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
-	}
 	if (!cmdtree->arg)
-		return (printf("\n"), 0);
+	{
+		printf("\n");
+		return ;
+	}
 	while (cmdtree->arg[i])
 	{
 		if (i == 1 && !ft_strncmp(cmdtree->arg[i], "-n", 3) && i++)
@@ -35,30 +30,18 @@ int	do_echo(t_tree *cmdtree, int *redr_fds)
 	}
 	if (ft_strncmp(cmdtree->arg[1], "-n", 3))
 		printf("\n");
-	(dup2(in, 0), dup2(out, 1));
-	return (0);
 }
 
-int	do_pwd(t_tree *cmdtree, int *redr_fds)
+void	do_pwd(t_tree *cmdtree)
 {
 	char	*pwd;
-	int		in;
-	int		out;
 
-	if (redr_fds)
-	{
-		in = dup(0);
-		out = dup(1);
-		(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
-	}
 	pwd = getcwd(0, 500);
 	printf("%s\n", pwd);
 	free(pwd);
-	(dup2(in, 0), dup2(out, 1));
-	return (0);
 }
 
-int	do_cd(t_tree *cmdtree, int *redr_fds)
+void	do_cd(t_tree *cmdtree)
 {
 	if (!cmdtree->arg[1])
 		chdir(getenv("HOME"));
@@ -71,10 +54,9 @@ int	do_cd(t_tree *cmdtree, int *redr_fds)
 		else
 			printf("cd: invalid directory path\n");
 	}
-	return (0);
 }
 
-int	do_env(t_tree *cmdtree, int *redr_fds, char **envp)
+void	do_env(t_tree *cmdtree, t_list *vars_lst)
 {
 	int	i;
 
@@ -82,5 +64,4 @@ int	do_env(t_tree *cmdtree, int *redr_fds, char **envp)
 	if (!cmdtree->arg[1])
 		while (envp[i])
 			printf("%s\n", envp[i++]);
-	return (0);
 }

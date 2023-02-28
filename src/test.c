@@ -6,81 +6,17 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/27 15:11:15 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/02/28 18:51:16 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
 #include "../include/executor.h"
-#include <stdio.h>
-#include <readline/readline.h>
 #include <readline/history.h>
+#include <readline/readline.h>
+#include <signal.h>
+#include <stdio.h>
 
-int	g_flag = 0;
-
-void	print_tree(t_tree *tree, int spaces)
-{
-	int	i;
-	int	j;
-
-	if (!tree || !tree->tkn)
-		return ;
-	spaces += 10;
-	print_tree(tree->limn, spaces);
-	i = 0;
-	while (i < spaces)
-	{
-		printf(" ");
-		i++;
-	}
-	i = 0;
-	while (i < tree->tkn->len)
-		printf("%c", tree->tkn->val[i++]);
-	i = 0;
-	if (tree->redr)
-	{
-		printf(" ");
-		while (i < tree->redr->tkn->len)
-			printf("%c", tree->redr->tkn->val[i++]);
-		i = 0;
-		printf(" ");
-		while (i < tree->redr->limn->tkn->len)
-			printf("%c", tree->redr->limn->tkn->val[i++]);
-	}
-	i = 1;
-	if (!tree->limn && !tree->lisr)
-	{
-		while (tree->arg && tree->arg[i])
-		{
-			j = 0;
-			printf(" ");
-			while (tree->arg[i][j])
-				printf("%c", tree->arg[i][j++]);
-			i++;
-		}
-	}
-	printf("\n");
-	print_tree(tree->lisr, spaces);
-}
-
-/* int	main(int argc, char **argv) */
-/* { */
-/*  	t_tkns	*tkns; */
-/*  	int		i; */
-
-/*  	(void)argc; */
-/*  	tkns = tokenize(argv[1]); */
-/*  	while (tkns) */
-/*  	{ */
-/*  		i = 0; */
-/*  		while (i < tkns->len) */
-/*  			printf("%c", tkns->val[i++]); */
-/*  		printf("\n%d\n%d\n%d", tkns->type, tkns->stat, tkns->sbsh); */
-/*  		printf("\n----NEXT TOKEN----\n"); */
-/*  		tkns = tkns->next; */
-/*  	} */
-/*  	return (0); */
-/* } */
+int		g_flag = 0;
 
 void	action(int sig)
 {
@@ -101,13 +37,63 @@ void	action(int sig)
 	}
 }
 
+int	ft_strchrr(const char *s, int c)
+{
+	char	*str;
+	int		i;
+
+	str = (char *)s;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == (unsigned char)c)
+			return (i);
+		i++;
+	}
+	if (c == '\0')
+		return (i);
+	return (0);
+}
+
+t_list	*get_vars(char **envp)
+{
+	t_var	*var;
+	t_list	*vars_lst;
+	int		i;
+	int		equ;
+
+	i = 0;
+	while (envp[i])
+	{
+		var = malloc(sizeof(t_var));
+		// if (!var)
+		// 	return (freelst(vars_lst), NULL);
+		equ = ft_strchrr(envp[i], '=');
+		var->key = ft_substr(envp[i], 0, equ);
+		var->val = ft_substr(envp[i], equ + 1, ft_strlen(envp[i]) - equ - 1);
+		ft_lstadd_back(&vars_lst, ft_lstnew(var));
+		i++;
+	}
+	return (vars_lst);
+}
+
+void	prompt(char **cmd_buf, int *error)
+{
+	char	*pwd;
+
+	pwd = getcwd(0, 500);
+	ft_strlcat(pwd, "> ", ft_strlen(pwd) + 3);
+	*error = 0;
+	*cmd_buf = readline(pwd);
+	free(pwd);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_tkns	*tkns;
 	t_tree	*tree;
 	int		error;
 	char	*cmd_buf;
-	char	*pwd;
 
 	signal(SIGQUIT, action);
 	signal(SIGINT, action);
@@ -115,16 +101,9 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	while (1)
 	{
-		pwd = getcwd(0, 500);
-		ft_strlcat(pwd, "> ", ft_strlen(pwd) + 3);
-		error = 0;
-		cmd_buf = readline(pwd);
-		free(pwd);
-		if (!cmd_buf || !(ft_strncmp(cmd_buf, "exit", 5)))
-		{
-			printf("exit\n");
-			break ;
-		}
+		prompt(&cmd_buf, &error);
+		if (!cmd_buf)
+			do_exit("0", 1);
 		if (ft_strlen(cmd_buf) > 0)
 			add_history(cmd_buf);
 		tkns = tokenize(cmd_buf);
@@ -136,20 +115,3 @@ int	main(int ac, char **av, char **envp)
 	}
 	return (0);
 }
-
-// int	main(int ac, char **av)
-// {
-// 	t_tkns	*tkns;
-// 	t_tree	*tree;
-// 	int		error;
-// 	(void)ac;
-// 	error = 0;
-// 	tkns = tokenize(av[1]);
-// 	if (!tkns)
-// 		return (0);
-// 	tree = giv_tree(tkns, &error);
-// 	if (!tree)
-// 		return (1);
-// 	executor(tree);
-// 	return (0);
-// }
