@@ -30,6 +30,7 @@ void	do_echo(t_tree *cmdtree)
 	}
 	if (ft_strncmp(cmdtree->arg[1], "-n", 3))
 		printf("\n");
+	g_flag = EXIT_SUCCESS;
 }
 
 void	do_pwd(t_tree *cmdtree)
@@ -39,29 +40,46 @@ void	do_pwd(t_tree *cmdtree)
 	pwd = getcwd(0, 500);
 	printf("%s\n", pwd);
 	free(pwd);
+	g_flag = EXIT_SUCCESS;
 }
 
 void	do_cd(t_tree *cmdtree)
 {
-	if (!cmdtree->arg[1])
+	g_flag = 0;
+	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2))
 		chdir(getenv("HOME"));
 	else if (cmdtree->arg[2])
+	{
+		g_flag = 1;
 		printf("cd: too many arguments\n");
+	}
 	else
 	{
 		if (dir_exists(cmdtree->arg[1]))
 			chdir(cmdtree->arg[1]);
 		else
+		{
+			g_flag = 1;
 			printf("cd: invalid directory path\n");
+		}
 	}
 }
 
-void	do_env(t_tree *cmdtree, t_list *vars_lst)
+void	do_env(t_tree *cmdtree, t_list **vars_lst)
 {
-	int	i;
+	t_list	*tmp;
 
-	i = 0;
+	tmp = *vars_lst;
 	if (!cmdtree->arg[1])
-		while (envp[i])
-			printf("%s\n", envp[i++]);
+	{
+		while (tmp)
+		{
+			printf("%s=%s\n", ((t_var *)tmp->content)->key,
+				((t_var *)tmp->content)->val);
+			tmp = tmp->next;
+		}
+		g_flag = 0;
+	}
+	else
+		g_flag = 127;
 }

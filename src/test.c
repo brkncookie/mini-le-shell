@@ -6,17 +6,13 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/28 18:51:16 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/10 12:27:51 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
-#include <readline/history.h>
-#include <readline/readline.h>
 #include <signal.h>
 #include <stdio.h>
-
-int		g_flag = 0;
 
 void	action(int sig)
 {
@@ -63,6 +59,7 @@ t_list	*get_vars(char **envp)
 	int		equ;
 
 	i = 0;
+	vars_lst = NULL;
 	while (envp[i])
 	{
 		var = malloc(sizeof(t_var));
@@ -94,7 +91,9 @@ int	main(int ac, char **av, char **envp)
 	t_tree	*tree;
 	int		error;
 	char	*cmd_buf;
+	t_list	*vars_lst;
 
+	vars_lst = get_vars(envp);
 	signal(SIGQUIT, action);
 	signal(SIGINT, action);
 	(void)ac;
@@ -103,14 +102,14 @@ int	main(int ac, char **av, char **envp)
 	{
 		prompt(&cmd_buf, &error);
 		if (!cmd_buf)
-			do_exit("0", 1);
+			do_exit("130", 1);
 		if (ft_strlen(cmd_buf) > 0)
 			add_history(cmd_buf);
 		tkns = tokenize(cmd_buf);
 		if (!tkns)
 			continue ;
 		tree = giv_tree(tkns, &error);
-		executor(tree, envp);
+		executor(tree, &vars_lst);
 		free(cmd_buf);
 	}
 	return (0);

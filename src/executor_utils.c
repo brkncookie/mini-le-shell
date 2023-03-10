@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/25 11:24:01 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/10 16:33:13 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 {
 	int		*fds;
 	char	*file;
+	char	*buf;
 
 	fds = ft_calloc(2, sizeof(*fds));
 	fds[0] = 0;
@@ -46,6 +47,20 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 			fds[1] = open(file, O_WRONLY | O_CREAT, 0666);
 		else if (redr->tkn->type & APPEND)
 			fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+		else if (redr->tkn->type & HERE_DOC)
+		{
+			if (pipe(fds))
+				perror("pipe");
+			while (1)
+			{
+				buf = readline("> ");
+				if (!buf || !ft_strncmp(buf, file, ft_strlen(file) + 1))
+					break ;
+				write(fds[1], buf, ft_strlen(buf));
+				write(fds[1], "\n", 1);
+			}
+			close(fds[1]);
+		}
 		if (fds[1] < 0 || fds[0] < 0)
 			return (free(fds), free(file), perror(NULL), NULL);
 		redr = redr->redr;

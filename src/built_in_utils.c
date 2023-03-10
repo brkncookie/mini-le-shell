@@ -36,7 +36,7 @@ void	*reallocate(void *ptr, int oldsize, int size)
 {
 	void	*newptr;
 
-	newptr = malloc(size);
+	newptr = ft_calloc(1, size);
 	newptr = ft_memcpy(newptr, ptr, oldsize);
 	free(ptr);
 	return (newptr);
