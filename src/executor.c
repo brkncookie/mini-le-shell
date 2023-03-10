@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/10 16:56:49 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/10 17:02:03 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,11 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	char	**envs;
 
 	envs = get_dblarr(vars_lst);
-	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND)))
+	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (free(rslv_redr(cmdtree, redr_fds, 0, 1)), errno);
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
-	if (do_builtin(cmdtree, redr_fds, vars_lst, &r_val) || !cmdtree->arg)
+	if (do_builtin(cmdtree, redr_fds, vars_lst, &r_val))
 		return (r_val);
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	pid = fork();
