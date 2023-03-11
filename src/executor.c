@@ -6,13 +6,12 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/11 15:31:01 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 17:48:40 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
-
-extern int	g_flag;
+#include "../include/global.h"
 
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
@@ -32,7 +31,7 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 		if (cmdtree->arg[i][0] == '$')
 		{
 			if (ft_getenv(cmdtree->arg[i] + 1, *vars_lst))
-				cmdtree->arg[i] = ft_getenv(cmdtree->arg[i] + 1, *vars_lst);
+				cmdtree->arg[i] = ft_getenv(cmdtree->arg[i] + 1, *vars_lst);//hna
 			else if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
 				cmdtree->arg[i] = ft_itoa(g_flag);
 		}
@@ -74,7 +73,7 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
 	if (do_builtin(cmdtree, redr_fds, vars_lst))
-		return (r_val);
+		return (g_flag);
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	pid = fork();
 	if (!pid)

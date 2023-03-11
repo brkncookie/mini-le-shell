@@ -99,7 +99,7 @@ void	do_unset(t_tree *cmdtree, t_list **vars_lst)
 	t_list	*next;
 
 	tmp = *vars_lst;
-	while (tmp && tmp->next->content)
+	while (tmp && tmp->next && tmp->next->content)
 	{
 		i = 1;
 		while (cmdtree->arg[i])
