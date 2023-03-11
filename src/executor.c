@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/11 17:48:40 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 18:09:40 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,11 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 		//for example echo ana && << tt redirections should be handled before echo getting executed
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
+		//prot
 	if (do_builtin(cmdtree, redr_fds, vars_lst))
 		return (g_flag);
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
+	//prot
 	pid = fork();
 	if (!pid)
 	{
