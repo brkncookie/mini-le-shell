@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "../include/executor.h"
-#include "../include/global.h"
+
+extern int	g_flag;
 
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {

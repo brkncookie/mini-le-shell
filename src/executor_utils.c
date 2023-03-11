@@ -44,7 +44,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 		if (redr->tkn->type & REDR_I)
 			fds[0] = open(file, O_RDONLY);
 		else if (redr->tkn->type & REDR_O)
-			fds[1] = open(file, O_WRONLY | O_CREAT, 0666);
+			fds[1] = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		else if (redr->tkn->type & APPEND)
 			fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		else if (redr->tkn->type & HERE_DOC)

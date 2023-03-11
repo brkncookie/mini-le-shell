@@ -45,7 +45,7 @@ t_tree	*redir(t_tkns *tkn, int *error)
 	{
 		if (tkn->type & WHITE_SPC)
 			tkn = tkn->next;
-		else if (tkn->type & (WORD | VAR) || !(tkn->type & (WORD | VAR))) //wtf is this condition bhalla ktbi else if(1)
+		else
 			break ;
 	}
 	if (!tkn || !(tkn->type & (WORD | VAR)))
