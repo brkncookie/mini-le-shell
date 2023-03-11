@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 
 #include "../include/executor.h"
-#include "../include/global.h"
 #include <signal.h>
 #include <stdio.h>
+
+extern int	g_flag;
 
 void	action(int sig)
 {

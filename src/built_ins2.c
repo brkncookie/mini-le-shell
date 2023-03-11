@@ -1,5 +1,6 @@
 #include "../include/executor.h"
-#include "../include/global.h"
+
+extern int	g_flag;
 
 int	is_num(char *str)
 {

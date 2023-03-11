@@ -1,5 +1,6 @@
 #include "../include/executor.h"
-#include "../include/global.h"
+
+int	g_flag;
 
 int	dir_exists(const char *path)
 {
