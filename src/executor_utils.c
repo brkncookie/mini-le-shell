@@ -97,7 +97,12 @@ char	*is_vld_exc(char	*path)
 	int		i;
 
 	if (ft_strchr(path, '/') && *(ft_strchr(path, '/') + 1))
-		return (path);
+	{
+		if (!access(path, F_OK) && !access(path, X_OK))
+			return (path);
+		else
+			return (free(path), printf("Not a valid executable\n"), NULL);
+	}
 	ppath = getenv("PATH");
 	if (!ppath)
 		return (perror(NULL), NULL);
