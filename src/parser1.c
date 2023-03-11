@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 12:59:10 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/17 15:04:45 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/11 12:06:17 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_tree	*redir(t_tkns *tkn, int *error)
 	{
 		if (tkn->type & WHITE_SPC)
 			tkn = tkn->next;
-		else if (tkn->type & (WORD | VAR) || !(tkn->type & (WORD | VAR)))
+		else if (tkn->type & (WORD | VAR) || !(tkn->type & (WORD | VAR))) //wtf is this condition bhalla ktbi else if(1)
 			break ;
 	}
 	if (!tkn || !(tkn->type & (WORD | VAR)))

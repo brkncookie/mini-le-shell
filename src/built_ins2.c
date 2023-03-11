@@ -1,4 +1,5 @@
 #include "../include/executor.h"
+#include "../include/global.h"
 
 int	is_num(char *str)
 {

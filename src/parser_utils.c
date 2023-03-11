@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/08 12:29:15 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 15:01:57 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,9 @@ int	count_arg(t_tkns *tkn)
 {
 	int	cnt;
 	int	delim;
-	int	flag;
 
 	delim = PIPE | AND | OR | HERE_DOC | APPEND | REDR_O | REDR_I;
 	cnt = 0;
-	flag = 0;
 	while (tkn && !(tkn->type & delim))
 	{
 		if (tkn->type & (VAR | WORD))

@@ -6,13 +6,14 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/10 17:02:03 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 15:00:55 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
+#include "../include/global.h"
 
-int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst, int *r_val)
+int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
 	int	i;
 	int	in;
@@ -25,38 +26,35 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst, int *r_val)
 		(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
 	}
 	i = 0;
-	if (!ft_strncmp(cmdtree->tkn->val, "echo", 5))
+	while (cmdtree->arg && cmdtree->arg[i])
+	{
+		if (cmdtree->arg[i][0] == '$')
+		{
+			if (ft_getenv(cmdtree->arg[i] + 1, *vars_lst))
+				cmdtree->arg[i] = ft_getenv(cmdtree->arg[i] + 1, *vars_lst);
+			else if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
+				cmdtree->arg[i] = ft_itoa(g_flag);
+		}
+		expand(cmdtree, i);
+		i++;
+	}
+	if (!ft_strncmp(cmdtree->arg[0], "echo", 5))
 		return (do_echo(cmdtree), (dup2(in, 0), dup2(out, 1)), 1);
-	if (!ft_strncmp(cmdtree->tkn->val, "exit", 5))
+	if (!ft_strncmp(cmdtree->arg[0], "exit", 5))
 		return (do_exit(cmdtree->arg[1], count_args(cmdtree)), (dup2(in, 0),
 				dup2(out, 1)), 1);
-	else if (!ft_strncmp(cmdtree->tkn->val, "cd", 2))
+	else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
 		return (do_cd(cmdtree), (dup2(in, 0), dup2(out, 1)), 1);
-	else if (!ft_strncmp(cmdtree->tkn->val, "pwd", 4))
+	else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
 		return (do_pwd(cmdtree), (dup2(in, 0), dup2(out, 1)), 1);
-	else if (!ft_strncmp(cmdtree->tkn->val, "env", 4))
+	else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
 		return (do_env(cmdtree, vars_lst), (dup2(in, 0), dup2(out, 1)), 1);
-	else if (!ft_strncmp(cmdtree->tkn->val, "export", 6))
+	else if (!ft_strncmp(cmdtree->arg[0], "export", 7))
 		return (do_export(cmdtree, vars_lst), (dup2(in, 0), dup2(out, 1)), 1);
-	else if (!ft_strncmp(cmdtree->tkn->val, "unset", 5))
+	else if (!ft_strncmp(cmdtree->arg[0], "unset", 6))
 		return (do_unset(cmdtree, vars_lst), (dup2(in, 0), dup2(out, 1)), 1);
 	else
-	{
-		while (cmdtree->arg && cmdtree->arg[i])
-		{
-			if (cmdtree->arg[i][0] == '$')
-			{
-				if (ft_getenv(cmdtree->arg[i] + 1, *vars_lst))
-					cmdtree->arg[i] = ft_getenv(cmdtree->arg[i] + 1, *vars_lst);
-				else if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
-					cmdtree->arg[i] = ft_itoa(g_flag);
-			}
-			expand(cmdtree, i);
-			i++;
-		}
-		(dup2(in, 0), dup2(out, 1));
-		return (0);
-	}
+		return ((dup2(in, 0), dup2(out, 1)), 0);
 }
 
 int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
@@ -69,9 +67,12 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	envs = get_dblarr(vars_lst);
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (free(rslv_redr(cmdtree, redr_fds, 0, 1)), errno);
+		//error here with free when entering "echo AAA | < text"
+		//also here_doc and redirections in general should be handled first regardless of their position in the tree
+		//for example echo ana && << tt redirections should be handled before echo getting executed
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
-	if (do_builtin(cmdtree, redr_fds, vars_lst, &r_val))
+	if (do_builtin(cmdtree, redr_fds, vars_lst))
 		return (r_val);
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	pid = fork();
@@ -112,7 +113,7 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	if (cmdtree->redr && rslv_redr(cmdtree->redr, &lisr_fds[0], 0, 0))
 		rslv_redr(cmdtree->redr, &limn_fds[0], 1, 0);
 	return (do_logops(cmdtree->lisr, &lisr_fds[0], 1, vars_lst),
-		do_logops(cmdtree->limn, &limn_fds[0], 1, vars_lst));
+			do_logops(cmdtree->limn, &limn_fds[0], 1, vars_lst));
 }
 
 int	do_logops(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)

@@ -1,5 +1,21 @@
 #include "../include/executor.h"
 
+void	swap_args(t_tree *cmdtree, int i, int num, int args_num)
+{
+	char	*tmp;
+	int		n;
+
+	n = num - i - 2;
+	while (i + 1 < num)
+	{
+		tmp = cmdtree->arg[i + 1];
+		cmdtree->arg[i + 1] = cmdtree->arg[args_num - n];
+		cmdtree->arg[args_num - n] = tmp;
+		args_num++;
+		i++;
+	}
+}
+
 void	expand(t_tree *cmdtree, int i)
 {
 	DIR				*d;
@@ -7,12 +23,12 @@ void	expand(t_tree *cmdtree, int i)
 	int				num;
 	int				args_num;
 
-	num = count_dir();
 	args_num = count_args(cmdtree);
+	num = args_num;
 	if (!ft_strncmp(cmdtree->arg[i], "*", 2))
 	{
-		cmdtree->arg = reallocate(cmdtree->arg, sizeof(char *) * args_num, (num
-					+ args_num) * sizeof(char *));
+		cmdtree->arg = reallocate(cmdtree->arg, sizeof(char *) * args_num,
+				(count_dir() + args_num) * sizeof(char *));
 		d = opendir(".");
 		if (d)
 		{
@@ -26,8 +42,8 @@ void	expand(t_tree *cmdtree, int i)
 					if (ft_strncmp(fil->d_name, ".", 1))
 						cmdtree->arg[args_num++] = fil->d_name;
 			}
-			cmdtree->arg[args_num] = NULL;
-			//closedir(d);       kanzidha kaykhsr kolchi
+			swap_args(cmdtree, i, num, args_num - 1);
+			//closedir(d);
 		}
 	}
 }

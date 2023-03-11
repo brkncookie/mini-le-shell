@@ -1,4 +1,5 @@
 #include "../include/executor.h"
+#include "../include/global.h"
 
 int	dir_exists(const char *path)
 {
@@ -37,6 +38,7 @@ void	do_pwd(t_tree *cmdtree)
 {
 	char	*pwd;
 
+	(void)cmdtree;
 	pwd = getcwd(0, 500);
 	printf("%s\n", pwd);
 	free(pwd);

@@ -6,11 +6,12 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/10 12:27:51 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 14:52:06 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
+#include "../include/global.h"
 #include <signal.h>
 #include <stdio.h>
 

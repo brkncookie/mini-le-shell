@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/10 12:28:00 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 14:50:43 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,5 @@ int		ft_strchrr(const char *s, int c);
 char	*ft_getenv(char *key, t_list *vars);
 char	**get_dblarr(t_list **vars_lst);
 void	free_dblarr(char **arr, int i);
-
-int		g_flag;
 
 #endif
