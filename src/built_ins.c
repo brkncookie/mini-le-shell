@@ -29,7 +29,7 @@ void	do_echo(t_tree *cmdtree)
 		if (cmdtree->arg[i])
 			printf(" ");
 	}
-	if (ft_strncmp(cmdtree->arg[1], "-n", 3))
+	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 2))
 		printf("\n");
 	g_flag = EXIT_SUCCESS;
 }

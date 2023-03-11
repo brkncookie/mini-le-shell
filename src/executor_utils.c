@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/10 16:33:13 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 16:10:23 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 				write(fds[1], buf, ft_strlen(buf));
 				write(fds[1], "\n", 1);
 			}
-			close(fds[1]);
+			//close(fds[1]);
 		}
 		if (fds[1] < 0 || fds[0] < 0)
 			return (free(fds), free(file), perror(NULL), NULL);

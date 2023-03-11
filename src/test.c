@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/11 14:52:06 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/11 15:06:04 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_list	*get_vars(char **envp)
 	vars_lst = NULL;
 	while (envp[i])
 	{
-		var = malloc(sizeof(t_var));
+		var = ft_calloc(1, sizeof(t_var));
 		// if (!var)
 		// 	return (freelst(vars_lst), NULL);
 		equ = ft_strchrr(envp[i], '=');
