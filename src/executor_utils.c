@@ -59,7 +59,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 				write(fds[1], buf, ft_strlen(buf));
 				write(fds[1], "\n", 1);
 			}
-			//close(fds[1]);
+			close(fds[1]);
 		}
 		if (fds[1] < 0 || fds[0] < 0)
 			return (free(fds), free(file), perror(NULL), NULL);

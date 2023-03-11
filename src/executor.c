@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "../include/executor.h"
-#include "../include/global.h"
+
+extern int	g_flag;
 
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
@@ -71,10 +72,13 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 		//also here_doc and redirections in general should be handled first regardless of their position in the tree
 		//for example echo ana && << tt redirections should be handled before echo getting executed
 	if (cmdtree->redr)
+	{
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
-		//prot
+		if (!redr_fds)
+			return (errno);
+	}
 	if (do_builtin(cmdtree, redr_fds, vars_lst))
-		return (g_flag);
+		return (pipe_close(redr_fds, limn), g_flag);
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	//prot
 	pid = fork();
