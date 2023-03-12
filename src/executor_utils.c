@@ -32,10 +32,12 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 	int		*fds;
 	char	*file;
 	char	*buf;
+	t_tree	*t_redr;
 
 	fds = ft_calloc(2, sizeof(*fds));
 	fds[0] = 0;
 	fds[1] = 1;
+	t_redr = NULL;
 	while (redr)
 	{
 		file = ft_strndup(redr->limn->tkn->val, redr->limn->tkn->len);
@@ -49,6 +51,8 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 			fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		else if (redr->tkn->type & HERE_DOC)
 		{
+			if (!t_redr)
+				t_redr = redr;
 			if (pipe(fds))
 				perror("pipe");
 			while (1)
@@ -72,7 +76,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 			redr_fds[0] = fds[0];
 		if (limn && fds[1] != 1)
 			redr_fds[1] = fds[1];
-		if (cmd && fds[1] != 1)
+		if (cmd && fds[1] != 1 && t_redr && !(t_redr->tkn->type & HERE_DOC))
 			redr_fds[1] = fds[1];
 		return (free(fds), redr_fds);
 	}
