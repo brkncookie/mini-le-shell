@@ -34,13 +34,39 @@ void	do_exit(char *arg, int args_num)
 	}
 }
 
-void	add_variable(t_list **vars_lst, char *str, int equ)
+int	next_isspace(t_tree **cmdtree, char *str)
+{
+	t_tree	*tmp;
+
+	tmp = *cmdtree;
+	while (tmp->tkn->prev)
+		tmp->tkn = tmp->tkn->prev;
+	while (tmp->tkn->next)
+	{
+		if (!ft_strncmp(tmp->tkn->val, str, ft_strlen(str))
+			&& !(tmp->tkn->next->type & (WORD | QUOTE | DQUOTE)))
+			return (1);
+		tmp->tkn = tmp->tkn->next;
+	}
+	return (0);
+}
+
+void	add_variable(t_list **vars_lst, t_tree *cmdtree, int *i)
 {
 	t_var	*var;
+	int		equ;
 
 	var = ft_calloc(1, sizeof(t_var));
-	var->key = ft_substr(str, 0, equ);
-	var->val = ft_substr(str, equ + 1, ft_strlen(str));
+	equ = ft_strchrr(cmdtree->arg[*i], '=');
+	var->key = ft_substr(cmdtree->arg[*i], 0, equ);
+	if (equ == (int)ft_strlen(cmdtree->arg[*i]) - 1 && !next_isspace(&cmdtree,
+			cmdtree->arg[*i]))
+	{
+		*i = *i + 1;
+		equ = -1;
+	}
+	var->val = ft_substr(cmdtree->arg[*i], equ + 1,
+			ft_strlen(cmdtree->arg[*i]));
 	ft_lstadd_back(vars_lst, ft_lstnew(var));
 }
 
@@ -62,34 +88,41 @@ void	do_export(t_tree *cmdtree, t_list **vars_lst)
 			tmp = tmp->next;
 		}
 	}
-	else if (!(ft_isdigit(cmdtree->arg[1][0]) || cmdtree->arg[1][0] == '=')
-			&& ft_strchr(cmdtree->arg[1], '='))
+	while (cmdtree->arg[i])
 	{
-		while (cmdtree->arg[i])
+		equ = ft_strchrr(cmdtree->arg[i], '=');
+		if ((ft_isdigit(cmdtree->arg[i][0]) && cmdtree->arg[i][0] == '=')
+			|| !ft_strchr(cmdtree->arg[i], '='))
 		{
-			found = 0;
-			tmp = *vars_lst;
-			while (tmp && tmp->content)
-			{
-				equ = ft_strchrr(cmdtree->arg[i], '=');
-				if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->content)->key,
-						ft_strlen(((t_var *)tmp->content)->key)))
-				{
-					free(((t_var *)tmp->content)->val);
-					((t_var *)tmp->content)->val = ft_substr(cmdtree->arg[i],
-							equ + 1, ft_strlen(cmdtree->arg[i]));
-					found = 1;
-					break ;
-				}
-				tmp = tmp->next;
-			}
-			if (!found)
-				add_variable(vars_lst, cmdtree->arg[i], equ);
+			printf("export: %s: invalid argument\n", cmdtree->arg[i]);
 			i++;
+			continue ;
 		}
+		found = 0;
+		tmp = *vars_lst;
+		while (tmp && tmp->content)
+		{
+			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->content)->key,
+					ft_strlen(((t_var *)tmp->content)->key)))
+			{
+				free(((t_var *)tmp->content)->val);
+				if (equ == (int)ft_strlen(cmdtree->arg[i]) - 1
+					&& !next_isspace(&cmdtree, cmdtree->arg[i]))
+				{
+					equ = -1;
+					i++;
+				}
+				((t_var *)tmp->content)->val = ft_substr(cmdtree->arg[i], equ
+						+ 1, ft_strlen(cmdtree->arg[i]));
+				found = 1;
+				break ;
+			}
+			tmp = tmp->next;
+		}
+		if (!found)
+			add_variable(vars_lst, cmdtree, &i);
+		i++;
 	}
-	else
-		printf("export: invalid argument\n");
 }
 
 void	do_unset(t_tree *cmdtree, t_list **vars_lst)
