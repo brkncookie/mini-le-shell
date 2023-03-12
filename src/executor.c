@@ -105,12 +105,17 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	int	pipefd[2];
 
 	if (redr_fds)
+	{
 		lisr_fds[0] = redr_fds[0];
+		limn_fds[1] = redr_fds[1];
+	}
 	else
+	{
 		lisr_fds[0] = 0;
+		limn_fds[1] = 1;
+	}
 	lisr_fds[1] = 1;
 	limn_fds[0] = 0;
-	limn_fds[1] = 1;
 	if (!(cmdtree->tkn->type & PIPE))
 		return (do_cmd(cmdtree, redr_fds, limn, vars_lst));
 	pipe(pipefd);
