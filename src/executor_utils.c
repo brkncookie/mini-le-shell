@@ -29,12 +29,11 @@ void	pipe_close(int *pipefd, int limn)
 
 int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 {
-	int		*fds;
+	int	fds[2];
 	char	*file;
 	char	*buf;
 	t_tree	*t_redr;
 
-	fds = ft_calloc(2, sizeof(*fds));
 	fds[0] = 0;
 	fds[1] = 1;
 	t_redr = NULL;
@@ -42,7 +41,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 	{
 		file = ft_strndup(redr->limn->tkn->val, redr->limn->tkn->len);
 		if (!file || !fds)
-			return (free(file), free(fds), NULL);
+			return (free(file), NULL);
 		if (redr->tkn->type & REDR_I)
 			fds[0] = open(file, O_RDONLY);
 		else if (redr->tkn->type & REDR_O)
@@ -66,7 +65,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 			close(fds[1]);
 		}
 		if (fds[1] < 0 || fds[0] < 0)
-			return (free(fds), free(file), perror(NULL), NULL);
+			return (free(file), perror(NULL), NULL);
 		redr = redr->redr;
 		free(file);
 	}
@@ -76,11 +75,19 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 			redr_fds[0] = fds[0];
 		if (limn && fds[1] != 1)
 			redr_fds[1] = fds[1];
-		if (cmd && fds[1] != 1 && t_redr && !(t_redr->tkn->type & HERE_DOC))
-			redr_fds[1] = fds[1];
-		return (free(fds), redr_fds);
+		if (cmd && fds[1] != 1)
+		{
+			if (t_redr)
+			{
+				if (!t_redr->tkn->type & HERE_DOC)
+					redr_fds[1] = fds[1];
+			}
+			else
+					redr_fds[1] = fds[1];
+		}
+		return (redr_fds);
 	}
-	return (fds);
+	return (redr_fds);
 }
 
 void	fre2d(char **path)

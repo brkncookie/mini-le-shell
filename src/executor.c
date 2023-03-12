@@ -67,7 +67,7 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 
 	envs = get_dblarr(vars_lst);
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
-		return (free(rslv_redr(cmdtree, redr_fds, 0, 1)), errno);
+		return (rslv_redr(cmdtree, redr_fds, 0, 1), errno);
 		//error here with free when entering "echo AAA | < text"
 		//also here_doc and redirections in general should be handled first regardless of their position in the tree
 		//for example echo ana && << tt redirections should be handled before echo getting executed
@@ -147,5 +147,9 @@ int	do_logops(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 
 void	executor(t_tree *cmdtree, t_list **vars_lst)
 {
-	do_logops(cmdtree, NULL, 0, vars_lst);
+	int	redr_fds[2];
+
+	redr_fds[0] = 0;
+	redr_fds[1] = 1;
+	do_logops(cmdtree, &redr_fds[0], 0, vars_lst);
 }
