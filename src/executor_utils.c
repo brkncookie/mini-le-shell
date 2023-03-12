@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/11 16:10:23 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/12 16:42:52 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 	while (redr)
 	{
 		file = ft_strndup(redr->limn->tkn->val, redr->limn->tkn->len);
-		if (!file || !fds)
+		if (!file)
 			return (free(file), NULL);
 		if (redr->tkn->type & REDR_I)
 			fds[0] = open(file, O_RDONLY);
@@ -79,7 +79,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 		{
 			if (t_redr)
 			{
-				if (!t_redr->tkn->type & HERE_DOC)
+				if (!(t_redr->tkn->type & HERE_DOC))
 					redr_fds[1] = fds[1];
 			}
 			else

@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/12 12:18:07 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/12 16:49:43 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	envs = get_dblarr(vars_lst);
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (rslv_redr(cmdtree, redr_fds, 0, 1), errno);
-		//error here with free when entering "echo AAA | < text"
 		//also here_doc and redirections in general should be handled first regardless of their position in the tree
 		//for example echo ana && << tt redirections should be handled before echo getting executed
 	if (cmdtree->redr)
@@ -82,10 +81,12 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	//prot
 	pid = fork();
+	//prot
 	if (!pid)
 	{
 		if (redr_fds)
 			(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
+		//prot
 		prgm = is_vld_exc(prgm);
 		if (!prgm)
 			exit(EXIT_FAILURE);
