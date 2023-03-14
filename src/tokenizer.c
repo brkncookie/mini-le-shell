@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:38:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/07 12:44:35 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/13 17:51:47 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ t_tkns	*tokenize(char *cmds)
 		(*cmds == '<' && *(cmds + 1) == '<') || *cmds == '<')
 			tkn_link(&tkns, tkn_create(&cmds, id_type(cmds), NULL));
 		else
-			tkn_link(&tkns, tkn_create(&cmds, WORD, NULL));
+			if (!tkn_link(&tkns, tkn_create(&cmds, WORD, NULL)))
+				return (NULL);
 	}
 	return (tkns);
 }

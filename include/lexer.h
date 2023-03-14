@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 09:35:44 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/08 12:48:57 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/13 17:49:36 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_tkns
 	struct s_tkns	*prev;
 }	t_tkns;
 
-void	tkn_link(t_tkns **lst, t_tkns *tkn);
+int		tkn_link(t_tkns **lst, t_tkns *tkn);
 int		is_blncd(char **str, char c);
 t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn);
 void	freelst(t_tkns **lst);

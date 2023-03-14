@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/11 17:56:54 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/13 18:00:00 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ void	action(int sig)
 	}
 }
 
+/// @brief 
+/// @param s 
+/// @param c 
+/// @return 
 int	ft_strchrr(const char *s, int c)
 {
 	char	*str;
@@ -87,6 +91,11 @@ void	prompt(char **cmd_buf, int *error)
 	free(pwd);
 }
 
+/// @brief 
+/// @param ac 
+/// @param av 
+/// @param envp 
+/// @return 
 int	main(int ac, char **av, char **envp)
 {
 	t_tkns	*tkns;
@@ -108,11 +117,16 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strlen(cmd_buf) > 0)
 			add_history(cmd_buf);
 		tkns = tokenize(cmd_buf);
-		if (!tkns)
+		if (!tkns || error)
+		{
+			g_flag = 2;
 			continue ;
+		}
 		tree = giv_tree(tkns, &error);
 		if (!error)
 			executor(tree, &vars_lst);
+		else
+			g_flag = 2;
 		free(cmd_buf);
 	}
 	return (0);

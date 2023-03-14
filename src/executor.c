@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/12 16:49:43 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/13 17:02:51 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 extern int	g_flag;
 
+/// @brief 
+/// @param cmdtree 
+/// @param redr_fds 
+/// @param vars_lst 
+/// @return 
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
 	int	i;
@@ -32,7 +37,7 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 		if (cmdtree->arg[i][0] == '$')
 		{
 			if (ft_getenv(cmdtree->arg[i] + 1, *vars_lst))
-				cmdtree->arg[i] = ft_getenv(cmdtree->arg[i] + 1, *vars_lst);//hna
+				cmdtree->arg[i] = ft_getenv(cmdtree->arg[i] + 1, *vars_lst);
 			else if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
 				cmdtree->arg[i] = ft_itoa(g_flag);
 		}

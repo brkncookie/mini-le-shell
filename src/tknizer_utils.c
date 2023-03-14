@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 08:49:16 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/08 12:38:08 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/13 17:56:17 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,29 +117,30 @@ t_tkns	*tkn_create(char **str, t_type type, t_tkns *tkn)
 		tkn->len = 1;
 	while (i + 1 < tkn->len)
 		if (tkn->val[i++] == ';' && tkn->val[i] == ';' && !tkn->stat)
-			return (printf("Syntax Error\n"), exit(0), NULL);
+			return (printf("Syntax Error\n"), NULL);
 	return (*str += tkn->len, tkn);
 }
 
-void	tkn_link(t_tkns **lst, t_tkns *tkn)
+int	tkn_link(t_tkns **lst, t_tkns *tkn)
 {
 	t_tkns	*tmp;
 
-	tkn->next = NULL;
-	tkn->prev = NULL;
-	tmp = *lst;
 	if (tkn == NULL)
 	{
 		freelst(lst);
-		return ;
+		return (0);
 	}
+	tkn->next = NULL;
+	tkn->prev = NULL;
+	tmp = *lst;
 	if (!*lst)
 	{
 		*lst = tkn;
-		return ;
+		return (1);
 	}
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = tkn;
 	tkn->prev = tmp;
+	return (1);
 }
