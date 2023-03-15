@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/13 17:02:51 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/14 16:48:51 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,18 @@
 
 extern int	g_flag;
 
-/// @brief 
-/// @param cmdtree 
-/// @param redr_fds 
-/// @param vars_lst 
-/// @return 
+/// @brief
+/// @param cmdtree
+/// @param redr_fds
+/// @param vars_lst
+/// @return
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
-	int	i;
-	int	in;
-	int	out;
+	int		i;
+	int		j;
+	int		in;
+	int		out;
+	char	*val;
 
 	if (redr_fds)
 	{
@@ -34,12 +36,22 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 	i = 0;
 	while (cmdtree->arg && cmdtree->arg[i])
 	{
-		if (cmdtree->arg[i][0] == '$')
+		j = 0;
+		while (cmdtree->arg[i][j])
 		{
-			if (ft_getenv(cmdtree->arg[i] + 1, *vars_lst))
-				cmdtree->arg[i] = ft_getenv(cmdtree->arg[i] + 1, *vars_lst);
-			else if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
-				cmdtree->arg[i] = ft_itoa(g_flag);
+			if (cmdtree->arg[i][j] == '$')
+			{
+				val = ft_getenv(cmdtree->arg[i] + j + 1, *vars_lst);
+				if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
+					cmdtree->arg[i] = ft_itoa(g_flag);
+				else if (val)
+				{
+					cmdtree->arg[i][j] = '\0';
+					ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
+						+ ft_strlen(cmdtree->arg[i]) + 1);
+				}
+			}
+			j++;
 		}
 		expand(cmdtree, i);
 		i++;
@@ -73,8 +85,6 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	envs = get_dblarr(vars_lst);
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (rslv_redr(cmdtree, redr_fds, 0, 1), errno);
-		//also here_doc and redirections in general should be handled first regardless of their position in the tree
-		//for example echo ana && << tt redirections should be handled before echo getting executed
 	if (cmdtree->redr)
 	{
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
@@ -92,16 +102,16 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 		if (redr_fds)
 			(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
 		//prot
-		prgm = is_vld_exc(prgm);
+		prgm = is_vld_exc(prgm, vars_lst);
 		if (!prgm)
-			exit(EXIT_FAILURE);
+			exit(127);
 		execve(prgm, cmdtree->arg, envs);
 	}
 	pipe_close(redr_fds, limn);
 	waitpid(pid, &r_val, 0);
-	g_flag = r_val;
+	g_flag = WEXITSTATUS(r_val);
 	free_dblarr(envs, ft_lstsize(*vars_lst));
-	return (r_val);
+	return (WEXITSTATUS(r_val));
 }
 
 int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
@@ -130,7 +140,7 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	if (cmdtree->redr && rslv_redr(cmdtree->redr, &lisr_fds[0], 0, 0))
 		rslv_redr(cmdtree->redr, &limn_fds[0], 1, 0);
 	return (do_logops(cmdtree->lisr, &lisr_fds[0], 1, vars_lst),
-		do_logops(cmdtree->limn, &limn_fds[0], 1, vars_lst));
+			do_logops(cmdtree->limn, &limn_fds[0], 1, vars_lst));
 }
 
 int	do_logops(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)

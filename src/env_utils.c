@@ -1,5 +1,7 @@
 #include "../include/executor.h"
 
+extern int	g_flag;
+
 char	**get_dblarr(t_list **vars_lst)
 {
 	char	**envs;

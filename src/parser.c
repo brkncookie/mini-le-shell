@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/02/12 10:30:21 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/14 18:10:25 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ t_tree	*logops(t_tkns *tkns, int *error)
 	treenode = NULL;
 	while (tkns && tkns->type & WHITE_SPC)
 		tkns = tkns->next;
+	if (!tkns)
+		return (NULL);
 	if (no_delims(tkns, AND | OR, 0))
 		return (lqados(tkns, error));
 	tmp = tkns;

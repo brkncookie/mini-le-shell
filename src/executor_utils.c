@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/12 16:42:52 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/14 16:26:25 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	pipe_close(int *pipefd, int limn)
 
 int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 {
-	int	fds[2];
+	int		fds[2];
 	char	*file;
 	char	*buf;
 	t_tree	*t_redr;
@@ -83,7 +83,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 					redr_fds[1] = fds[1];
 			}
 			else
-					redr_fds[1] = fds[1];
+				redr_fds[1] = fds[1];
 		}
 		return (redr_fds);
 	}
@@ -100,7 +100,7 @@ void	fre2d(char **path)
 	free(path);
 }
 
-char	*is_vld_exc(char	*path)
+char	*is_vld_exc(char *path, t_list **vars_lst)
 {
 	char	*ppath;
 	char	**paths;
@@ -114,16 +114,16 @@ char	*is_vld_exc(char	*path)
 		else
 			return (free(path), printf("Not a valid executable\n"), NULL);
 	}
-	ppath = getenv("PATH");
+	ppath = ft_getenv("PATH", *vars_lst);
 	if (!ppath)
-		return (perror(NULL), NULL);
+		return (free(path), printf("Not a valid executable\n"), NULL);
 	paths = ft_split(ppath, ':');
 	if (!paths)
-		return (NULL);
+		return (free(path), NULL);
 	i = 0;
 	while (paths[i])
 	{
-		npath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2, \
+		npath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2,
 				sizeof(*npath));
 		if (!npath)
 			return (fre2d(paths), NULL);
