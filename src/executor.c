@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/14 16:48:51 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/15 17:59:48 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
 	int		i;
 	int		j;
+	int		len;
 	int		in;
 	int		out;
 	char	*val;
@@ -41,11 +42,15 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 		{
 			if (cmdtree->arg[i][j] == '$')
 			{
-				val = ft_getenv(cmdtree->arg[i] + j + 1, *vars_lst);
+				val = ft_calloc(ft_strlen(ft_getenvi(cmdtree->arg[i] + j + 1, *vars_lst, &len)) + 1, 1);
+				val = ft_getenvi(cmdtree->arg[i] + j + 1, *vars_lst, &len);
+				len += j;
 				if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
 					cmdtree->arg[i] = ft_itoa(g_flag);
 				else if (val)
 				{
+					ft_strlcat(val, cmdtree->arg[i] + len, ft_strlen(val)
+						+ ft_strlen(cmdtree->arg[i] + len) + 1);
 					cmdtree->arg[i][j] = '\0';
 					ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
 						+ ft_strlen(cmdtree->arg[i]) + 1);

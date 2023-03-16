@@ -14,13 +14,13 @@ char	**get_dblarr(t_list **vars_lst)
 	while (tmp)
 	{
 		envs[i] = ft_calloc(sizeof(char),
-				ft_strlen(((t_var *)tmp->content)->key)
-				+ ft_strlen(((t_var *)tmp->content)->val) + 2);
+							ft_strlen(((t_var *)tmp->content)->key)
+								+ ft_strlen(((t_var *)tmp->content)->val) + 2);
 		ft_strlcat(envs[i], ((t_var *)tmp->content)->key,
-			ft_strlen(((t_var *)tmp->content)->key) + 1);
+				ft_strlen(((t_var *)tmp->content)->key) + 1);
 		ft_strlcat(envs[i], "=", ft_strlen(envs[i]) + 2);
 		ft_strlcat(envs[i], ((t_var *)tmp->content)->val, ft_strlen(envs[i])
-			+ ft_strlen(((t_var *)tmp->content)->val) + 1);
+				+ ft_strlen(((t_var *)tmp->content)->val) + 1);
 		i++;
 		tmp = tmp->next;
 	}
@@ -42,12 +42,31 @@ void	free_dblarr(char **arr, int i)
 
 char	*ft_getenv(char *key, t_list *vars)
 {
+	int	len;
+
 	while (vars)
 	{
-		if (!ft_strncmp(key, ((t_var *)vars->content)->key,
-				ft_strlen(((t_var *)vars->content)->key)))
-			return (((t_var *)vars->content)->val);
+		len = ft_strlen(((t_var *)vars->content)->key);
+		if (!ft_strncmp(key, ((t_var *)vars->content)->key, len))
+			if (!key[len] || (key[len] == '$' || key[len] == '"'
+					|| key[len] == '\''))
+				return (((t_var *)vars->content)->val);
 		vars = vars->next;
 	}
+	return (NULL);
+}
+
+char	*ft_getenvi(char *key, t_list *vars, int *len)
+{
+	while (vars)
+	{
+		*len = ft_strlen(((t_var *)vars->content)->key) + 1;
+		if (!ft_strncmp(key, ((t_var *)vars->content)->key, *len - 1))
+			if (!key[*len - 1] || (key[*len - 1] == '$' || key[*len - 1] == '"'
+					|| key[*len - 1] == '\''))
+				return (((t_var *)vars->content)->val);
+		vars = vars->next;
+	}
+	*len = 0;
 	return (NULL);
 }
