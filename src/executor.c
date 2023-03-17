@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/15 17:59:48 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/17 23:56:10 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 extern int	g_flag;
 
-/// @brief
-/// @param cmdtree
-/// @param redr_fds
-/// @param vars_lst
-/// @return
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
 	int		i;
@@ -113,7 +108,8 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 		execve(prgm, cmdtree->arg, envs);
 	}
 	pipe_close(redr_fds, limn);
-	waitpid(pid, &r_val, 0);
+	if(limn > 0 || limn == -2)
+		waitpid(pid, &r_val, 0);
 	g_flag = WEXITSTATUS(r_val);
 	free_dblarr(envs, ft_lstsize(*vars_lst));
 	return (WEXITSTATUS(r_val));
@@ -124,19 +120,13 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	int	lisr_fds[2];
 	int	limn_fds[2];
 	int	pipefd[2];
+	int	r_val;
 
-	if (redr_fds)
-	{
-		lisr_fds[0] = redr_fds[0];
-		limn_fds[1] = redr_fds[1];
-	}
-	else
-	{
-		lisr_fds[0] = 0;
-		limn_fds[1] = 1;
-	}
+
+	lisr_fds[0] = redr_fds[0];
 	lisr_fds[1] = 1;
 	limn_fds[0] = 0;
+	limn_fds[1] = redr_fds[1];
 	if (!(cmdtree->tkn->type & PIPE))
 		return (do_cmd(cmdtree, redr_fds, limn, vars_lst));
 	pipe(pipefd);
@@ -144,8 +134,15 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	limn_fds[0] = pipefd[0];
 	if (cmdtree->redr && rslv_redr(cmdtree->redr, &lisr_fds[0], 0, 0))
 		rslv_redr(cmdtree->redr, &limn_fds[0], 1, 0);
-	return (do_logops(cmdtree->lisr, &lisr_fds[0], 1, vars_lst),
-			do_logops(cmdtree->limn, &limn_fds[0], 1, vars_lst));
+	if (cmdtree->lisr->tkn->type & (VAR | WORD))
+		do_cmd(cmdtree->lisr, &lisr_fds[0], -1, vars_lst);
+	else
+		do_logops(cmdtree->lisr, &lisr_fds[0], 1, vars_lst);
+	r_val = do_logops(cmdtree->limn, &limn_fds[0], 1, vars_lst);
+	if (cmdtree->lisr->tkn->type & (VAR | WORD))
+		waitpid(-1, NULL, 0);
+	return (r_val);
+
 }
 
 int	do_logops(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
@@ -157,7 +154,7 @@ int	do_logops(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 		return (do_lqados(cmdtree, redr_fds, limn, vars_lst));
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);
-	r_lisr = do_logops(cmdtree->lisr, redr_fds, limn = 0, vars_lst);
+	r_lisr = do_logops(cmdtree->lisr, redr_fds, limn = -2, vars_lst);
 	if ((!r_lisr && cmdtree->tkn->type & AND) || (r_lisr
 			&& cmdtree->tkn->type & OR))
 		r_limn = do_logops(cmdtree->limn, redr_fds, limn = 1, vars_lst);
@@ -172,5 +169,5 @@ void	executor(t_tree *cmdtree, t_list **vars_lst)
 
 	redr_fds[0] = 0;
 	redr_fds[1] = 1;
-	do_logops(cmdtree, &redr_fds[0], 0, vars_lst);
+	do_logops(cmdtree, &redr_fds[0], 1, vars_lst);
 }

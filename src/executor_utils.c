@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/14 16:26:25 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/17 23:55:47 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ void	pipe_close(int *pipefd, int limn)
 {
 	struct stat	read;
 	struct stat	write;
-
+	
+	if(limn == -2)
+		return ;
 	if (!pipefd || !limn)
 		return ;
 	fstat(pipefd[0], &read);
