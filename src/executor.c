@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/17 23:56:10 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/20 18:39:10 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,55 @@
 
 extern int	g_flag;
 
+int	is_inquotes(t_tree **cmdtree, char *str)
+{
+	t_tree		*tmp;
+	static int	i = 0;
+
+	tmp = *cmdtree;
+	while (tmp->tkn->next)
+	{
+		while (tmp->tkn->val[i] && tmp->tkn->val[i] != '$')
+			i++;
+		if (!ft_strncmp(tmp->tkn->val + i, str, ft_strlen(str))
+			&& (tmp->tkn->stat & (IN_QUOTE)))
+			return (i++, 1);
+		i = 0;
+		tmp->tkn = tmp->tkn->next;
+	}
+	while (tmp->tkn->prev)
+		tmp->tkn = tmp->tkn->prev;
+	return (0);
+}
+
+void	expand2(t_tree *cmdtree, int i, int j, t_list **vars_lst)
+{
+	char	*val;
+	int		len;
+
+	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + j))
+	{
+		val = ft_getenvi(cmdtree->arg[i] + j + 1, *vars_lst, &len);
+		len += j;
+		if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
+			cmdtree->arg[i] = ft_itoa(g_flag);
+		else
+		{
+			ft_strlcat(val, cmdtree->arg[i] + len, ft_strlen(val)
+				+ ft_strlen(cmdtree->arg[i] + len) + 1);
+			cmdtree->arg[i][j] = '\0';
+			ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
+				+ ft_strlen(cmdtree->arg[i]) + 1);
+		}
+	}
+}
+
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
-	int		i;
-	int		j;
-	int		len;
-	int		in;
-	int		out;
-	char	*val;
+	int	i;
+	int	j;
+	int	in;
+	int	out;
 
 	if (redr_fds)
 	{
@@ -36,21 +77,7 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 		while (cmdtree->arg[i][j])
 		{
 			if (cmdtree->arg[i][j] == '$')
-			{
-				val = ft_calloc(ft_strlen(ft_getenvi(cmdtree->arg[i] + j + 1, *vars_lst, &len)) + 1, 1);
-				val = ft_getenvi(cmdtree->arg[i] + j + 1, *vars_lst, &len);
-				len += j;
-				if (!ft_strncmp(cmdtree->arg[i], "$?", 3))
-					cmdtree->arg[i] = ft_itoa(g_flag);
-				else if (val)
-				{
-					ft_strlcat(val, cmdtree->arg[i] + len, ft_strlen(val)
-						+ ft_strlen(cmdtree->arg[i] + len) + 1);
-					cmdtree->arg[i][j] = '\0';
-					ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
-						+ ft_strlen(cmdtree->arg[i]) + 1);
-				}
-			}
+				expand2(cmdtree, i, j, vars_lst);
 			j++;
 		}
 		expand(cmdtree, i);
@@ -108,7 +135,7 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 		execve(prgm, cmdtree->arg, envs);
 	}
 	pipe_close(redr_fds, limn);
-	if(limn > 0 || limn == -2)
+	if (limn > 0 || limn == -2)
 		waitpid(pid, &r_val, 0);
 	g_flag = WEXITSTATUS(r_val);
 	free_dblarr(envs, ft_lstsize(*vars_lst));
@@ -121,7 +148,6 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	int	limn_fds[2];
 	int	pipefd[2];
 	int	r_val;
-
 
 	lisr_fds[0] = redr_fds[0];
 	lisr_fds[1] = 1;
@@ -142,7 +168,6 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	if (cmdtree->lisr->tkn->type & (VAR | WORD))
 		waitpid(-1, NULL, 0);
 	return (r_val);
-
 }
 
 int	do_logops(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)

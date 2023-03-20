@@ -59,12 +59,6 @@ void	add_variable(t_list **vars_lst, t_tree *cmdtree, int *i)
 	var = ft_calloc(1, sizeof(t_var));
 	equ = ft_strchrr(cmdtree->arg[*i], '=');
 	var->key = ft_substr(cmdtree->arg[*i], 0, equ);
-	// if (equ == (int)ft_strlen(cmdtree->arg[*i]) - 1 && !next_isspace(&cmdtree,
-	// 		cmdtree->arg[*i]))
-	// {
-	// 	*i = *i + 1;
-	// 	equ = -1;
-	// }
 	var->val = ft_substr(cmdtree->arg[*i], equ + 1,
 			ft_strlen(cmdtree->arg[*i]));
 	ft_lstadd_back(vars_lst, ft_lstnew(var));
