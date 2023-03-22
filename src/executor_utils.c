@@ -16,7 +16,7 @@ void	pipe_close(int *pipefd, int limn)
 {
 	struct stat	read;
 	struct stat	write;
-	
+
 	if(limn == -2)
 		return ;
 	if (!pipefd || !limn)
@@ -97,6 +97,8 @@ void	fre2d(char **path)
 	int	i;
 
 	i = 0;
+	if (!path)
+		return ;
 	while (path[i])
 		free(path[i++]);
 	free(path);
@@ -106,36 +108,29 @@ char	*is_vld_exc(char *path, t_list **vars_lst)
 {
 	char	*ppath;
 	char	**paths;
-	char	*npath;
 	int		i;
 
-	if (ft_strchr(path, '/') && *(ft_strchr(path, '/') + 1))
-	{
-		if (!access(path, F_OK) && !access(path, X_OK))
-			return (path);
-		else
-			return (free(path), printf("Not a valid executable\n"), NULL);
-	}
+	if (dir_exists(path))
+		return (printf("%s: is a directory\n", path), free(path),  NULL);
+	if (!access(path, F_OK) && !access(path, X_OK))
+		return (path);
 	ppath = ft_getenv("PATH", *vars_lst);
 	if (!ppath)
 		return (free(path), printf("Not a valid executable\n"), NULL);
 	paths = ft_split(ppath, ':');
-	if (!paths)
-		return (free(path), NULL);
-	i = 0;
-	while (paths[i])
+	i = -1;
+	while (paths && paths[++i])
 	{
-		npath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2,
-				sizeof(*npath));
-		if (!npath)
-			return (fre2d(paths), NULL);
-		ft_strlcpy(npath, paths[i], ft_strlen(paths[i]) + ft_strlen(path) + 2);
-		*(npath + ft_strlen(paths[i])) = '/';
-		ft_strlcat(npath, path, ft_strlen(paths[i]) + ft_strlen(path) + 2);
-		if (!access(npath, F_OK) && !access(npath, X_OK))
-			return (fre2d(paths), free(path), npath);
-		free(npath);
-		i++;
+		ppath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2,
+				sizeof(*ppath));
+		if (!ppath)
+			return (fre2d(paths), free(path), NULL);
+		ft_strlcpy(ppath, paths[i], ft_strlen(paths[i]) + ft_strlen(path) + 2);
+		*(ppath + ft_strlen(paths[i])) = '/';
+		ft_strlcat(ppath, path, ft_strlen(paths[i]) + ft_strlen(path) + 2);
+		if (!access(ppath, F_OK) && !access(ppath, X_OK))
+			return (fre2d(paths), free(path), ppath);
+		free(ppath);
 	}
 	return (fre2d(paths), free(path), printf("Not a valid executable\n"), NULL);
 }
