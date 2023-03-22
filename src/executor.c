@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/20 18:39:10 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/22 12:30:15 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,14 @@ void	expand2(t_tree *cmdtree, int i, int j, t_list **vars_lst)
 
 int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
-	int	i;
-	int	j;
-	int	in;
-	int	out;
+	int			i;
+	int			j;
+	int			in;
+	int			out;
+	static char	*pwd = NULL;
 
+	if (!pwd)
+		pwd = getcwd(0, 500);
 	if (redr_fds)
 	{
 		in = dup(0);
@@ -89,9 +92,9 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 		return (do_exit(cmdtree->arg[1], count_args(cmdtree)), (dup2(in, 0),
 				dup2(out, 1)), 1);
 	else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
-		return (do_cd(cmdtree), (dup2(in, 0), dup2(out, 1)), 1);
+		return (do_cd(cmdtree, pwd), (dup2(in, 0), dup2(out, 1)), 1);
 	else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
-		return (do_pwd(cmdtree), (dup2(in, 0), dup2(out, 1)), 1);
+		return (do_pwd(pwd), (dup2(in, 0), dup2(out, 1)), 1);
 	else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
 		return (do_env(cmdtree, vars_lst), (dup2(in, 0), dup2(out, 1)), 1);
 	else if (!ft_strncmp(cmdtree->arg[0], "export", 7))

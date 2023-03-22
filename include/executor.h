@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/17 23:39:43 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/22 12:13:41 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ char	*is_vld_exc(char *path, t_list **vars_lst);
 void	executor(t_tree *cmdtree, t_list **vars_lst);
 void	pipe_close(int *pipefd, int limn);
 void	do_echo(t_tree *cmdtree);
-void	do_pwd(t_tree *cmdtree);
-void	do_cd(t_tree *cmdtree);
+void	do_pwd(char *pwd);
+void	do_cd(t_tree *cmdtree, char *pwd);
 void	do_unset(t_tree *cmdtree, t_list **vars_lst);
 void	do_export(t_tree *cmdtree, t_list **vars_lst);
 void	do_env(t_tree *cmdtree, t_list **vars_lst);

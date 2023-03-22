@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/15 15:02:55 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/22 11:52:24 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_tree	*node_create(t_tkns **tmp, t_tkns *tkns, int *error,
 	while ((*tmp)->next && ((*tmp)->next->type & WHITE_SPC
 			|| ((*tmp)->next->type & CPAR)))
 		(*tmp) = (*tmp)->next;
-	if (!(*tmp)->next || (tkns->type & PIPE))
+	if (!(*tmp)->next || (tkns->type & (PIPE | AND | OR)))
 		return (*error = 2, treenode);
 	treenode->limn = lyamin((*tmp)->next, error);
 	return (treenode);

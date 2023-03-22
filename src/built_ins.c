@@ -1,6 +1,6 @@
 #include "../include/executor.h"
 
-int	g_flag;
+int		g_flag;
 
 int	dir_exists(const char *path)
 {
@@ -30,40 +30,54 @@ void	do_echo(t_tree *cmdtree)
 		if (cmdtree->arg[i])
 			printf(" ");
 	}
-	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 2))
+	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 3))
 		printf("\n");
 	g_flag = EXIT_SUCCESS;
 }
 
-void	do_pwd(t_tree *cmdtree)
+void	do_pwd(char *pwd)
 {
-	char	*pwd;
-
-	(void)cmdtree;
-	pwd = getcwd(0, 500);
-	printf("%s\n", pwd);
-	free(pwd);
-	g_flag = EXIT_SUCCESS;
+	if (pwd)
+	{
+		printf("%s\n", pwd);
+		g_flag = EXIT_SUCCESS;
+	}
+	else
+		g_flag = EXIT_FAILURE;
 }
 
-void	do_cd(t_tree *cmdtree)
+void	do_cd(t_tree *cmdtree, char *pwd)
 {
+	char	*tmp;
+
 	g_flag = 0;
-	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2))
-		chdir(getenv("HOME"));
-	else if (cmdtree->arg[2])
+	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2)
+		|| !ft_strncmp(cmdtree->arg[1], "..", 3))
 	{
-		g_flag = 1;
-		printf("cd: too many arguments\n");
+		if (ft_strncmp(cmdtree->arg[1], "..", 3))
+			chdir(getenv("HOME"));
+		else
+			chdir("..");
+		free(pwd);
+		pwd = getcwd(0, 500);
 	}
 	else
 	{
-		if (dir_exists(cmdtree->arg[1]))
+		tmp = getcwd(0, 500);
+		if (dir_exists(cmdtree->arg[1]) && tmp)
+		{
 			chdir(cmdtree->arg[1]);
+			free(pwd);
+			pwd = getcwd(0, 500);
+			free(tmp);
+		}
 		else
 		{
 			g_flag = 1;
-			printf("cd: invalid directory path\n");
+			if (cmdtree->arg[2])
+				printf("cd: too many arguments\n");
+			else
+				printf("cd: invalid directory path\n");
 		}
 	}
 }
@@ -78,7 +92,7 @@ void	do_env(t_tree *cmdtree, t_list **vars_lst)
 		while (tmp)
 		{
 			printf("%s=%s\n", ((t_var *)tmp->content)->key,
-				((t_var *)tmp->content)->val);
+					((t_var *)tmp->content)->val);
 			tmp = tmp->next;
 		}
 		g_flag = 0;
