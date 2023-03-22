@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/22 12:13:41 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/22 17:12:43 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_var
 int		do_logops(t_tree *cmdtree, int	*redr_fds, int limn, t_list **vars_lst);
 int		*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd);
 char	*is_vld_exc(char *path, t_list **vars_lst);
-int	dir_exists(const char *path);
+int		dir_exists(const char *path);
 void	executor(t_tree *cmdtree, t_list **vars_lst);
 void	pipe_close(int *pipefd, int limn);
 void	do_echo(t_tree *cmdtree);
