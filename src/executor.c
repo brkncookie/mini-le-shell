@@ -126,12 +126,12 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	//prot
 	if (!pid)
 	{
-		if (redr_fds)
-			(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
 		//prot
 		prgm = is_vld_exc(prgm, vars_lst);
 		if (!prgm)
 			exit(127);
+		if (redr_fds)
+			(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
 		execve(prgm, cmdtree->arg, envs);
 	}
 	pipe_close(redr_fds, limn);
