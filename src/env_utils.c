@@ -11,11 +11,15 @@ char	**get_dblarr(t_list **vars_lst)
 	i = 0;
 	tmp = *vars_lst;
 	envs = ft_calloc(sizeof(char *), ft_lstsize(*vars_lst) + 1);
+	if (!envs)
+		return (NULL);
 	while (tmp)
 	{
 		envs[i] = ft_calloc(sizeof(char),
 				ft_strlen(((t_var *)tmp->content)->key)
 				+ ft_strlen(((t_var *)tmp->content)->val) + 2);
+		if (!envs[i])
+			return (free_dblarr(envs, ft_lstsize(*vars_lst)), NULL);
 		ft_strlcat(envs[i], ((t_var *)tmp->content)->key,
 			ft_strlen(((t_var *)tmp->content)->key) + 1);
 		ft_strlcat(envs[i], "=", ft_strlen(envs[i]) + 2);
@@ -24,7 +28,6 @@ char	**get_dblarr(t_list **vars_lst)
 		i++;
 		tmp = tmp->next;
 	}
-	envs[i] = NULL;
 	return (envs);
 }
 

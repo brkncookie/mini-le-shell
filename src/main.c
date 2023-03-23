@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/22 16:58:55 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/23 14:41:53 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,18 @@
 
 extern int	g_flag;
 
+char	*get_set_buf(char *cmd)
+{
+	static char	*cmd_buf;
+
+	cmd_buf = NULL;
+	if (cmd)
+		cmd_buf = cmd;
+	return (cmd_buf);
+}
+
 void	action(int sig)
 {
-	char	*prpt;
-
-	prpt = "Nut-Shell> ";
 	if (sig == SIGQUIT)
 	{
 		g_flag = 127;
@@ -28,8 +35,11 @@ void	action(int sig)
 	}
 	if (sig == SIGINT)
 	{
-		printf("\n%s", prpt);
-		g_flag = 1000;
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		g_flag = 130;
 		return ;
 	}
 }
@@ -97,12 +107,6 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		prompt(&cmd_buf, &error);
-		if (g_flag == 1000)
-		{
-			g_flag = 130;
-			free(cmd_buf);
-			continue ;
-		}
 		if (!cmd_buf)
 			do_exit("130", 1);
 		tkns = tokenize(cmd_buf);
