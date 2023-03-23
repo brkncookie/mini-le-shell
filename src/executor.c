@@ -124,18 +124,21 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	if (do_builtin(cmdtree, redr_fds, vars_lst))
 		return (pipe_close(redr_fds, limn), g_flag);
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
-	//prot
+	if (!prgm)
+		return (printf("Allocation error\n"), 1);
 	pid = fork();
-	//prot
+	if (pid < 0)
+		return (perror("fork"), g_flag = 254);
 	if (!pid)
 	{
-		//prot
 		prgm = is_vld_exc(prgm, vars_lst);
 		if (!prgm)
 			exit(127);
 		if (redr_fds)
-			(dup2(redr_fds[0], 0), dup2(redr_fds[1], 1));
+			if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0)
+				return (perror("dup2"), exit(errno), 1);
 		execve(prgm, cmdtree->arg, envs);
+		return (perror("execve"), exit(errno), 1);
 	}
 	pipe_close(redr_fds, limn);
 	if (limn > 0 || limn == -2)
@@ -158,7 +161,8 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	limn_fds[1] = redr_fds[1];
 	if (!(cmdtree->tkn->type & PIPE))
 		return (do_cmd(cmdtree, redr_fds, limn, vars_lst));
-	pipe(pipefd);
+	if (pipe(pipefd) < 0)
+		return (perror("pipe"), 1);
 	lisr_fds[1] = pipefd[1];
 	limn_fds[0] = pipefd[0];
 	if (cmdtree->redr && rslv_redr(cmdtree->redr, &lisr_fds[0], 0, 0))
