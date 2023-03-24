@@ -16,15 +16,15 @@ char	**get_dblarr(t_list **vars_lst)
 	while (tmp)
 	{
 		envs[i] = ft_calloc(sizeof(char),
-				ft_strlen(((t_var *)tmp->content)->key)
-				+ ft_strlen(((t_var *)tmp->content)->val) + 2);
+							ft_strlen(((t_var *)tmp->content)->key)
+								+ ft_strlen(((t_var *)tmp->content)->val) + 2);
 		if (!envs[i])
 			return (free_dblarr(envs, ft_lstsize(*vars_lst)), NULL);
 		ft_strlcat(envs[i], ((t_var *)tmp->content)->key,
-			ft_strlen(((t_var *)tmp->content)->key) + 1);
+				ft_strlen(((t_var *)tmp->content)->key) + 1);
 		ft_strlcat(envs[i], "=", ft_strlen(envs[i]) + 2);
 		ft_strlcat(envs[i], ((t_var *)tmp->content)->val, ft_strlen(envs[i])
-			+ ft_strlen(((t_var *)tmp->content)->val) + 1);
+				+ ft_strlen(((t_var *)tmp->content)->val) + 1);
 		i++;
 		tmp = tmp->next;
 	}
@@ -59,23 +59,24 @@ char	*ft_getenv(char *key, t_list *vars)
 	return (NULL);
 }
 
-char	*ft_getenvi(char *key, t_list *vars, int *len)
+char	*ft_getenvi(char *key, t_list *vars, int *len, int *j)
 {
+	if (!ft_strncmp(key, "?", 1))
+		return (*len = 2, ft_strndup(ft_itoa(g_flag),
+				ft_strlen(ft_itoa(g_flag)) + 1));
 	while (vars)
 	{
 		*len = ft_strlen(((t_var *)vars->content)->key) + 1;
 		if (!ft_strncmp(key, ((t_var *)vars->content)->key, *len - 1))
 		{
-			if (!key[*len - 1] || key[*len - 1] == '$' || key[*len - 1] == '"'
-				|| key[*len - 1] == '\'' || key[*len - 1] == ' ')
-				return (ft_strndup(((t_var *)vars->content)->val,
+			if (!key[*len - 1] || !ft_isalnum(key[*len - 1]))
+				return (*j = *j + 1, ft_strndup(((t_var *)vars->content)->val,
 						ft_strlen(((t_var *)vars->content)->val)));
 		}
 		vars = vars->next;
 	}
 	*len = 1;
-	while (key[*len - 1] && key[*len - 1] != '$' && key[*len - 1] != '"'
-		&& key[*len - 1] != '\'' && key[*len - 1] != ' ')
+	while (key[*len - 1] && ft_isalnum(key[*len - 1]))
 		*len = *len + 1;
 	return (ft_strndup("", 1));
 }

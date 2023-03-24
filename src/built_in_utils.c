@@ -25,11 +25,11 @@ void	expand(t_tree *cmdtree, int i)
 
 	args_num = count_args(cmdtree);
 	num = args_num;
+	d = opendir(".");
 	if (!ft_strncmp(cmdtree->arg[i], "*", 2))
 	{
 		cmdtree->arg = reallocate(cmdtree->arg, sizeof(char *) * args_num,
 				(count_dir() + args_num) * sizeof(char *));
-		d = opendir(".");
 		if (d)
 		{
 			fil = readdir(d);
@@ -38,14 +38,13 @@ void	expand(t_tree *cmdtree, int i)
 			while (fil)
 			{
 				fil = readdir(d);
-				if (fil)
-					if (ft_strncmp(fil->d_name, ".", 1))
-						cmdtree->arg[args_num++] = fil->d_name;
+				if (fil && ft_strncmp(fil->d_name, ".", 1))
+					cmdtree->arg[args_num++] = fil->d_name;
 			}
 			swap_args(cmdtree, i, num, args_num - 1);
-			//closedir(d);
 		}
 	}
+	closedir(d);
 }
 
 void	*reallocate(void *ptr, int oldsize, int size)

@@ -26,10 +26,10 @@ void	do_exit(char *arg, int args_num)
 	else if (args_num == 2 && is_num(arg))
 		exit(ft_atoi(arg));
 	else if (args_num > 2)
-		printf("exit: too many arguments");
+		printf("exit: too many arguments\n");
 	else
 	{
-		printf("exit: numeric argument required");
+		printf("exit: numeric argument required\n");
 		exit(2);
 	}
 }

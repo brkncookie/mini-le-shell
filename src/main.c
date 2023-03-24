@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/23 14:41:53 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/23 14:56:49 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,6 @@
 #include <stdio.h>
 
 extern int	g_flag;
-
-char	*get_set_buf(char *cmd)
-{
-	static char	*cmd_buf;
-
-	cmd_buf = NULL;
-	if (cmd)
-		cmd_buf = cmd;
-	return (cmd_buf);
-}
 
 void	action(int sig)
 {
@@ -89,6 +79,8 @@ void	prompt(char **cmd_buf, int *error)
 {
 	*error = 0;
 	*cmd_buf = readline("Nut-Shell> ");
+	if (!*cmd_buf)
+		do_exit("130", 1);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -107,8 +99,6 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		prompt(&cmd_buf, &error);
-		if (!cmd_buf)
-			do_exit("130", 1);
 		tkns = tokenize(cmd_buf);
 		if (ft_strlen(cmd_buf) > 0)
 			add_history(cmd_buf);
@@ -126,8 +116,7 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		executor(tree, &vars_lst);
-		if (cmd_buf)
-			free(cmd_buf);
+		free(cmd_buf);
 	}
 	return (0);
 }
