@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/25 15:17:51 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/26 17:51:12 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,13 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 
 int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 {
-	int		r_val;
-	int		pid;
-	char	*prgm;
-	char	**envs;
+	int			r_val;
+	int			pid;
+	char		*prgm;
+	static char	**envs;
 
-	envs = get_dblarr(vars_lst);
+	if (!envs)
+		envs = get_dblarr(vars_lst);
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (rslv_redr(cmdtree, redr_fds, 0, 1), errno);
 	if (cmdtree->redr)

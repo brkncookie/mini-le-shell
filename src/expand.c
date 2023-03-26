@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:36:14 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/26 14:36:17 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/26 23:17:23 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 int	is_inquotes(t_tree **cmdtree, char *str)
 {
 	t_tree		*tmp;
-	static int	i = 0;
+	static int	i;
 
+	i = 0;
 	tmp = *cmdtree;
 	while (tmp->tkn->next)
 	{
@@ -33,6 +34,16 @@ int	is_inquotes(t_tree **cmdtree, char *str)
 	return (0);
 }
 
+char	*ft_realloc(char *str, int len)
+{
+	char	*new;
+
+	new = ft_calloc(sizeof(char), len + 1);
+	ft_strlcpy(new, str, len + 1);
+	free(str);
+	return (new);
+}
+
 void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst)
 {
 	char	*val;
@@ -40,15 +51,17 @@ void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst)
 
 	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j))
 	{
-		val = ft_getenvi(cmdtree->arg[i] + *j + 1, *vars_lst, &len, j);
+		val = ft_getenvi(cmdtree->arg[i] + *j + 1, *vars_lst, &len);
 		len += *j;
 		ft_strlcat(val, cmdtree->arg[i] + len, ft_strlen(val)
 			+ ft_strlen(cmdtree->arg[i] + len) + 1);
-		cmdtree->arg[i][*j] = '\0';
+		cmdtree->arg[i] = ft_realloc(cmdtree->arg[i], *j);
 		ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
 			+ ft_strlen(cmdtree->arg[i]) + 1);
-		if (!ft_strncmp(val, "0", 2))
+		if (ft_strncmp(val, cmdtree->arg[i] + len, ft_strlen(cmdtree->arg[i]
+					+ len)))
 			*j = *j + 1;
+		free(val);
 	}
 	else
 		*j = *j + 1;

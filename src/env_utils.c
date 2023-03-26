@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/26 22:32:48 by saltysushi        #+#    #+#             */
+/*   Updated: 2023/03/26 23:33:50 by saltysushi       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/executor.h"
 
 extern int	g_flag;
@@ -59,18 +71,17 @@ char	*ft_getenv(char *key, t_list *vars)
 	return (NULL);
 }
 
-char	*ft_getenvi(char *key, t_list *vars, int *len, int *j)
+char	*ft_getenvi(char *key, t_list *vars, int *len)
 {
 	if (!ft_strncmp(key, "?", 1))
-		return (*len = 2, ft_strndup(ft_itoa(g_flag),
-				ft_strlen(ft_itoa(g_flag)) + 1));
+		return (*len = 2, ft_itoa(g_flag));
 	while (vars)
 	{
 		*len = ft_strlen(((t_var *)vars->content)->key) + 1;
 		if (!ft_strncmp(key, ((t_var *)vars->content)->key, *len - 1))
 		{
 			if (!key[*len - 1] || !ft_isalnum(key[*len - 1]))
-				return (*j = *j + 1, ft_strndup(((t_var *)vars->content)->val,
+				return (ft_strndup(((t_var *)vars->content)->val,
 						ft_strlen(((t_var *)vars->content)->val)));
 		}
 		vars = vars->next;

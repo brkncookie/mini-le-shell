@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/23 14:56:49 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/26 23:09:43 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,16 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		tree = giv_tree(tkns, &error);
-		if (error || !tree)
+		if (error || !tree || !vars_lst)
 		{
 			g_flag = 2;
 			free(cmd_buf);
+			freelst(&tkns);
 			continue ;
 		}
 		executor(tree, &vars_lst);
+		freetree(tree);
+		freelst(&tkns);
 		free(cmd_buf);
 	}
 	return (0);
