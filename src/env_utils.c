@@ -16,15 +16,15 @@ char	**get_dblarr(t_list **vars_lst)
 	while (tmp)
 	{
 		envs[i] = ft_calloc(sizeof(char),
-							ft_strlen(((t_var *)tmp->content)->key)
-								+ ft_strlen(((t_var *)tmp->content)->val) + 2);
+				ft_strlen(((t_var *)tmp->content)->key)
+				+ ft_strlen(((t_var *)tmp->content)->val) + 2);
 		if (!envs[i])
 			return (free_dblarr(envs, ft_lstsize(*vars_lst)), NULL);
 		ft_strlcat(envs[i], ((t_var *)tmp->content)->key,
-				ft_strlen(((t_var *)tmp->content)->key) + 1);
+			ft_strlen(((t_var *)tmp->content)->key) + 1);
 		ft_strlcat(envs[i], "=", ft_strlen(envs[i]) + 2);
 		ft_strlcat(envs[i], ((t_var *)tmp->content)->val, ft_strlen(envs[i])
-				+ ft_strlen(((t_var *)tmp->content)->val) + 1);
+			+ ft_strlen(((t_var *)tmp->content)->val) + 1);
 		i++;
 		tmp = tmp->next;
 	}

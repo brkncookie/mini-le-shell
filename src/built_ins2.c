@@ -2,20 +2,6 @@
 
 extern int	g_flag;
 
-int	is_num(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 void	do_exit(char *arg, int args_num)
 {
 	if (args_num == 1)
@@ -101,12 +87,6 @@ void	do_export(t_tree *cmdtree, t_list **vars_lst)
 					ft_strlen(((t_var *)tmp->content)->key)))
 			{
 				free(((t_var *)tmp->content)->val);
-				// if (equ == (int)ft_strlen(cmdtree->arg[i]) - 1
-				// 	&& !next_isspace(&cmdtree, cmdtree->arg[i]))
-				// {
-				// 	equ = -1;
-				// 	i++;
-				// }
 				((t_var *)tmp->content)->val = ft_substr(cmdtree->arg[i], equ
 						+ 1, ft_strlen(cmdtree->arg[i]));
 				found = 1;

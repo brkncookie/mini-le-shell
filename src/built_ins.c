@@ -92,7 +92,7 @@ void	do_env(t_tree *cmdtree, t_list **vars_lst)
 		while (tmp)
 		{
 			printf("%s=%s\n", ((t_var *)tmp->content)->key,
-					((t_var *)tmp->content)->val);
+				((t_var *)tmp->content)->val);
 			tmp = tmp->next;
 		}
 		g_flag = 0;

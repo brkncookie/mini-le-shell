@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/17 23:55:47 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/25 15:11:30 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	pipe_close(int *pipefd, int limn)
 	struct stat	read;
 	struct stat	write;
 
-	if(limn == -2)
+	if (limn == -2)
 		return ;
 	if (!pipefd || !limn)
 		return ;
@@ -111,7 +111,7 @@ char	*is_vld_exc(char *path, t_list **vars_lst)
 	int		i;
 
 	if (dir_exists(path))
-		return (printf("%s: is a directory\n", path), free(path),  NULL);
+		return (printf("%s: is a directory\n", path), free(path), NULL);
 	if (!access(path, F_OK) && !access(path, X_OK))
 		return (path);
 	ppath = ft_getenv("PATH", *vars_lst);
