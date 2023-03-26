@@ -52,5 +52,6 @@ char	**get_dblarr(t_list **vars_lst);
 void	free_dblarr(char **arr, int i);
 char	*ft_getenvi(char *key, t_list *vars, int *len, int *j);
 size_t	ft_strlcat(char *dest, const char *src, size_t size);
+void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst);
 
 #endif

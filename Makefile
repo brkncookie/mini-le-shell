@@ -1,6 +1,10 @@
+LIBFT_SRCS = $(shell cat libft/Makefile | grep 'SRCS ' |  cut -d '=' -f 2)
+
+LIBFT_SRCS_WITH_DIR = $(addprefix libft/, $(LIBFT_SRCS))
+
 SRCS_NAMES = built_in_utils.c built_ins.c built_ins2.c env_utils.c executor_utils.c \
 executor.c main.c parser_utils.c parser.c parser1.c tknizer_utils.c tokenizer.c \
-utils.c
+utils.c expand.c
 
 OBJS_DIR = objs/
 
@@ -14,19 +18,19 @@ OBJS = $(addprefix $(OBJS_DIR), $(OBJS_NAMES))
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 
-NAME = Nut_Shell
+NAME = minishell
 
-$(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)* libft/libft.a
+$(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)*
 	@mkdir -p $(OBJS_DIR)
-	$(CC) $(CC_FLAGS) -c $< libft/libft.a -o $@
+	$(CC) $(CC_FLAGS) -c $< -o $@
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBFT_SRCS_WITH_DIR)
 	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -lreadline
 
 all: $(NAME)
 
-libft/libft.a:
-	make --directory=libft
+$(LIBFT_SRCS_WITH_DIR):
+	make  --directory=libft
 
 clean:
 	rm -rf $(OBJS_DIR)
