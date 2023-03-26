@@ -12,7 +12,7 @@ SRCS_DIR = src/
 
 HEADER = include/
 
-CC_FLAGS = -Wall -Wextra -Werror -I $(HEADER)
+CC_FLAGS = -Wall -Wextra -Werror -ggdb3 -I $(HEADER)
 
 OBJS_NAMES = $(SRCS_NAMES:c=o)
 
@@ -20,7 +20,7 @@ OBJS = $(addprefix $(OBJS_DIR), $(OBJS_NAMES))
 
 LIBFT_OBJS_DIR = $(addprefix libft/, $(LIBFT_OBJS))
 
-NAME = Minishell
+NAME = minishell
 
 $(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)*
 	@mkdir -p $(OBJS_DIR)
@@ -32,11 +32,11 @@ $(NAME): $(OBJS) $(LIBFT_OBJS_DIR)
 all: $(NAME)
 
 libft/%.o:libft/%.c
-	make --directory=libft
+	@make -s --directory=libft
 
 clean:
 	rm -rf $(OBJS_DIR)
-	make --directory=libft fclean
+	@make  -s --directory=libft fclean
 
 fclean: clean
 	rm -rf $(NAME)

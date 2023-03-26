@@ -22,7 +22,6 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 	int			out;
 	static char	*pwd;
 
-	pwd = NULL;
 	if (!pwd)
 		pwd = getcwd(0, 500);
 	if (redr_fds)
@@ -105,7 +104,7 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 		waitpid(pid, &r_val, 0);
 	g_flag = WEXITSTATUS(r_val);
 	free_dblarr(envs, ft_lstsize(*vars_lst));
-	return (WEXITSTATUS(r_val));
+	return (free(prgm), WEXITSTATUS(r_val));
 }
 
 int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)

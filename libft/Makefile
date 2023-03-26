@@ -17,8 +17,8 @@ all: $(NAME)
 $(NAME): $(OBJS) $(HEADER)
 	ar rc $(NAME) $(OBJS)
 
-%.c: %.o
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c libft.h
+	$(CC) $(CFLAGS) -c  $< -o $@
 
 clean:
 	$(RM) $(OBJS)
