@@ -71,23 +71,19 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 		redr = redr->redr;
 		free(file);
 	}
-	if (redr_fds)
+	if (!limn && fds[0] != 0)
+		redr_fds[0] = fds[0];
+	if (limn && fds[1] != 1)
+		redr_fds[1] = fds[1];
+	if (cmd && fds[1] != 1)
 	{
-		if (!limn && fds[0] != 0)
-			redr_fds[0] = fds[0];
-		if (limn && fds[1] != 1)
-			redr_fds[1] = fds[1];
-		if (cmd && fds[1] != 1)
+		if (t_redr)
 		{
-			if (t_redr)
-			{
-				if (!(t_redr->tkn->type & HERE_DOC))
-					redr_fds[1] = fds[1];
-			}
-			else
+			if (!(t_redr->tkn->type & HERE_DOC))
 				redr_fds[1] = fds[1];
 		}
-		return (redr_fds);
+		else
+			redr_fds[1] = fds[1];
 	}
 	return (redr_fds);
 }
@@ -104,10 +100,8 @@ void	fre2d(char **path)
 	free(path);
 }
 
-char	*is_vld_exc(char *path, t_list **vars_lst)
+char	*is_vld_exc(char *path, t_list **vars_lst, char	*ppath, char	**paths)
 {
-	char	*ppath;
-	char	**paths;
 	int		i;
 
 	if (dir_exists(path))
@@ -116,12 +110,12 @@ char	*is_vld_exc(char *path, t_list **vars_lst)
 		return (path);
 	ppath = ft_getenv("PATH", *vars_lst);
 	if (!ppath)
-		return (free(path), printf("Not a valid executable\n"), NULL);
+		return (free(path), printf("Error Fetching $PATH\n"), NULL);
 	paths = ft_split(ppath, ':');
 	i = -1;
 	while (paths && paths[++i])
 	{
-		ppath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2,
+		ppath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2, \
 				sizeof(*ppath));
 		if (!ppath)
 			return (fre2d(paths), free(path), NULL);

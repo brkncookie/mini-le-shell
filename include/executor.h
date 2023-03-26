@@ -29,7 +29,8 @@ typedef struct s_var
 
 int		do_logops(t_tree *cmdtree, int	*redr_fds, int limn, t_list **vars_lst);
 int		*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd);
-char	*is_vld_exc(char *path, t_list **vars_lst);
+char	*is_vld_exc(char *path, t_list **vars_lst, \
+		char	*ppath, char	**paths);
 int		is_num(char *str);
 int		dir_exists(const char *path);
 void	executor(t_tree *cmdtree, t_list **vars_lst);
