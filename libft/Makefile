@@ -8,15 +8,20 @@ CC	= cc
 RM	= rm -f
 CFLAGS = -Wall -Wextra -Werror -I.
 
+HEADER = libft.h
+
 NAME = libft.a
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(HEADER)
 	ar rc $(NAME) $(OBJS)
 
+%.c: %.o
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	$(RM) $(OBJS) $(BONUS_OBJS)
+	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)
