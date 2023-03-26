@@ -1,6 +1,10 @@
+LIBFT_SRCS = $(shell cat libft/Makefile | grep "SRCS " | cut -d '=' -f 2)
+
+LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
+
 SRCS_NAMES = built_in_utils.c built_ins.c built_ins2.c env_utils.c executor_utils.c \
 executor.c main.c parser_utils.c parser.c parser1.c tknizer_utils.c tokenizer.c \
-utils.c
+utils.c expand.c
 
 OBJS_DIR = objs/
 
@@ -8,24 +12,26 @@ SRCS_DIR = src/
 
 HEADER = include/
 
+CC_FLAGS = -Wall -Wextra -Werror -I $(HEADER)
+
 OBJS_NAMES = $(SRCS_NAMES:c=o)
 
 OBJS = $(addprefix $(OBJS_DIR), $(OBJS_NAMES))
 
-SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
+LIBFT_OBJS_DIR = $(addprefix libft/, $(LIBFT_OBJS))
 
-NAME = Nut_Shell
+NAME = Minishell
 
-$(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)* libft/libft.a
+$(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)*
 	@mkdir -p $(OBJS_DIR)
-	$(CC) $(CC_FLAGS) -c $< libft/libft.a -o $@
+	$(CC) $(CC_FLAGS) -c $< -o $@
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBFT_OBJS_DIR)
 	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -lreadline
 
 all: $(NAME)
 
-libft/libft.a:
+libft/%.o: libft/%.c
 	make --directory=libft
 
 clean:
