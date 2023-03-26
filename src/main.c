@@ -117,6 +117,8 @@ int	main(int ac, char **av, char **envp)
 		}
 		executor(tree, &vars_lst);
 		free(cmd_buf);
+		freetree(tree);
+		freelst(&tkns);
 	}
 	return (0);
 }
