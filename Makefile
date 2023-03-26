@@ -31,7 +31,7 @@ $(NAME): $(OBJS) $(LIBFT_OBJS_DIR)
 
 all: $(NAME)
 
-libft/%.o: libft/%.c
+libft/libft.a:
 	make --directory=libft
 
 clean:
