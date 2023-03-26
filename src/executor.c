@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/26 17:51:12 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/26 23:47:52 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,20 +81,10 @@ int	do_child(char	*prgm, t_tree	*cmdtree, t_list **vars_lst, int *redr_fds)
 
 int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 {
-<<<<<<< HEAD
-	int			r_val;
-	int			pid;
-	char		*prgm;
-	static char	**envs;
-
-	if (!envs)
-		envs = get_dblarr(vars_lst);
-=======
 	int		r_val;
 	int		pid;
 	char	*prgm;
 
->>>>>>> 8bdec6062233196e6cc7a4a070bab77f4e90c3ad
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (rslv_redr(cmdtree, redr_fds, 0, 1), errno);
 	if (cmdtree->redr && !rslv_redr(cmdtree->redr, redr_fds, 0, 1))
