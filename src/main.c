@@ -120,8 +120,6 @@ int	main(int ac, char **av, char **envp)
 		freetree(tree);
 		freelst(&tkns);
 		free(cmd_buf);
-		freetree(tree);
-		freelst(&tkns);
 	}
 	return (0);
 }
