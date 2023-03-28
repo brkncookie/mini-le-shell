@@ -1,149 +1,114 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins2.c                                       :+:      :+:    :+:   */
+/*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/26 22:32:30 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/28 16:53:42 by saltysushi       ###   ########.fr       */
+/*   Created: 2023/03/26 22:32:04 by saltysushi        #+#    #+#             */
+/*   Updated: 2023/03/28 16:54:54 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
-extern int	g_flag[2];
+int		g_flag[2] = {0, 1};
 
-void	do_exit(char *arg, int args_num)
+int	dir_exists(const char *path)
 {
-	if (args_num == 1)
-	{
-		printf("exit\n");
-		exit(0);
-	}
-	else if (args_num == 2 && is_num(arg))
-		exit(ft_atoi(arg));
-	else if (args_num > 2)
-		printf("exit: too many arguments\n");
-	else
-	{
-		printf("exit: numeric argument required\n");
-		exit(2);
-	}
-}
+	struct stat	stats;
 
-int	next_isspace(t_tree **cmdtree, char *str)
-{
-	t_tree	*tmp;
-
-	tmp = *cmdtree;
-	while (tmp->tkn->prev)
-		tmp->tkn = tmp->tkn->prev;
-	while (tmp->tkn->next)
-	{
-		if (!ft_strncmp(tmp->tkn->val, str, ft_strlen(str))
-			&& !(tmp->tkn->next->type & (WORD | QUOTE | DQUOTE)))
-			return (1);
-		tmp->tkn = tmp->tkn->next;
-	}
+	stat(path, &stats);
+	if (S_ISDIR(stats.st_mode))
+		return (1);
 	return (0);
 }
 
-void	add_variable(t_list **vars_lst, t_tree *cmdtree, int *i)
+void	do_echo(t_tree *cmdtree)
 {
-	t_var	*var;
-	int		equ;
+	int	i;
 
-	var = ft_calloc(1, sizeof(t_var));
-	equ = ft_strchrr(cmdtree->arg[*i], '=');
-	var->key = ft_substr(cmdtree->arg[*i], 0, equ);
-	var->val = ft_substr(cmdtree->arg[*i], equ + 1,
-			ft_strlen(cmdtree->arg[*i]));
-	ft_lstadd_back(vars_lst, ft_lstnew(var));
+	i = 1;
+	if (!cmdtree->arg)
+	{
+		printf("\n");
+		return ;
+	}
+	while (cmdtree->arg[i])
+	{
+		if (i == 1 && !ft_strncmp(cmdtree->arg[i], "-n", 3) && i++)
+			continue ;
+		printf("%s", cmdtree->arg[i++]);
+		if (cmdtree->arg[i])
+			printf(" ");
+	}
+	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 3))
+		printf("\n");
+	g_flag[0] = EXIT_SUCCESS;
 }
 
-void	do_export(t_tree *cmdtree, t_list **vars_lst)
+void	do_pwd(char *pwd)
 {
-	t_list	*tmp;
-	int		i;
-	int		equ;
-	int		found;
+	if (pwd)
+	{
+		printf("%s\n", pwd);
+		g_flag[0] = EXIT_SUCCESS;
+	}
+	else
+		g_flag[0] = EXIT_FAILURE;
+}
+
+void	do_cd(t_tree *cmdtree, char *pwd)
+{
+	char	*tmp;
 
 	g_flag[0] = 0;
-	i = 1;
+	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2)
+		|| !ft_strncmp(cmdtree->arg[1], "..", 3))
+	{
+		if (ft_strncmp(cmdtree->arg[1], "..", 3))
+			chdir(getenv("HOME"));
+		else
+			chdir("..");
+		free(pwd);
+		pwd = getcwd(0, 500);
+	}
+	else
+	{
+		tmp = getcwd(0, 500);
+		if (dir_exists(cmdtree->arg[1]) && tmp)
+		{
+			chdir(cmdtree->arg[1]);
+			free(pwd);
+			pwd = getcwd(0, 500);
+			free(tmp);
+		}
+		else
+		{
+			g_flag[0] = 1;
+			if (cmdtree->arg[2])
+				printf("cd: too many arguments\n");
+			else
+				printf("cd: invalid directory path\n");
+		}
+	}
+}
+
+void	do_env(t_tree *cmdtree, t_list **vars_lst)
+{
+	t_list	*tmp;
+
 	tmp = *vars_lst;
 	if (!cmdtree->arg[1])
 	{
 		while (tmp)
 		{
-			printf("declare -x %s=%s\n", ((t_var *)tmp->content)->key,
+			printf("%s=%s\n", ((t_var *)tmp->content)->key,
 				((t_var *)tmp->content)->val);
 			tmp = tmp->next;
 		}
+		g_flag[0] = 0;
 	}
-	while (cmdtree->arg[i])
-	{
-		equ = ft_strchrr(cmdtree->arg[i], '=');
-		if ((ft_isdigit(cmdtree->arg[i][0]) && cmdtree->arg[i][0] == '=')
-			|| !ft_strchr(cmdtree->arg[i], '='))
-		{
-			printf("export: %s: invalid argument\n", cmdtree->arg[i++]);
-			g_flag[0] = 1;
-			continue ;
-		}
-		found = 0;
-		tmp = *vars_lst;
-		while (tmp && tmp->content)
-		{
-			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->content)->key,
-					ft_strlen(((t_var *)tmp->content)->key)))
-			{
-				free(((t_var *)tmp->content)->val);
-				((t_var *)tmp->content)->val = ft_substr(cmdtree->arg[i], equ
-						+ 1, ft_strlen(cmdtree->arg[i]));
-				found = 1;
-				break ;
-			}
-			tmp = tmp->next;
-		}
-		if (!found)
-			add_variable(vars_lst, cmdtree, &i);
-		i++;
-	}
-}
-
-void	do_unset(t_tree *cmdtree, t_list **vars_lst)
-{
-	int		i;
-	t_list	*tmp;
-	t_list	*next;
-
-	g_flag[0] = 0;
-	tmp = *vars_lst;
-	while (tmp && tmp->next && tmp->next->content)
-	{
-		i = 1;
-		while (cmdtree->arg[i])
-		{
-			if ((ft_isdigit(cmdtree->arg[i][0])))
-			{
-				printf("unset: %s: invalid argument\n", cmdtree->arg[i++]);
-				g_flag[0] = 1;
-				continue ;
-			}
-			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->next->content)->key,
-					ft_strlen(((t_var *)tmp->next->content)->key) + 1))
-			{
-				next = tmp->next;
-				tmp->next = next->next;
-				free(((t_var *)next->content)->key);
-				free(((t_var *)next->content)->val);
-				free(next->content);
-				free(next);
-				return ;
-			}
-			i++;
-		}
-		tmp = tmp->next;
-	}
+	else
+		g_flag[0] = 127;
 }

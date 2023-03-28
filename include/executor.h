@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/28 02:10:43 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 18:10:46 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int		is_num(char *str);
 int		dir_exists(const char *path);
 void	executor(t_tree *cmdtree, t_list **vars_lst);
 void	pipe_close(int *pipefd, int limn);
+int		do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst);
 void	do_echo(t_tree *cmdtree);
 void	do_pwd(char *pwd);
 void	do_cd(t_tree *cmdtree, char *pwd);

@@ -5,110 +5,61 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/26 22:32:04 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/28 16:54:54 by saltysushi       ###   ########.fr       */
+/*   Created: 2023/03/28 18:11:16 by saltysushi        #+#    #+#             */
+/*   Updated: 2023/03/28 18:11:36 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
-int		g_flag[2] = {0, 1};
-
-int	dir_exists(const char *path)
+int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 {
-	struct stat	stats;
+	int			i;
+	int			j;
+	int			in;
+	int			out;
+	static char	*pwd;
 
-	stat(path, &stats);
-	if (S_ISDIR(stats.st_mode))
-		return (1);
-	return (0);
-}
-
-void	do_echo(t_tree *cmdtree)
-{
-	int	i;
-
-	i = 1;
-	if (!cmdtree->arg)
-	{
-		printf("\n");
-		return ;
-	}
-	while (cmdtree->arg[i])
-	{
-		if (i == 1 && !ft_strncmp(cmdtree->arg[i], "-n", 3) && i++)
-			continue ;
-		printf("%s", cmdtree->arg[i++]);
-		if (cmdtree->arg[i])
-			printf(" ");
-	}
-	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 3))
-		printf("\n");
-	g_flag[0] = EXIT_SUCCESS;
-}
-
-void	do_pwd(char *pwd)
-{
-	if (pwd)
-	{
-		printf("%s\n", pwd);
-		g_flag[0] = EXIT_SUCCESS;
-	}
-	else
-		g_flag[0] = EXIT_FAILURE;
-}
-
-void	do_cd(t_tree *cmdtree, char *pwd)
-{
-	char	*tmp;
-
-	g_flag[0] = 0;
-	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2)
-		|| !ft_strncmp(cmdtree->arg[1], "..", 3))
-	{
-		if (ft_strncmp(cmdtree->arg[1], "..", 3))
-			chdir(getenv("HOME"));
-		else
-			chdir("..");
-		free(pwd);
+	if (!pwd)
 		pwd = getcwd(0, 500);
-	}
-	else
+	if (redr_fds)
 	{
-		tmp = getcwd(0, 500);
-		if (dir_exists(cmdtree->arg[1]) && tmp)
+		in = dup(0);
+		out = dup(1);
+		if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0)
+			return (perror("dup2"), exit(errno), 1);
+	}
+	i = 0;
+	while (cmdtree->arg && cmdtree->arg[i])
+	{
+		j = 0;
+		while (cmdtree->arg[i][j])
 		{
-			chdir(cmdtree->arg[1]);
-			free(pwd);
-			pwd = getcwd(0, 500);
-			free(tmp);
-		}
-		else
-		{
-			g_flag[0] = 1;
-			if (cmdtree->arg[2])
-				printf("cd: too many arguments\n");
+			if (cmdtree->arg[i][j] == '$')
+				expand2(cmdtree, i, &j, vars_lst);
 			else
-				printf("cd: invalid directory path\n");
+				j++;
 		}
+		expand(cmdtree, i);
+		i++;
 	}
-}
-
-void	do_env(t_tree *cmdtree, t_list **vars_lst)
-{
-	t_list	*tmp;
-
-	tmp = *vars_lst;
-	if (!cmdtree->arg[1])
-	{
-		while (tmp)
-		{
-			printf("%s=%s\n", ((t_var *)tmp->content)->key,
-				((t_var *)tmp->content)->val);
-			tmp = tmp->next;
-		}
-		g_flag[0] = 0;
-	}
+	if (!ft_strncmp(cmdtree->arg[0], "echo", 5))
+		return (do_echo(cmdtree), (dup2(in, 0), dup2(out, 1)), 1);
+	if (!ft_strncmp(cmdtree->arg[0], "exit", 5))
+		return (do_exit(cmdtree->arg[1], count_args(cmdtree)), (dup2(in, 0),
+				dup2(out, 1)), 1);
+	else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
+		return (do_cd(cmdtree, pwd), (dup2(in, 0), dup2(out, 1)), 1);
+	else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
+		return (do_pwd(pwd), (dup2(in, 0), dup2(out, 1)), 1);
+	else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
+		return (do_env(cmdtree, vars_lst), (dup2(in, 0), dup2(out, 1)), 1);
+	else if (!ft_strncmp(cmdtree->arg[0], "export", 7))
+		return (do_export(cmdtree, vars_lst), (dup2(in, 0), dup2(out, 1)), 1);
+	else if (!ft_strncmp(cmdtree->arg[0], "unset", 6))
+		return (do_unset(cmdtree, vars_lst), (dup2(in, 0), dup2(out, 1)), 1);
 	else
-		g_flag[0] = 127;
+	{
+		return ((dup2(in, 0), dup2(out, 1)), 0);
+	}
 }

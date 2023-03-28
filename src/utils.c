@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 09:39:31 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/25 15:14:30 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 18:06:12 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,30 @@ char	*ft_strndup(const char *s1, size_t l)
 		return (NULL);
 	ft_memcpy(p, s1, l);
 	return (p);
+}
+
+void	freeredr(t_tree *tree)
+{
+	if (!tree)
+		return ;
+	freeredr(tree->redr);
+	free(tree->limn);
+	free(tree);
+}
+
+void	freetree(t_tree *tree)
+{
+	int	i;
+
+	i = 0;
+	if (!tree)
+		return ;
+	freetree(tree->limn);
+	freetree(tree->lisr);
+	while (tree->arg && tree->arg[i])
+		free(tree->arg[i++]);
+	if (tree->redr)
+		freeredr(tree->redr);
+	free(tree->arg);
+	free(tree);
 }
