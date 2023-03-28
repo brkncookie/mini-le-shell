@@ -104,7 +104,7 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 			tmp = cmdlst->redr->limn->tkn->next;
 		else
 			tmp = tkn->next;
-		while (tmp && tmp->type & WHITE_SPC)
+		while (tmp && tmp->type & (WHITE_SPC | WORD | VAR))
 			tmp = tmp->next;
 		if (tmp && (tmp->type & OPAR && !tmp->stat))
 			return (*error = 2, cmdlst);

@@ -34,13 +34,23 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	int		r_val;
 	int		pid;
 	char	*prgm;
+	int		oredr_fds[2];
 
+	oredr_fds[0] = redr_fds[0];
+	oredr_fds[1] = redr_fds[1];
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (rslv_redr(cmdtree, redr_fds, 0, 1), errno);
 	if (cmdtree->redr && !rslv_redr(cmdtree->redr, redr_fds, 0, 1))
 		return (errno);
 	if (do_builtin(cmdtree, redr_fds, vars_lst))
+	{
+		if (cmdtree->redr)
+		{
+			redr_fds[0] = oredr_fds[0];
+			redr_fds[1] = oredr_fds[1];
+		}
 		return (pipe_close(redr_fds, limn), g_flag[0]);
+	}
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	if (!prgm)
 		return (printf("Allocation error\n"), 1);
@@ -58,6 +68,11 @@ int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	else
 		g_flag[0] = WEXITSTATUS(r_val);
 	g_flag[1] = 1;
+	if (cmdtree->redr)
+	{
+		redr_fds[0] = oredr_fds[0];
+		redr_fds[1] = oredr_fds[1];
+	}
 	return (free(prgm), g_flag[0]);
 }
 
