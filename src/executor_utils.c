@@ -29,45 +29,51 @@ void	pipe_close(int *pipefd, int limn)
 		close(pipefd[1]);
 }
 
+int	*open_files(t_tree *redr, int	*fds, char *file)
+{
+	char	*buf;
+	int		hdfds[2];
+
+	if (redr->tkn->type & REDR_I)
+		fds[0] = open(file, O_RDONLY);
+	else if (redr->tkn->type & REDR_O)
+		fds[1] = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	else if (redr->tkn->type & APPEND)
+		fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	else if (redr->tkn->type & HERE_DOC)
+	{
+		if (pipe(hdfds) < 0)
+			return (free(file), perror("pipe"), NULL);
+		while (1)
+		{
+			buf = readline("> ");
+			if (!buf || !ft_strncmp(buf, file, ft_strlen(file) + 1))
+				break ;
+			write(hdfds[1], buf, ft_strlen(buf));
+			write(hdfds[1], "\n", 1);
+		}
+		close(hdfds[1]);
+		fds[0] = hdfds[0];
+	}
+	return (fds);
+}
+
 int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 {
 	int		fds[2];
 	char	*file;
-	char	*buf;
-	t_tree	*t_redr;
 
 	fds[0] = 0;
 	fds[1] = 1;
-	t_redr = NULL;
 	while (redr)
 	{
 		file = ft_strndup(redr->limn->tkn->val, redr->limn->tkn->len);
 		if (!file)
-			return (free(file), NULL);
-		if (redr->tkn->type & REDR_I)
-			fds[0] = open(file, O_RDONLY);
-		else if (redr->tkn->type & REDR_O)
-			fds[1] = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		else if (redr->tkn->type & APPEND)
-			fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
-		else if (redr->tkn->type & HERE_DOC)
-		{
-			if (!t_redr)
-				t_redr = redr;
-			if (pipe(fds))
-				perror("pipe");
-			while (1)
-			{
-				buf = readline("> ");
-				if (!buf || !ft_strncmp(buf, file, ft_strlen(file) + 1))
-					break ;
-				write(fds[1], buf, ft_strlen(buf));
-				write(fds[1], "\n", 1);
-			}
-			close(fds[1]);
-		}
+			return (NULL);
+		if (!open_files(redr, fds, file))
+			return (NULL);
 		if (fds[1] < 0 || fds[0] < 0)
-			return (free(file), perror(NULL), NULL);
+			return (free(file), perror("open"), NULL);
 		redr = redr->redr;
 		free(file);
 	}
@@ -76,15 +82,7 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 	if (limn && fds[1] != 1)
 		redr_fds[1] = fds[1];
 	if (cmd && fds[1] != 1)
-	{
-		if (t_redr)
-		{
-			if (!(t_redr->tkn->type & HERE_DOC))
-				redr_fds[1] = fds[1];
-		}
-		else
-			redr_fds[1] = fds[1];
-	}
+		redr_fds[1] = fds[1];
 	return (redr_fds);
 }
 
