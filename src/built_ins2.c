@@ -6,13 +6,13 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:30 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/26 22:32:31 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 16:53:42 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
-extern int	g_flag;
+extern int	g_flag[2];
 
 void	do_exit(char *arg, int args_num)
 {
@@ -69,7 +69,7 @@ void	do_export(t_tree *cmdtree, t_list **vars_lst)
 	int		equ;
 	int		found;
 
-	g_flag = 0;
+	g_flag[0] = 0;
 	i = 1;
 	tmp = *vars_lst;
 	if (!cmdtree->arg[1])
@@ -88,7 +88,7 @@ void	do_export(t_tree *cmdtree, t_list **vars_lst)
 			|| !ft_strchr(cmdtree->arg[i], '='))
 		{
 			printf("export: %s: invalid argument\n", cmdtree->arg[i++]);
-			g_flag = 1;
+			g_flag[0] = 1;
 			continue ;
 		}
 		found = 0;
@@ -118,7 +118,7 @@ void	do_unset(t_tree *cmdtree, t_list **vars_lst)
 	t_list	*tmp;
 	t_list	*next;
 
-	g_flag = 0;
+	g_flag[0] = 0;
 	tmp = *vars_lst;
 	while (tmp && tmp->next && tmp->next->content)
 	{
@@ -128,7 +128,7 @@ void	do_unset(t_tree *cmdtree, t_list **vars_lst)
 			if ((ft_isdigit(cmdtree->arg[i][0])))
 			{
 				printf("unset: %s: invalid argument\n", cmdtree->arg[i++]);
-				g_flag = 1;
+				g_flag[0] = 1;
 				continue ;
 			}
 			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->next->content)->key,

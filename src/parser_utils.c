@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/23 12:20:34 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/27 14:09:00 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,15 @@ void	freelst(t_tkns **lst)
 	}
 }
 
+void	freeredr(t_tree *tree)
+{
+	if (!tree)
+		return ;
+	freeredr(tree->redr);
+	free(tree->limn);
+	free(tree);
+}
+
 void	freetree(t_tree *tree)
 {
 	int	i;
@@ -39,10 +48,7 @@ void	freetree(t_tree *tree)
 	while (tree->arg && tree->arg[i])
 		free(tree->arg[i++]);
 	if (tree->redr)
-	{
-		free(tree->redr->limn);
-		free(tree->redr);
-	}
+		freeredr(tree->redr);
 	free(tree->arg);
 	free(tree);
 }

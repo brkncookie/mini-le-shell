@@ -6,13 +6,13 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:48 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/26 23:33:50 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 17:24:04 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
-extern int	g_flag;
+extern int	g_flag[2];
 
 char	**get_dblarr(t_list **vars_lst)
 {
@@ -73,8 +73,12 @@ char	*ft_getenv(char *key, t_list *vars)
 
 char	*ft_getenvi(char *key, t_list *vars, int *len)
 {
-	if (!ft_strncmp(key, "?", 1))
-		return (*len = 2, ft_itoa(g_flag));
+	if (key[0] == '?')
+		return (*len = 2, ft_itoa(g_flag[0]));
+	if (ft_isdigit(key[0]))
+		return (*len = 2, ft_strdup(""));
+	if (!ft_isalpha(key[0]))
+		return (NULL);
 	while (vars)
 	{
 		*len = ft_strlen(((t_var *)vars->content)->key) + 1;
@@ -89,5 +93,5 @@ char	*ft_getenvi(char *key, t_list *vars, int *len)
 	*len = 1;
 	while (key[*len - 1] && ft_isalnum(key[*len - 1]))
 		*len = *len + 1;
-	return (ft_strndup("", 1));
+	return (ft_strdup(""));
 }

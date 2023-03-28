@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:36:14 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/26 23:17:23 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 17:33:29 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,15 @@ void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst)
 	char	*val;
 	int		len;
 
-	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j))
+	val = ft_getenvi(cmdtree->arg[i] + *j + 1, *vars_lst, &len);
+	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j) && val)
 	{
-		val = ft_getenvi(cmdtree->arg[i] + *j + 1, *vars_lst, &len);
 		len += *j;
 		ft_strlcat(val, cmdtree->arg[i] + len, ft_strlen(val)
 			+ ft_strlen(cmdtree->arg[i] + len) + 1);
 		cmdtree->arg[i] = ft_realloc(cmdtree->arg[i], *j);
 		ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
 			+ ft_strlen(cmdtree->arg[i]) + 1);
-		if (ft_strncmp(val, cmdtree->arg[i] + len, ft_strlen(cmdtree->arg[i]
-					+ len)))
-			*j = *j + 1;
 		free(val);
 	}
 	else

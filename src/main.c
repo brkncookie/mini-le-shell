@@ -6,30 +6,39 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/26 23:09:43 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 17:08:33 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 #include <signal.h>
 #include <stdio.h>
+#include <termios.h>
 
-extern int	g_flag;
+extern int	g_flag[2];
 
 void	action(int sig)
 {
 	if (sig == SIGQUIT)
 	{
-		g_flag = 127;
-		return ;
+		if (!g_flag[1])
+		{
+			printf("Quit: 3\n");
+			g_flag[0] = 131;
+		}
+		else
+			return ;
 	}
 	if (sig == SIGINT)
 	{
 		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		g_flag = 130;
+		if (g_flag[1])
+		{
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+		g_flag[0] = 130;
 		return ;
 	}
 }
@@ -80,7 +89,9 @@ void	prompt(char **cmd_buf, int *error)
 	*error = 0;
 	*cmd_buf = readline("Nut-Shell> ");
 	if (!*cmd_buf)
-		do_exit("130", 1);
+		do_exit(ft_itoa(g_flag[0]), 2);
+	if (ft_strlen(*cmd_buf) > 0)
+		add_history(*cmd_buf);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -92,36 +103,30 @@ int	main(int ac, char **av, char **envp)
 	t_list	*vars_lst;
 
 	vars_lst = get_vars(envp);
-	signal(SIGQUIT, action);
 	signal(SIGINT, action);
-	(void)ac;
-	(void)av;
+	signal(SIGQUIT, action);
 	while (1)
 	{
 		prompt(&cmd_buf, &error);
-		tkns = tokenize(cmd_buf);
-		if (ft_strlen(cmd_buf) > 0)
-			add_history(cmd_buf);
+		tkns = tokenize(cmd_buf, &error);
 		if (!tkns || error)
 		{
-			g_flag = 2;
 			free(cmd_buf);
+			if (error)
+				g_flag[0] = error;
 			continue ;
 		}
 		tree = giv_tree(tkns, &error);
 		if (error || !tree || !vars_lst)
 		{
-			g_flag = 2;
+			g_flag[0] = 2;
 			free(cmd_buf);
-			freelst(&tkns);
 			continue ;
 		}
 		executor(tree, &vars_lst);
 		freetree(tree);
 		freelst(&tkns);
 		free(cmd_buf);
-		freetree(tree);
-		freelst(&tkns);
 	}
-	return (0);
+	return ((void)ac, (void)av, 0);
 }
