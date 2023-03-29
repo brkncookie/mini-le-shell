@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 16:36:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2022/10/17 16:36:58 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/03/28 23:18:47 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 
 	if (!lst || !f || !del)
 		return (0);
-	new_list = ft_lstnew(f(lst->content));
+	new_list = ft_lstnew(f(lst->ctnt));
 	if (!new_list)
 		return (0);
 	save = new_list;
 	lst = lst->next;
 	while (lst)
 	{
-		new_list->next = ft_lstnew(f(lst->content));
+		new_list->next = ft_lstnew(f(lst->ctnt));
 		if (!new_list->next)
 		{
 			ft_lstclear(&save, del);
@@ -57,13 +57,13 @@ int main(void)
 	t_list *tmp = l;
 	for (int i = 0; i < 4; ++i)
 	{
-		printf("%i", ( *(int *)tmp->content));
+		printf("%i", ( *(int *)tmp->ctnt));
 		tmp = tmp->next;
 	}
 	tmp = m;
 	for (int i = 0; i < 4; ++i)
 	{
-		printf("%i", (*(int*)tmp->content));
+		printf("%i", (*(int*)tmp->ctnt));
 		tmp = tmp->next;
 	}
 	return (0);

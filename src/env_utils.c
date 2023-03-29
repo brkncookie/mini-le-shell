@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:48 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/28 17:24:04 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 23:46:11 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ char	**get_dblarr(t_list **vars_lst)
 	int		i;
 
 	i = 0;
+	if (!vars_lst || !*vars_lst)
+		return (NULL);
 	tmp = *vars_lst;
 	envs = ft_calloc(sizeof(char *), ft_lstsize(*vars_lst) + 1);
 	if (!envs)
@@ -28,15 +30,15 @@ char	**get_dblarr(t_list **vars_lst)
 	while (tmp)
 	{
 		envs[i] = ft_calloc(sizeof(char),
-				ft_strlen(((t_var *)tmp->content)->key)
-				+ ft_strlen(((t_var *)tmp->content)->val) + 2);
+				ft_strlen(((t_var *)tmp->ctnt)->key)
+				+ ft_strlen(((t_var *)tmp->ctnt)->val) + 2);
 		if (!envs[i])
 			return (free_dblarr(envs, ft_lstsize(*vars_lst)), NULL);
-		ft_strlcat(envs[i], ((t_var *)tmp->content)->key,
-			ft_strlen(((t_var *)tmp->content)->key) + 1);
+		ft_strlcat(envs[i], ((t_var *)tmp->ctnt)->key,
+			ft_strlen(((t_var *)tmp->ctnt)->key) + 1);
 		ft_strlcat(envs[i], "=", ft_strlen(envs[i]) + 2);
-		ft_strlcat(envs[i], ((t_var *)tmp->content)->val, ft_strlen(envs[i])
-			+ ft_strlen(((t_var *)tmp->content)->val) + 1);
+		ft_strlcat(envs[i], ((t_var *)tmp->ctnt)->val, ft_strlen(envs[i])
+			+ ft_strlen(((t_var *)tmp->ctnt)->val) + 1);
 		i++;
 		tmp = tmp->next;
 	}
@@ -61,11 +63,11 @@ char	*ft_getenv(char *key, t_list *vars)
 
 	while (vars)
 	{
-		len = ft_strlen(((t_var *)vars->content)->key);
-		if (!ft_strncmp(key, ((t_var *)vars->content)->key, len))
+		len = ft_strlen(((t_var *)vars->ctnt)->key);
+		if (!ft_strncmp(key, ((t_var *)vars->ctnt)->key, len))
 			if (!key[len] || (key[len] == '$' || key[len] == '"'
 					|| key[len] == '\'' || key[len] == ' '))
-				return (((t_var *)vars->content)->val);
+				return (((t_var *)vars->ctnt)->val);
 		vars = vars->next;
 	}
 	return (NULL);
@@ -81,12 +83,12 @@ char	*ft_getenvi(char *key, t_list *vars, int *len)
 		return (NULL);
 	while (vars)
 	{
-		*len = ft_strlen(((t_var *)vars->content)->key) + 1;
-		if (!ft_strncmp(key, ((t_var *)vars->content)->key, *len - 1))
+		*len = ft_strlen(((t_var *)vars->ctnt)->key) + 1;
+		if (!ft_strncmp(key, ((t_var *)vars->ctnt)->key, *len - 1))
 		{
 			if (!key[*len - 1] || !ft_isalnum(key[*len - 1]))
-				return (ft_strndup(((t_var *)vars->content)->val,
-						ft_strlen(((t_var *)vars->content)->val)));
+				return (ft_strndup(((t_var *)vars->ctnt)->val,
+						ft_strlen(((t_var *)vars->ctnt)->val)));
 		}
 		vars = vars->next;
 	}

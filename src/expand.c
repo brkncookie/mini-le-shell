@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:36:14 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/28 17:33:29 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/29 01:44:02 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 int	is_inquotes(t_tree **cmdtree, char *str)
 {
 	t_tree		*tmp;
-	static int	i;
+	static int	i = 0;
 
-	i = 0;
 	tmp = *cmdtree;
 	while (tmp->tkn->next)
 	{
@@ -29,8 +28,6 @@ int	is_inquotes(t_tree **cmdtree, char *str)
 		i = 0;
 		tmp->tkn = tmp->tkn->next;
 	}
-	while (tmp->tkn->prev)
-		tmp->tkn = tmp->tkn->prev;
 	return (0);
 }
 

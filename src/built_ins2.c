@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins.c                                        :+:      :+:    :+:   */
+/*   built_ins2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:04 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/28 16:54:54 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 23:46:25 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ void	do_env(t_tree *cmdtree, t_list **vars_lst)
 	{
 		while (tmp)
 		{
-			printf("%s=%s\n", ((t_var *)tmp->content)->key,
-				((t_var *)tmp->content)->val);
+			printf("%s=%s\n", ((t_var *)tmp->ctnt)->key,
+				((t_var *)tmp->ctnt)->val);
 			tmp = tmp->next;
 		}
 		g_flag[0] = 0;

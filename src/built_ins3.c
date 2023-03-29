@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins2.c                                       :+:      :+:    :+:   */
+/*   built_ins3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:30 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/28 16:53:42 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 23:46:19 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ void	do_export(t_tree *cmdtree, t_list **vars_lst)
 	{
 		while (tmp)
 		{
-			printf("declare -x %s=%s\n", ((t_var *)tmp->content)->key,
-				((t_var *)tmp->content)->val);
+			printf("declare -x %s=%s\n", ((t_var *)tmp->ctnt)->key,
+				((t_var *)tmp->ctnt)->val);
 			tmp = tmp->next;
 		}
 	}
@@ -93,13 +93,13 @@ void	do_export(t_tree *cmdtree, t_list **vars_lst)
 		}
 		found = 0;
 		tmp = *vars_lst;
-		while (tmp && tmp->content)
+		while (tmp && tmp->ctnt)
 		{
-			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->content)->key,
-					ft_strlen(((t_var *)tmp->content)->key)))
+			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->ctnt)->key,
+					ft_strlen(((t_var *)tmp->ctnt)->key)))
 			{
-				free(((t_var *)tmp->content)->val);
-				((t_var *)tmp->content)->val = ft_substr(cmdtree->arg[i], equ
+				free(((t_var *)tmp->ctnt)->val);
+				((t_var *)tmp->ctnt)->val = ft_substr(cmdtree->arg[i], equ
 						+ 1, ft_strlen(cmdtree->arg[i]));
 				found = 1;
 				break ;
@@ -120,7 +120,7 @@ void	do_unset(t_tree *cmdtree, t_list **vars_lst)
 
 	g_flag[0] = 0;
 	tmp = *vars_lst;
-	while (tmp && tmp->next && tmp->next->content)
+	while (tmp && tmp->next && tmp->next->ctnt)
 	{
 		i = 1;
 		while (cmdtree->arg[i])
@@ -131,14 +131,14 @@ void	do_unset(t_tree *cmdtree, t_list **vars_lst)
 				g_flag[0] = 1;
 				continue ;
 			}
-			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->next->content)->key,
-					ft_strlen(((t_var *)tmp->next->content)->key) + 1))
+			if (!ft_strncmp(cmdtree->arg[i], ((t_var *)tmp->next->ctnt)->key,
+					ft_strlen(((t_var *)tmp->next->ctnt)->key) + 1))
 			{
 				next = tmp->next;
 				tmp->next = next->next;
-				free(((t_var *)next->content)->key);
-				free(((t_var *)next->content)->val);
-				free(next->content);
+				free(((t_var *)next->ctnt)->key);
+				free(((t_var *)next->ctnt)->val);
+				free(next->ctnt);
 				free(next);
 				return ;
 			}

@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/28 17:08:33 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/28 23:57:00 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,24 +43,6 @@ void	action(int sig)
 	}
 }
 
-int	ft_strchrr(const char *s, int c)
-{
-	char	*str;
-	int		i;
-
-	str = (char *)s;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == (unsigned char)c)
-			return (i);
-		i++;
-	}
-	if (c == '\0')
-		return (i);
-	return (0);
-}
-
 t_list	*get_vars(char **envp)
 {
 	t_var	*var;
@@ -84,14 +66,32 @@ t_list	*get_vars(char **envp)
 	return (vars_lst);
 }
 
-void	prompt(char **cmd_buf, int *error)
+t_tkns	*prompt(char **cmd_buf, int *error)
 {
+	t_tkns	*tkns;
+
 	*error = 0;
 	*cmd_buf = readline("Nut-Shell> ");
 	if (!*cmd_buf)
 		do_exit(ft_itoa(g_flag[0]), 2);
 	if (ft_strlen(*cmd_buf) > 0)
 		add_history(*cmd_buf);
+	tkns = tokenize(*cmd_buf, error);
+	if (!tkns || *error)
+	{
+		free(*cmd_buf);
+		if (*error)
+			g_flag[0] = *error;
+		return (NULL);
+	}
+	return (tkns);
+}
+
+void	freeall(t_tree *tree, t_tkns *tkns, char *cmd_buf)
+{
+	freetree(tree);
+	freelst(&tkns);
+	free(cmd_buf);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -107,15 +107,9 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, action);
 	while (1)
 	{
-		prompt(&cmd_buf, &error);
-		tkns = tokenize(cmd_buf, &error);
+		tkns = prompt(&cmd_buf, &error);
 		if (!tkns || error)
-		{
-			free(cmd_buf);
-			if (error)
-				g_flag[0] = error;
 			continue ;
-		}
 		tree = giv_tree(tkns, &error);
 		if (error || !tree || !vars_lst)
 		{
@@ -124,9 +118,7 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		executor(tree, &vars_lst);
-		freetree(tree);
-		freelst(&tkns);
-		free(cmd_buf);
+		freeall(tree, tkns, cmd_buf);
 	}
 	return ((void)ac, (void)av, 0);
 }

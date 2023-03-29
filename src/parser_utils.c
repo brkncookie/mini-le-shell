@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/28 18:06:05 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/29 01:49:44 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	**get_arg(t_tkns *tkn, int *error)
 			arg[i] = ft_strndup(tkn->val, tkn->len);
 			if (!arg[i])
 				return (*error = 1, NULL);
-			while (tkn && tkn->next && tkn->next->type & (QUOTE | DQUOTE))
+			while (tkn && !(tkn->type & WHITE_SPC) && tkn->next && tkn->next->type & (QUOTE | DQUOTE))
 			{
 				tkn = tkn->next->next;
 				while (tkn && (tkn->stat & (IN_QUOTE | IN_DQUOTE)
@@ -77,7 +77,7 @@ char	**get_arg(t_tkns *tkn, int *error)
 					tkn = tkn->next;
 				}
 			}
-			while (tkn && tkn->next && tkn->next->type & (VAR | WORD))
+			while (tkn && !(tkn->type & WHITE_SPC) && tkn->next && tkn->next->type & (VAR | WORD))
 			{
 				tkn = tkn->next;
 				ft_strlcat(arg[i], tkn->val, tkn->len + ft_strlen(arg[i]) + 1);

@@ -17,7 +17,7 @@
 
 typedef struct s_list
 {
-	void			*content;
+	void			*ctnt;
 	struct s_list	*next;
 }t_list;
 
@@ -45,7 +45,6 @@ int		ft_strncmp(char const *s1, char const *s2, size_t n);
 char	*ft_strnstr(char const *haystack, char const *needle, size_t n);
 char	*ft_strdup(char const *s);
 void	*ft_calloc(size_t nmemb, size_t size);
-t_list	*ft_lstnew(void *content);
 char	**ft_split(char const *str, char c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -56,7 +55,7 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_putstr_fd(char *s, int fd);
-t_list	*ft_lstnew(void *content);
+t_list	*ft_lstnew(void *ctnt);
 void	ft_lstiter(t_list *lst, void (*f) (void *));
 void	ft_lstdelone(t_list *lst, void (*del) (void *));
 void	ft_lstclear(t_list **lst, void (*del) (void *));

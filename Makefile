@@ -4,7 +4,7 @@ LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
 
 SRCS_NAMES = built_in_utils.c built_ins.c built_ins2.c env_utils.c executor_utils.c \
 executor.c main.c parser_utils.c parser.c parser1.c tknizer_utils.c tokenizer.c \
-utils.c expand.c built_ins3.c
+utils.c expand.c built_ins3.c utils2.c
 
 OBJS_DIR = objs/
 

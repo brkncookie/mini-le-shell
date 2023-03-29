@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/28 18:10:46 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/29 00:24:23 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	do_exit(char *arg, int args_count);
 int		count_args(t_tree *cmdtree);
 int		count_dir(void);
 void	*reallocate(void *ptr, int oldsize, int size);
-void	expand(t_tree *cmdtree, int i);
+void	expand3(t_tree *cmdtree, int i);
 void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst);
 t_list	*get_vars(char **envp);
 int		ft_strchrr(const char *s, int c);
