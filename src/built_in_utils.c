@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 23:47:17 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/29 00:31:16 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/29 18:28:55 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	expand3(t_tree *cmdtree, int i)
 
 	args_num = count_args(cmdtree);
 	num = args_num;
-	d = opendir(".");
 	if (!ft_strncmp(cmdtree->arg[i], "*", 2))
 	{
 		cmdtree->arg = reallocate(cmdtree->arg, sizeof(char *) * args_num,
@@ -47,6 +46,7 @@ void	expand3(t_tree *cmdtree, int i)
 			// handle allocation error
 			return ;
 		}
+		d = opendir(".");
 		if (d)
 		{
 			fil = readdir(d);
@@ -57,6 +57,7 @@ void	expand3(t_tree *cmdtree, int i)
 				fil = readdir(d);
 				if (fil && ft_strncmp(fil->d_name, ".", 1))
 				{
+					free(cmdtree->arg[args_num]);
 					cmdtree->arg[args_num] = ft_strdup(fil->d_name);
 					if (!cmdtree->arg[args_num++])
 					{
@@ -82,7 +83,6 @@ void	*reallocate(void *ptr, int oldsize, int size)
 	free(ptr);
 	return (newptr);
 }
-
 
 int	count_dir(void)
 {

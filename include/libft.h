@@ -43,6 +43,7 @@ size_t	ft_strlcat(char *dest, char const *src, size_t size);
 size_t	ft_strlcpy(char *dest, char const *src, size_t size);
 size_t	ft_strlen(char const *str);
 int		ft_strncmp(char const *s1, char const *s2, size_t n);
+int		ft_strncmp2(char const *s1, char const *s2, size_t n);
 char	*ft_strnstr(char const *haystack, char const *needle, size_t n);
 char	*ft_strdup(char const *s);
 char	*ft_strndup(const char *s1, size_t l);

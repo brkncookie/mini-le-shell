@@ -6,28 +6,38 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:36:14 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/29 01:44:02 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/29 17:19:56 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
-int	is_inquotes(t_tree **cmdtree, char *str)
+int	is_inquotes(t_tree **cmdtree, char *str, int arg_num)
 {
 	t_tree		*tmp;
 	static int	i = 0;
+	int			arg;
 
 	tmp = *cmdtree;
-	while (tmp->tkn->next)
+	arg = 0;
+	while (tmp->tkn->next && arg <= arg_num)
 	{
-		while (tmp->tkn->val[i] && tmp->tkn->val[i] != '$')
+		while (tmp->tkn->val[i] && tmp->tkn->val[i] != '$' && i < tmp->tkn->len)
 			i++;
-		if (!ft_strncmp(tmp->tkn->val + i, str, ft_strlen(str))
+		if (!ft_strncmp2(tmp->tkn->val + i, str, ft_strlen(str) - 1)
 			&& (tmp->tkn->stat & (IN_QUOTE)))
+		{
+			while (tmp && tmp->tkn->prev)
+				tmp->tkn = tmp->tkn->prev;
 			return (i++, 1);
+		}
 		i = 0;
+		if (tmp->tkn->val[0] == ' ')
+			arg++;
 		tmp->tkn = tmp->tkn->next;
 	}
+	while (tmp && tmp->tkn->prev)
+		tmp->tkn = tmp->tkn->prev;
 	return (0);
 }
 
@@ -47,7 +57,7 @@ void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst)
 	int		len;
 
 	val = ft_getenvi(cmdtree->arg[i] + *j + 1, *vars_lst, &len);
-	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j) && val)
+	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j, i) && val)
 	{
 		len += *j;
 		ft_strlcat(val, cmdtree->arg[i] + len, ft_strlen(val)

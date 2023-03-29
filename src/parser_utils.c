@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/29 01:49:44 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/29 15:07:17 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,10 @@ char	**get_arg(t_tkns *tkn, int *error)
 			{
 				tkn = tkn->next->next;
 				while (tkn && (tkn->stat & (IN_QUOTE | IN_DQUOTE)
-						|| tkn->type & (WORD | QUOTE | DQUOTE)))
+						|| tkn->type & (VAR | WORD | QUOTE | DQUOTE)))
 				{
-					if (!(tkn->type & (QUOTE | DQUOTE)))
-						ft_strlcat(arg[i], tkn->val, tkn->len
-							+ ft_strlen(arg[i]) + 1);
+					ft_strlcat(arg[i], tkn->val, tkn->len
+						+ ft_strlen(arg[i]) + 1);
 					tkn = tkn->next;
 				}
 			}

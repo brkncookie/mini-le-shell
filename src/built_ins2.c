@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:04 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/28 23:46:25 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/29 18:34:45 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,35 +63,24 @@ void	do_cd(t_tree *cmdtree, char *pwd)
 	char	*tmp;
 
 	g_flag[0] = 0;
-	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2)
-		|| !ft_strncmp(cmdtree->arg[1], "..", 3))
-	{
-		if (ft_strncmp(cmdtree->arg[1], "..", 3))
-			chdir(getenv("HOME"));
-		else
-			chdir("..");
-		free(pwd);
-		pwd = getcwd(0, 500);
-	}
+	tmp = getcwd(0, 500);
+	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2))
+		chdir(getenv("HOME"));
+	else if (!ft_strncmp(cmdtree->arg[1], "..", 3))
+		chdir("..");
+	else if (dir_exists(cmdtree->arg[1]) && tmp && !chdir(cmdtree->arg[1]))
+		pwd = getcwd(pwd, 500);
 	else
 	{
-		tmp = getcwd(0, 500);
-		if (dir_exists(cmdtree->arg[1]) && tmp)
-		{
-			chdir(cmdtree->arg[1]);
-			free(pwd);
-			pwd = getcwd(0, 500);
-			free(tmp);
-		}
+		g_flag[0] = 1;
+		if (cmdtree->arg[2])
+			printf("cd: too many arguments\n");
 		else
-		{
-			g_flag[0] = 1;
-			if (cmdtree->arg[2])
-				printf("cd: too many arguments\n");
-			else
-				printf("cd: invalid directory path\n");
-		}
+			printf("cd: invalid directory path\n");
 	}
+	if (tmp || !ft_strncmp(cmdtree->arg[1], "..", 3))
+		pwd = getcwd(pwd, 500);
+	free(tmp);
 }
 
 void	do_env(t_tree *cmdtree, t_list **vars_lst)
