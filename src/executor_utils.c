@@ -12,21 +12,22 @@
 
 #include "../include/executor.h"
 
-void	pipe_close(int *pipefd, int limn)
+int	pipe_close(int *pipefd, int limn)
 {
 	struct stat	read;
 	struct stat	write;
 
 	if (limn == -2)
-		return ;
+		return (0);
 	if (!pipefd || !limn)
-		return ;
+		return (0);
 	fstat(pipefd[0], &read);
 	fstat(pipefd[1], &write);
 	if ((read.st_mode & S_IFMT) == S_IFIFO)
 		close(pipefd[0]);
 	if ((write.st_mode & S_IFMT) == S_IFIFO)
 		close(pipefd[1]);
+	return (0);
 }
 
 int	*open_files(t_tree *redr, int	*fds, char *file)

@@ -52,7 +52,7 @@ int	built_in(t_tree *cmdtree, t_list **vars_lst, char *pwd, int *redr_fds)
 	return (0);
 }
 
-int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
+int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds, t_list **vars_lst)
 {
 	int			in;
 	int			out;
@@ -69,6 +69,8 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst)
 	{
 		if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
 			return (perror("dup2"), exit(errno), 1);
+		redr_fds[1] = oredr_fds[1];
+		redr_fds[0] = oredr_fds[0];
 		return (1);
 	}
 	else if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
