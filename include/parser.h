@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 13:23:15 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/08 13:39:31 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/30 21:55:19 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,5 @@ int			skip_pars(t_tkns **tkns);
 t_tree		*node_create(t_tkns **tmp, t_tkns *tkns, int *error,
 				t_tree *(*lyasar)(t_tkns *, int *),
 				t_tree *(*lyamin)(t_tkns *, int *));
+void		fre2d(char **path);
 #endif

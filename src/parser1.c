@@ -6,7 +6,7 @@
 /*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:14 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/30 21:43:31 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/30 21:55:37 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_tree	*get_redr(t_tkns *tkn, int type, int *error, t_tree *cmd)
 	{
 		redr = redir(tkn, error);
 		if (*error)
-			return (free(cmd), redr);
+			return (fre2d(cmd->arg), free(cmd), redr);
 		if (cmd)
 			return (cmd->redr = redr, cmd);
 		else
