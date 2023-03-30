@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:48 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/29 17:54:25 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/30 01:29:26 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ char	**get_dblarr(t_list **vars_lst)
 		return (NULL);
 	while (tmp)
 	{
-		envs[++i] = ft_calloc(sizeof(char),
-				ft_strlen(((t_var *)tmp->ctnt)->key)
+		envs[++i] = ft_calloc(1, ft_strlen(((t_var *)tmp->ctnt)->key)
 				+ ft_strlen(((t_var *)tmp->ctnt)->val) + 2);
 		if (!envs[i])
 			return (free_dblarr(envs, ft_lstsize(*vars_lst)), NULL);

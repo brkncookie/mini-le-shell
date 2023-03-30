@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:04 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/29 18:34:45 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/30 01:07:15 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,26 @@ int	dir_exists(const char *path)
 	return (0);
 }
 
-void	do_echo(t_tree *cmdtree)
+void	do_echo(t_tree *cmdtree, int *redr_fds)
 {
 	int	i;
 
 	i = 1;
 	if (!cmdtree->arg)
 	{
-		printf("\n");
+		write(redr_fds[1], "\n", 1);
 		return ;
 	}
 	while (cmdtree->arg[i])
 	{
-		if (i == 1 && !ft_strncmp(cmdtree->arg[i], "-n", 3) && i++)
-			continue ;
-		printf("%s", cmdtree->arg[i++]);
-		if (cmdtree->arg[i])
-			printf(" ");
+		if (i == 1 && !ft_strncmp(cmdtree->arg[i], "-n", 3))
+			i++;
+		write(redr_fds[1], cmdtree->arg[i], ft_strlen(cmdtree->arg[i]));
+		if (cmdtree->arg[++i])
+			write(redr_fds[1], " ", 1);
 	}
 	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 3))
-		printf("\n");
+		write(redr_fds[1], "\n", 1);
 	g_flag[0] = EXIT_SUCCESS;
 }
 
