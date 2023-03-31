@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:43 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 14:08:44 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:09:16 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,12 @@ void	do_echo(t_tree *cmdtree, int *redr_fds)
 	{
 		if (i == 1 && !ft_strncmp(cmdtree->arg[i], "-n", 3))
 			i++;
-		write(redr_fds[1], cmdtree->arg[i], ft_strlen(cmdtree->arg[i]));
-		if (cmdtree->arg[++i])
-			write(redr_fds[1], " ", 1);
+		if (cmdtree->arg[i])
+		{
+			write(redr_fds[1], cmdtree->arg[i], ft_strlen(cmdtree->arg[i]));
+			if (cmdtree->arg[++i])
+				write(redr_fds[1], " ", 1);
+		}
 	}
 	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 3))
 		write(redr_fds[1], "\n", 1);
