@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/28 18:11:16 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/31 12:30:39 by saltysushi       ###   ########.fr       */
+/*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
+/*   Updated: 2023/03/31 14:09:16 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int	built_in(t_tree *cmdtree, t_list **vars_lst, char *pwd, int *redr_fds)
 	return (0);
 }
 
-int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds, t_list **vars_lst)
+int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
+		t_list **vars_lst)
 {
 	int			in;
 	int			out;
