@@ -34,8 +34,9 @@ char	*is_vld_exc(char *path, t_list **vars_lst, \
 int		is_num(char *str);
 int		dir_exists(const char *path);
 void	executor(t_tree *cmdtree, t_list **vars_lst);
-void	pipe_close(int *pipefd, int limn);
-int		do_builtin(t_tree *cmdtree, int *redr_fds, t_list **vars_lst);
+int		pipe_close(int *pipefd, int limn);
+int		do_builtin(t_tree *cmdtree, int *redr_fds, \
+		int *oredr_fds, t_list **vars_lst);
 void	do_echo(t_tree *cmdtree, int *redr_fds);
 void	do_pwd(char *pwd);
 void	do_cd(t_tree *cmdtree, char *pwd);

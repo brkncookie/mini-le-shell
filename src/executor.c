@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/15 15:19:07 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/30 00:02:12 by saltysushi       ###   ########.fr       */
+/*   Created: 2023/03/30 21:42:33 by mnadir            #+#    #+#             */
+/*   Updated: 2023/03/30 21:42:39 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	do_child(char	*prgm, t_tree	*cmdtree, t_list **vars_lst, int *redr_fds)
 {
 	char	**envs;
 
+	if (!prgm)
+		return (printf("Allocation error\n"), exit(errno), 1);
 	envs = get_dblarr(vars_lst);
 	prgm = is_vld_exc(prgm, vars_lst, NULL, NULL);
 	if (!prgm)
@@ -29,51 +31,33 @@ int	do_child(char	*prgm, t_tree	*cmdtree, t_list **vars_lst, int *redr_fds)
 		perror("execve"), exit(errno), 1);
 }
 
-int	do_cmd(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
+int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 {
 	int		r_val;
 	int		pid;
 	char	*prgm;
-	int		oredr_fds[2];
+	int		ordrfd[2];
 
-	oredr_fds[0] = redr_fds[0];
-	oredr_fds[1] = redr_fds[1];
+	ft_memcpy(ordrfd, rdrfd, sizeof(rdrfd));
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
-		return (rslv_redr(cmdtree, redr_fds, 0, 1), errno);
-	if (cmdtree->redr && !rslv_redr(cmdtree->redr, redr_fds, 0, 1))
+		return (rslv_redr(cmdtree, rdrfd, 0, 1), errno);
+	if (cmdtree->redr && !rslv_redr(cmdtree->redr, rdrfd, 0, 1))
 		return (errno);
-	if (do_builtin(cmdtree, redr_fds, vars_lst))
-	{
-		if (cmdtree->redr)
-		{
-			redr_fds[0] = oredr_fds[0];
-			redr_fds[1] = oredr_fds[1];
-		}
-		return (pipe_close(redr_fds, limn), g_flag[0]);
-	}
+	if (do_builtin(cmdtree, rdrfd, ordrfd, vars_lst))
+		return (pipe_close(rdrfd, limn), g_flag[0]);
 	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
-	if (!prgm)
-		return (printf("Allocation error\n"), 1);
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), g_flag[0] = 254);
 	if (!pid)
-		do_child(prgm, cmdtree, vars_lst, redr_fds);
+		do_child(prgm, cmdtree, vars_lst, rdrfd);
 	g_flag[1] = !isatty(STDIN_FILENO);
-	pipe_close(redr_fds, limn);
+	(void)(ft_memcpy(rdrfd, ordrfd, sizeof rdrfd) + pipe_close(rdrfd, limn));
 	if (limn > 0 || limn == -2)
 		waitpid(pid, &r_val, 0);
-	if (WIFSIGNALED(r_val))
-		g_flag[0] = 128 + WTERMSIG(r_val);
-	else
-		g_flag[0] = WEXITSTATUS(r_val);
-	g_flag[1] = 1;
-	if (cmdtree->redr)
-	{
-		redr_fds[0] = oredr_fds[0];
-		redr_fds[1] = oredr_fds[1];
-	}
-	return (free(prgm), g_flag[0]);
+	g_flag[0] = (128 + WTERMSIG(r_val)) * WIFSIGNALED(r_val) + \
+			WEXITSTATUS(r_val) * !WIFSIGNALED(r_val);
+	return (free(prgm), g_flag[1] = 1, g_flag[0]);
 }
 
 int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)

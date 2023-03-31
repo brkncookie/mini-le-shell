@@ -3,30 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/12 12:09:02 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/29 15:49:11 by saltysushi       ###   ########.fr       */
+/*   Created: 2023/03/30 21:43:00 by mnadir            #+#    #+#             */
+/*   Updated: 2023/03/30 21:43:03 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
-void	pipe_close(int *pipefd, int limn)
+int	pipe_close(int *pipefd, int limn)
 {
 	struct stat	read;
 	struct stat	write;
 
 	if (limn == -2)
-		return ;
+		return (0);
 	if (!pipefd || !limn)
-		return ;
+		return (0);
 	fstat(pipefd[0], &read);
 	fstat(pipefd[1], &write);
 	if ((read.st_mode & S_IFMT) == S_IFIFO)
 		close(pipefd[0]);
 	if ((write.st_mode & S_IFMT) == S_IFIFO)
 		close(pipefd[1]);
+	return (0);
 }
 
 int	*open_files(t_tree *redr, int	*fds, char *file)
