@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 16:04:48 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:07:30 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,25 @@ int	built_in(t_tree *cmdtree, t_list **vars_lst, char *pwd, int *redr_fds)
 	return (0);
 }
 
+int	is_built_in(t_tree *cmdtree)
+{
+	if (!ft_strncmp(cmdtree->arg[0], "echo", 5))
+		return (1);
+	if (!ft_strncmp(cmdtree->arg[0], "exit", 5))
+		return (1);
+	else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
+		return (1);
+	else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
+		return (1);
+	else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
+		return (1);
+	else if (!ft_strncmp(cmdtree->arg[0], "export", 7))
+		return (1);
+	else if (!ft_strncmp(cmdtree->arg[0], "unset", 6))
+		return (1);
+	return (0);
+}
+
 int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 		t_list **vars_lst)
 {
@@ -79,19 +98,23 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 	int			out;
 	static char	*pwd;
 
+	if (!is_built_in(cmdtree))
+		return (0);
 	if (!pwd)
 		pwd = getcwd(0, 500);
 	in = dup(0);
 	out = dup(1);
+	if (in < 0 || out < 0)
+		return (perror("dup"), g_flag[0] = 1, 0);
 	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0)
 		return (perror("dup2"), g_flag[0] = 1, 0);
 	expand(cmdtree, vars_lst);
 	if (built_in(cmdtree, vars_lst, pwd, redr_fds))
 	{
+		redr_fds[0] = oredr_fds[0];
+		redr_fds[1] = oredr_fds[1];
 		if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
 			return (perror("dup2"), g_flag[0] = 1);
-		redr_fds[1] = oredr_fds[1];
-		redr_fds[0] = oredr_fds[0];
 		return (1);
 	}
 	else if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
