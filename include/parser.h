@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 13:23:15 by mnadir            #+#    #+#             */
-/*   Updated: 2023/02/08 13:39:31 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/31 13:33:44 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ t_tree		*redir(t_tkns *tkn, int *error);
 t_tree		*cmd(t_tkns *tkn, int *error);
 void		freetree(t_tree *tree);
 char		**get_arg(t_tkns *tkn, int *error);
+void		fre2d(char **path);
 int			skip_pars(t_tkns **tkns);
 t_tree		*node_create(t_tkns **tmp, t_tkns *tkns, int *error,
 				t_tree *(*lyasar)(t_tkns *, int *),

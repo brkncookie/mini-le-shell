@@ -6,13 +6,23 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:32:48 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/30 01:29:26 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/31 13:25:34 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
 extern int	g_flag[2];
+
+int	count_args(t_tree *cmdtree)
+{
+	int	i;
+
+	i = 0;
+	while (cmdtree->arg && cmdtree->arg[i])
+		i++;
+	return (i);
+}
 
 char	**get_dblarr(t_list **vars_lst)
 {

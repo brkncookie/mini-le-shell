@@ -6,11 +6,29 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 18:11:16 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/30 01:01:20 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/31 12:30:39 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
+
+void	do_exit(char *arg, int args_num)
+{
+	if (args_num == 1)
+	{
+		printf("exit\n");
+		exit(0);
+	}
+	else if (args_num == 2 && is_num(arg))
+		exit(ft_atoi(arg));
+	else if (args_num > 2)
+		printf("exit: too many arguments\n");
+	else
+	{
+		printf("exit: numeric argument required\n");
+		exit(2);
+	}
+}
 
 void	expand(t_tree *cmdtree, t_list **vars_lst)
 {

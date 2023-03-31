@@ -6,7 +6,7 @@
 /*   By: saltysushi <saltysushi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 23:47:17 by saltysushi        #+#    #+#             */
-/*   Updated: 2023/03/29 18:28:55 by saltysushi       ###   ########.fr       */
+/*   Updated: 2023/03/31 13:25:20 by saltysushi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,36 @@ void	swap_args(t_tree *cmdtree, int i, int num, int args_num)
 	}
 }
 
-void	expand3(t_tree *cmdtree, int i)
+int	fix_args(t_tree *cmdtree, int i, int args_num, int num)
 {
 	DIR				*d;
 	struct dirent	*fil;
+
+	d = opendir(".");
+	if (d)
+	{
+		fil = readdir(d);
+		free(cmdtree->arg[i]);
+		cmdtree->arg[i] = ft_strdup(fil->d_name);
+		while (fil)
+		{
+			fil = readdir(d);
+			if (fil && ft_strncmp(fil->d_name, ".", 1))
+			{
+				free(cmdtree->arg[args_num]);
+				cmdtree->arg[args_num] = ft_strdup(fil->d_name);
+				if (!cmdtree->arg[args_num++] || !cmdtree->arg[i])
+					return (0);
+			}
+		}
+		swap_args(cmdtree, i, num, args_num - 1);
+		closedir(d);
+	}
+	return (1);
+}
+
+void	expand3(t_tree *cmdtree, int i)
+{
 	int				num;
 	int				args_num;
 
@@ -42,32 +68,11 @@ void	expand3(t_tree *cmdtree, int i)
 		cmdtree->arg = reallocate(cmdtree->arg, sizeof(char *) * args_num,
 				(count_dir() + args_num) * sizeof(char *));
 		if (!cmdtree->arg)
-		{
-			// handle allocation error
 			return ;
-		}
-		d = opendir(".");
-		if (d)
+		if (!fix_args(cmdtree, i, args_num, num))
 		{
-			fil = readdir(d);
-			free(cmdtree->arg[i]);
-			cmdtree->arg[i] = ft_strdup(fil->d_name);
-			while (fil)
-			{
-				fil = readdir(d);
-				if (fil && ft_strncmp(fil->d_name, ".", 1))
-				{
-					free(cmdtree->arg[args_num]);
-					cmdtree->arg[args_num] = ft_strdup(fil->d_name);
-					if (!cmdtree->arg[args_num++])
-					{
-						// handle allocation error
-						break ;
-					}
-				}
-			}
-			swap_args(cmdtree, i, num, args_num - 1);
-			closedir(d);
+			fre2d(cmdtree->arg);
+			return ;
 		}
 	}
 }
@@ -104,14 +109,4 @@ int	count_dir(void)
 		closedir(d);
 	}
 	return (num);
-}
-
-int	count_args(t_tree *cmdtree)
-{
-	int	i;
-
-	i = 0;
-	while (cmdtree->arg && cmdtree->arg[i])
-		i++;
-	return (i);
 }
