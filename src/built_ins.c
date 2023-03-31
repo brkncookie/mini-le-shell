@@ -6,11 +6,13 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 14:09:16 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/03/31 16:04:48 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
+
+extern int	g_flag[2];
 
 void	do_exit(char *arg, int args_num)
 {
@@ -82,17 +84,17 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 	in = dup(0);
 	out = dup(1);
 	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0)
-		return (perror("dup2"), exit(errno), 1);
+		return (perror("dup2"), g_flag[0] = 1, 0);
 	expand(cmdtree, vars_lst);
 	if (built_in(cmdtree, vars_lst, pwd, redr_fds))
 	{
 		if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
-			return (perror("dup2"), exit(errno), 1);
+			return (perror("dup2"), g_flag[0] = 1);
 		redr_fds[1] = oredr_fds[1];
 		redr_fds[0] = oredr_fds[0];
 		return (1);
 	}
 	else if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
-		return (perror("dup2"), exit(errno), 0);
+		return (perror("dup2"), g_flag[0] = 1, 0);
 	return (0);
 }
