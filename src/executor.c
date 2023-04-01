@@ -6,7 +6,7 @@
 /*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:42:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/31 16:32:52 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/01 14:52:47 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ int	do_child(char	*prgm, t_tree	*cmdtree, t_list **vars_lst, int *redr_fds)
 {
 	char	**envs;
 
+	if (cmdtree && cmdtree->arg)
+		prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	if (!prgm)
-		return (printf("Allocation error\n"), exit(errno), 1);
+		return (exit(errno), 1);
 	envs = get_dblarr(vars_lst);
 	prgm = is_vld_exc(prgm, vars_lst, NULL, NULL);
 	if (!prgm)
@@ -27,7 +29,7 @@ int	do_child(char	*prgm, t_tree	*cmdtree, t_list **vars_lst, int *redr_fds)
 	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0)
 		return (perror("dup2"), exit(errno), 1);
 	execve(prgm, cmdtree->arg, envs);
-	return (free_dblarr(envs, ft_lstsize(*vars_lst)), \
+	return (free(prgm), free_dblarr(envs, ft_lstsize(*vars_lst)), \
 		perror("execve"), exit(errno), 1);
 }
 
@@ -35,7 +37,6 @@ int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 {
 	int		r_val;
 	int		pid;
-	char	*prgm;
 	int		ordrfd[2];
 
 	ft_memcpy(ordrfd, rdrfd, sizeof(rdrfd));
@@ -45,19 +46,18 @@ int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 		return (errno);
 	if (do_builtin(cmdtree, rdrfd, ordrfd, vars_lst))
 		return (pipe_close(rdrfd, limn), g_flag[0]);
-	prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), g_flag[0] = 254);
 	if (!pid)
-		do_child(prgm, cmdtree, vars_lst, rdrfd);
+		do_child(NULL, cmdtree, vars_lst, rdrfd);
 	g_flag[1] = !isatty(STDIN_FILENO);
 	(void)(ft_memcpy(rdrfd, ordrfd, sizeof rdrfd) + pipe_close(rdrfd, limn));
 	if (limn > 0 || limn == -2)
 		waitpid(pid, &r_val, 0);
 	g_flag[0] = (128 + WTERMSIG(r_val)) * WIFSIGNALED(r_val) + \
 			WEXITSTATUS(r_val) * !WIFSIGNALED(r_val);
-	return (free(prgm), g_flag[1] = 1, g_flag[0]);
+	return (g_flag[1] = 1, g_flag[0]);
 }
 
 int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
