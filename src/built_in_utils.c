@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/01 15:11:24 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:17:07 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,16 @@ int	fix_args(t_tree *cmdtree, int i, int args_num, int num)
 {
 	DIR				*d;
 	struct dirent	*fil;
+	int				n;
 
 	d = opendir(".");
+	n = 0;
 	if (d)
 	{
 		fil = readdir(d);
 		while (fil)
 		{
-			if (fil && ft_strncmp(fil->d_name, ".", 1) && !num && ++num)
+			if (fil && ft_strncmp(fil->d_name, ".", 1) && !n && ++n)
 			{
 				free(cmdtree->arg[i]);
 				cmdtree->arg[i] = ft_strdup(fil->d_name);
