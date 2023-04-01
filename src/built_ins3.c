@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:33 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/01 16:00:47 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 18:04:31 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	do_export(t_tree *cmdtree, t_list **vars_lst)
 	}
 	while (cmdtree->arg[i])
 	{
-		if ((ft_isdigit(cmdtree->arg[i][0]) && cmdtree->arg[i][0] == '=')
+		if ((ft_isdigit(cmdtree->arg[i][0]) || cmdtree->arg[i][0] == '=')
 			|| !ft_strchr(cmdtree->arg[i], '='))
 		{
 			printf("export: %s: invalid argument\n", cmdtree->arg[i++]);
@@ -90,12 +90,13 @@ void	del_one(t_list **vars_lst, char *str, t_list **prev, t_list **tmp)
 		{
 			if (*tmp != *vars_lst)
 				(*prev)->next = (*tmp)->next;
-			else
+			else if ((*tmp)->next)
 				*vars_lst = (*tmp)->next;
 			free(((t_var *)(*tmp)->ctnt)->key);
 			free(((t_var *)(*tmp)->ctnt)->val);
 			free((*tmp)->ctnt);
 			free(*tmp);
+			*tmp = NULL;
 			break ;
 		}
 		*prev = *tmp;
@@ -121,6 +122,7 @@ void	do_unset(t_tree *cmdtree, t_list **vars_lst)
 			continue ;
 		}
 		tmp = *vars_lst;
-		del_one(vars_lst, cmdtree->arg[i], &prev, &tmp);
+		if (ft_strncmp(cmdtree->arg[i], "_", 1))
+			del_one(vars_lst, cmdtree->arg[i], &prev, &tmp);
 	}
 }
