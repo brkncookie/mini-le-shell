@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 17:44:47 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:12:49 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,39 +55,45 @@ void	expand(t_tree *cmdtree, t_list **vars_lst)
 
 int	built_in(t_tree *cmdtree, t_list **vars_lst, char *pwd, int *redr_fds)
 {
-	if (!ft_strncmp(cmdtree->arg[0], "echo", 5))
-		return (do_echo(cmdtree, redr_fds), 1);
-	if (!ft_strncmp(cmdtree->arg[0], "exit", 5))
-		return (do_exit(cmdtree->arg[1], count_args(cmdtree)), 1);
-	else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
-		return (do_cd(cmdtree, pwd), 1);
-	else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
-		return (do_pwd(pwd), 1);
-	else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
-		return (do_env(cmdtree, vars_lst), 1);
-	else if (!ft_strncmp(cmdtree->arg[0], "export", 7))
-		return (do_export(cmdtree, vars_lst), 1);
-	else if (!ft_strncmp(cmdtree->arg[0], "unset", 6))
-		return (do_unset(cmdtree, vars_lst), 1);
+	if (cmdtree->arg)
+	{
+		if (!ft_strncmp(cmdtree->arg[0], "echo", 5))
+			return (do_echo(cmdtree, redr_fds), 1);
+		if (!ft_strncmp(cmdtree->arg[0], "exit", 5))
+			return (do_exit(cmdtree->arg[1], count_args(cmdtree)), 1);
+		else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
+			return (do_cd(cmdtree, pwd), 1);
+		else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
+			return (do_pwd(pwd), 1);
+		else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
+			return (do_env(cmdtree, vars_lst), 1);
+		else if (!ft_strncmp(cmdtree->arg[0], "export", 7))
+			return (do_export(cmdtree, vars_lst), 1);
+		else if (!ft_strncmp(cmdtree->arg[0], "unset", 6))
+			return (do_unset(cmdtree, vars_lst), 1);
+	}
 	return (0);
 }
 
 int	is_built_in(t_tree *cmdtree)
 {
-	if (!ft_strncmp(cmdtree->arg[0], "echo", 5))
-		return (1);
-	if (!ft_strncmp(cmdtree->arg[0], "exit", 5))
-		return (1);
-	else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
-		return (1);
-	else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
-		return (1);
-	else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
-		return (1);
-	else if (!ft_strncmp(cmdtree->arg[0], "export", 7))
-		return (1);
-	else if (!ft_strncmp(cmdtree->arg[0], "unset", 6))
-		return (1);
+	if (cmdtree->arg)
+	{
+		if (!ft_strncmp(cmdtree->arg[0], "echo", 5))
+			return (1);
+		if (!ft_strncmp(cmdtree->arg[0], "exit", 5))
+			return (1);
+		else if (!ft_strncmp(cmdtree->arg[0], "cd", 3))
+			return (1);
+		else if (!ft_strncmp(cmdtree->arg[0], "pwd", 4))
+			return (1);
+		else if (!ft_strncmp(cmdtree->arg[0], "env", 4))
+			return (1);
+		else if (!ft_strncmp(cmdtree->arg[0], "export", 7))
+			return (1);
+		else if (!ft_strncmp(cmdtree->arg[0], "unset", 6))
+			return (1);
+	}
 	return (0);
 }
 

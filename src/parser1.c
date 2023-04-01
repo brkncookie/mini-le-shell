@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:14 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/31 14:09:27 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 14:53:41 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,12 @@ t_tree	*get_redr(t_tkns *tkn, int type, int *error, t_tree *cmd)
 	{
 		redr = redir(tkn, error);
 		if (*error)
-			return (fre2d(cmd->arg), free(cmd), redr);
+		{
+			if (cmd)
+				return (fre2d(cmd->arg), free(cmd), redr);
+			else
+				return (redr);
+		}
 		if (cmd)
 			return (cmd->redr = redr, cmd);
 		else
@@ -43,7 +48,7 @@ t_tree	*redir(t_tkns *tkn, int *error)
 	tkn = tkn->next;
 	while (tkn)
 	{
-		if (tkn->type & WHITE_SPC)
+		if (tkn->type & (WHITE_SPC | QUOTE | DQUOTE))
 			tkn = tkn->next;
 		else
 			break ;
@@ -69,6 +74,8 @@ t_tree	*get_subsh(t_tkns *tkn, int type, int *error)
 	skip_pars(&tkn);
 	while (tkn && (tkn->type & WHITE_SPC))
 		tkn = tkn->next;
+	if (!cmdlst)
+		return (*error = 2, cmdlst);
 	if (tkn && (tkn->type & type))
 	{
 		cmdlst->redr = redir(tkn, error);
@@ -92,13 +99,14 @@ t_tree	*cmdlst(t_tkns *tkn, int *error)
 	int		type;
 
 	tmp = NULL;
+	cmdlst = NULL;
 	type = HERE_DOC | APPEND | REDR_O | REDR_I;
 	if (tkn->type & OPAR && !(tkn->stat))
 		return (get_subsh(tkn, type, error));
-	else
+	else if (tkn->type & (type | WORD | VAR | DQUOTE | QUOTE))
 	{
 		cmdlst = cmd(tkn, error);
-		if (*error)
+		if (*error || !cmdlst)
 			return (cmdlst);
 		if (cmdlst->redr)
 			tmp = cmdlst->redr->limn->tkn->next;
@@ -121,7 +129,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	cmd = NULL;
 	while (tkn && (tkn->type & (DQUOTE | QUOTE) || tkn->type & WHITE_SPC))
 		tkn = tkn->next;
-	if (!(tkn->type & type))
+	if (tkn && !(tkn->type & type))
 	{
 		cmd = ft_calloc(1, sizeof(*cmd));
 		if (!cmd)
