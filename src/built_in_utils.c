@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 14:08:59 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:11:24 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,31 @@ int	fix_args(t_tree *cmdtree, int i, int args_num, int num)
 	if (d)
 	{
 		fil = readdir(d);
-		free(cmdtree->arg[i]);
-		cmdtree->arg[i] = ft_strdup(fil->d_name);
 		while (fil)
 		{
-			fil = readdir(d);
-			if (fil && ft_strncmp(fil->d_name, ".", 1))
+			if (fil && ft_strncmp(fil->d_name, ".", 1) && !num && ++num)
+			{
+				free(cmdtree->arg[i]);
+				cmdtree->arg[i] = ft_strdup(fil->d_name);
+			}
+			else if (fil && ft_strncmp(fil->d_name, ".", 1))
 			{
 				free(cmdtree->arg[args_num]);
 				cmdtree->arg[args_num] = ft_strdup(fil->d_name);
 				if (!cmdtree->arg[args_num++] || !cmdtree->arg[i])
 					return (0);
 			}
+			fil = readdir(d);
 		}
-		swap_args(cmdtree, i, num, args_num - 1);
 		closedir(d);
 	}
-	return (1);
+	return (swap_args(cmdtree, i, num, args_num - 1), 1);
 }
 
 void	expand3(t_tree *cmdtree, int i)
 {
-	int				num;
-	int				args_num;
+	int	num;
+	int	args_num;
 
 	args_num = count_args(cmdtree);
 	num = args_num;
@@ -72,6 +74,7 @@ void	expand3(t_tree *cmdtree, int i)
 		if (!fix_args(cmdtree, i, args_num, num))
 		{
 			fre2d(cmdtree->arg);
+			cmdtree->arg = NULL;
 			return ;
 		}
 	}
@@ -83,10 +86,9 @@ void	*reallocate(void *ptr, int oldsize, int size)
 
 	newptr = ft_calloc(1, size);
 	if (!newptr)
-		return (NULL);
+		return (free(ptr), NULL);
 	newptr = ft_memcpy(newptr, ptr, oldsize);
-	free(ptr);
-	return (newptr);
+	return (free(ptr), newptr);
 }
 
 int	count_dir(void)

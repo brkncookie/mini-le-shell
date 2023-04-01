@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 17:07:30 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/03/31 17:44:47 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	expand(t_tree *cmdtree, t_list **vars_lst)
 	while (cmdtree->arg && cmdtree->arg[i])
 	{
 		j = 0;
-		while (cmdtree->arg[i][j])
+		while (cmdtree->arg && cmdtree->arg[i] && cmdtree->arg[i][j])
 		{
 			if (cmdtree->arg[i][j] == '$')
 				expand2(cmdtree, i, &j, vars_lst);
@@ -104,10 +104,9 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 		pwd = getcwd(0, 500);
 	in = dup(0);
 	out = dup(1);
-	if (in < 0 || out < 0)
-		return (perror("dup"), g_flag[0] = 1, 0);
-	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0)
-		return (perror("dup2"), g_flag[0] = 1, 0);
+	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0 || in < 0
+		|| out < 0)
+		return (perror("dup/dup2"), g_flag[0] = 1, 0);
 	expand(cmdtree, vars_lst);
 	if (built_in(cmdtree, vars_lst, pwd, redr_fds))
 	{

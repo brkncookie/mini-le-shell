@@ -12,7 +12,7 @@ SRCS_DIR = src/
 
 HEADER = include/
 
-CC_FLAGS = -Wall -Wextra -Werror -I $(HEADER)
+CC_FLAGS = -Wall -Wextra -Werror -g -I$(HEADER)
 
 OBJS_NAMES = $(SRCS_NAMES:c=o)
 
