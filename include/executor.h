@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/31 18:03:38 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:45:02 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		do_builtin(t_tree *cmdtree, int *redr_fds, \
 		int *oredr_fds, t_list **vars_lst);
 void	do_echo(t_tree *cmdtree, int *redr_fds);
 void	do_pwd(char *pwd);
-void	do_cd(t_tree *cmdtree, char *pwd);
+void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst);
 void	do_unset(t_tree *cmdtree, t_list **vars_lst);
 void	do_export(t_tree *cmdtree, t_list **vars_lst);
 void	do_env(t_tree *cmdtree, t_list **vars_lst);

@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:33 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 14:08:34 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 16:00:47 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	del_one(t_list **vars_lst, char *str, t_list **prev, t_list **tmp)
 		if (!ft_strncmp(str, ((t_var *)(*tmp)->ctnt)->key,
 			ft_strlen(((t_var *)(*tmp)->ctnt)->key)))
 		{
-			if (*prev != NULL)
+			if (*tmp != *vars_lst)
 				(*prev)->next = (*tmp)->next;
 			else
 				*vars_lst = (*tmp)->next;

@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/01 15:19:15 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:35:09 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,26 @@ char	**get_arg(t_tkns *tkn, int *error)
 	{
 		if (tkn->type & (VAR | WORD))
 		{
-			if (!make_arg(tkn, arg, i, error))
-				return (fre2d(arg), NULL);
+			arg[i] = ft_strndup(tkn->val, tkn->len);
+			if (!arg[i])
+				return (*error = 1, NULL);
+			while (tkn && !(tkn->type & WHITE_SPC) && tkn->next && tkn->next->type & (QUOTE | DQUOTE))
+			{
+				tkn = tkn->next->next;
+				while (tkn && (tkn->stat & (IN_QUOTE | IN_DQUOTE)
+						|| tkn->type & (VAR | WORD | QUOTE | DQUOTE)))
+				{
+					if (!(tkn->type & (QUOTE | DQUOTE)))
+						ft_strlcat(arg[i], tkn->val, tkn->len
+							+ ft_strlen(arg[i]) + 1);
+					tkn = tkn->next;
+				}
+			}
+			while (tkn && !(tkn->type & WHITE_SPC) && tkn->next && tkn->next->type & (VAR | WORD))
+			{
+				tkn = tkn->next;
+				ft_strlcat(arg[i], tkn->val, tkn->len + ft_strlen(arg[i]) + 1);
+			}
 			i++;
 		}
 		if (tkn)

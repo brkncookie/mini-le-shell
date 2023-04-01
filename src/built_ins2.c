@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:43 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 17:36:42 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:49:11 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	do_echo(t_tree *cmdtree, int *redr_fds)
 	}
 	while (cmdtree->arg[i])
 	{
-		if (i == 1 && !ft_strncmp(cmdtree->arg[i], "-n", 3))
+		while (!ft_strncmp(cmdtree->arg[i], "-n", 2))
 			i++;
 		if (cmdtree->arg[i])
 		{
@@ -45,7 +45,7 @@ void	do_echo(t_tree *cmdtree, int *redr_fds)
 				write(redr_fds[1], " ", 1);
 		}
 	}
-	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 3))
+	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 2))
 		write(redr_fds[1], "\n", 1);
 	g_flag[0] = EXIT_SUCCESS;
 }
@@ -61,14 +61,14 @@ void	do_pwd(char *pwd)
 		g_flag[0] = EXIT_FAILURE;
 }
 
-void	do_cd(t_tree *cmdtree, char *pwd)
+void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst)
 {
 	char	*tmp;
 
 	g_flag[0] = 0;
 	tmp = getcwd(0, 500);
 	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2))
-		chdir(getenv("HOME"));
+		chdir(ft_getenv("HOME", *vars_lst));
 	else if (!ft_strncmp(cmdtree->arg[1], "..", 3))
 		chdir("..");
 	else if (dir_exists(cmdtree->arg[1]) && tmp && !chdir(cmdtree->arg[1]))
@@ -90,16 +90,19 @@ void	do_env(t_tree *cmdtree, t_list **vars_lst)
 {
 	t_list	*tmp;
 
-	tmp = *vars_lst;
-	if (!cmdtree->arg[1])
+	if (vars_lst)
 	{
-		while (tmp)
+		tmp = *vars_lst;
+		if (cmdtree && !cmdtree->arg[1])
 		{
-			printf("%s=%s\n", ((t_var *)tmp->ctnt)->key,
-				((t_var *)tmp->ctnt)->val);
-			tmp = tmp->next;
+			while (tmp)
+			{
+				printf("%s=%s\n", ((t_var *)tmp->ctnt)->key,
+					((t_var *)tmp->ctnt)->val);
+				tmp = tmp->next;
+			}
+			g_flag[0] = 0;
 		}
-		g_flag[0] = 0;
 	}
 	else
 		g_flag[0] = 127;
