@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:42:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/01 18:02:23 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/02 11:02:15 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 		return (pipe_close(rdrfd, limn), g_flag[0]);
 	pid = fork();
 	if (pid < 0)
-		return (perror("fork"), g_flag[0] = 254);
+		return (pipe_close(rdrfd, limn), perror("fork"), g_flag[0] = 254);
 	if (!pid)
 		do_child(NULL, cmdtree, vars_lst, rdrfd);
 	g_flag[1] = !isatty(STDIN_FILENO);
