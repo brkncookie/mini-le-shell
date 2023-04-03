@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 15:10:00 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 15:13:27 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 # include "dirent.h"
 # include <sys/errno.h>
 # include <sys/types.h>
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <termios.h>
 # define READLINE_LIBRARY 1
 # include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/history.h"

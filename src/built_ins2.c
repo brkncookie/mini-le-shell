@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:43 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/01 15:49:11 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 15:50:32 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ int	dir_exists(const char *path)
 void	do_echo(t_tree *cmdtree, int *redr_fds)
 {
 	int	i;
+	int	d;
 
 	i = 1;
+	d = 0;
 	if (!cmdtree->arg)
 	{
 		write(redr_fds[1], "\n", 1);
@@ -36,11 +38,12 @@ void	do_echo(t_tree *cmdtree, int *redr_fds)
 	}
 	while (cmdtree->arg[i])
 	{
-		while (!ft_strncmp(cmdtree->arg[i], "-n", 2))
+		while (!d && cmdtree->arg[i] && !ft_strncmp(cmdtree->arg[i], "-n", 2))
 			i++;
 		if (cmdtree->arg[i])
 		{
 			write(redr_fds[1], cmdtree->arg[i], ft_strlen(cmdtree->arg[i]));
+			d = 1;
 			if (cmdtree->arg[++i])
 				write(redr_fds[1], " ", 1);
 		}

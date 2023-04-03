@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 13:59:08 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 15:17:12 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,8 @@ int	fix_args(t_tree *cmdtree, int i, int args_num, int n)
 		while (fil)
 		{
 			if (fil && ft_strncmp(fil->d_name, ".", 1) && n == args_num && n--)
-			{
-				free(cmdtree->arg[i]);
-				cmdtree->arg[i] = ft_strdup(fil->d_name);
-			}
+				(free(cmdtree->arg[i]), cmdtree->arg[i] = \
+				ft_strdup(fil->d_name));
 			else if (fil && ft_strncmp(fil->d_name, ".", 1))
 			{
 				free(cmdtree->arg[args_num]);

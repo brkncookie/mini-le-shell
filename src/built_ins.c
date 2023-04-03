@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 13:26:54 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 15:33:00 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 	int			bkup[2];
 	static char	*pwd;
 
+	expand(cmdtree, vars_lst);
 	if (!is_built_in(cmdtree))
 		return (0);
 	if (!pwd)
@@ -112,7 +113,6 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0 || bkup[0] < 0
 		|| bkup[1] < 0)
 		return (perror("dup/dup2"), g_flag[0] = 1, 0);
-	expand(cmdtree, vars_lst);
 	if (built_in(cmdtree, vars_lst, pwd, redr_fds))
 	{
 		if (cmdtree->redr)
