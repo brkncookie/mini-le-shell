@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:00 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 12:17:05 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 13:15:00 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,8 @@ int	pipe_close(int *pipefd, int limn)
 	return (0);
 }
 
-void file_close(int *redr_fds)
-{
-	struct stat	read;
-	struct stat	write;
-
-	fstat(redr_fds[0], &read);
-	fstat(redr_fds[1], &write);
-	if ((read.st_mode & S_IFMT) == S_IFREG)
-	{
-		printf("this is a file %d\n", redr_fds[0]);
-		close(redr_fds[0]);
-	}
-	if ((write.st_mode & S_IFMT) == S_IFREG)
-	{
-		printf("this is a file %d\n", redr_fds[1]);
-		close(redr_fds[1]);
-	}
-}
-
 int	*open_files(t_tree *redr, int	*fds, char *file)
 {
-	char	*buf;
-	int		hdfds[2];
-
 	if (redr->tkn->type & REDR_I)
 	{
 		if (fds[0] != 0)
@@ -73,20 +51,8 @@ int	*open_files(t_tree *redr, int	*fds, char *file)
 		fds[1] = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	}
 	else if (redr->tkn->type & HERE_DOC)
-	{
-		if (pipe(hdfds) < 0)
-			return (free(file), perror("pipe"), NULL);
-		while (1)
-		{
-			buf = readline("> ");
-			if (!buf || !ft_strncmp(buf, file, ft_strlen(file) + 1))
-				break ;
-			write(hdfds[1], buf, ft_strlen(buf));
-			write(hdfds[1], "\n", 1);
-		}
-		close(hdfds[1]);
-		fds[0] = hdfds[0];
-	}
+		if (!here_doc(fds, file))
+			return (NULL);
 	return (fds);
 }
 

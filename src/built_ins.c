@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 13:01:22 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 13:26:54 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,29 +100,29 @@ int	is_built_in(t_tree *cmdtree)
 int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 		t_list **vars_lst)
 {
-	int			in;
-	int			out;
+	int			bkup[2];
 	static char	*pwd;
 
 	if (!is_built_in(cmdtree))
 		return (0);
 	if (!pwd)
 		pwd = getcwd(0, 500);
-	in = dup(0);
-	out = dup(1);
-	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0 || in < 0
-		|| out < 0)
+	bkup[0] = dup(0);
+	bkup[1] = dup(1);
+	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0 || bkup[0] < 0
+		|| bkup[1] < 0)
 		return (perror("dup/dup2"), g_flag[0] = 1, 0);
 	expand(cmdtree, vars_lst);
 	if (built_in(cmdtree, vars_lst, pwd, redr_fds))
 	{
 		if (cmdtree->redr)
-			(file_close(redr_fds), ft_memcpy(redr_fds, oredr_fds, sizeof redr_fds));
-		if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
+			(file_close(redr_fds), \
+			ft_memcpy(redr_fds, oredr_fds, sizeof redr_fds));
+		if (dup2(bkup[0], 0) < 0 || dup2(bkup[1], 1) < 0)
 			return (perror("dup2"), g_flag[0] = 1);
 		return (1);
 	}
-	else if (dup2(in, 0) < 0 || dup2(out, 1) < 0)
+	else if (dup2(bkup[0], 0) < 0 || dup2(bkup[1], 1) < 0)
 		return (perror("dup2"), g_flag[0] = 1, 0);
 	return (0);
 }

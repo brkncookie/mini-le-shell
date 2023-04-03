@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 13:02:51 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 13:13:58 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,6 @@ char	*ft_getenvi(char *key, t_list *vars, int *len);
 size_t	ft_strlcat(char *dest, const char *src, size_t size);
 void	expand(t_tree *cmdtree, t_list **vars_lst);
 void	file_close(int *redr_fds);
+int		*here_doc(int *fds, char *file);
 
 #endif
