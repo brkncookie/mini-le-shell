@@ -27,7 +27,7 @@ $(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)*
 	$(CC) $(CC_FLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT_OBJS_DIR)
-	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -lreadline
+	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -l readline -L /goinfre/mnadir/.brew/opt/readline/lib 
 
 all: $(NAME)
 

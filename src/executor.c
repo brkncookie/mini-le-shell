@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:42:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/02 11:02:15 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 12:46:18 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 	if (!pid)
 		do_child(NULL, cmdtree, vars_lst, rdrfd);
 	g_flag[1] = !isatty(STDIN_FILENO);
-	(void)(ft_memcpy(rdrfd, ordrfd, sizeof rdrfd) + pipe_close(rdrfd, limn));
+	pipe_close(rdrfd, limn);
+	if (cmdtree->redr)
+		(file_close(rdrfd), ft_memcpy(rdrfd, ordrfd, sizeof rdrfd));
 	if (limn > 0 || limn == -2)
 		waitpid(pid, &r_val, 0);
 	g_flag[0] = (128 + WTERMSIG(r_val)) * WIFSIGNALED(r_val) + \
@@ -112,4 +114,5 @@ void	executor(t_tree *cmdtree, t_list **vars_lst)
 	redr_fds[0] = 0;
 	redr_fds[1] = 1;
 	do_logops(cmdtree, &redr_fds[0], 1, vars_lst);
+	file_close(redr_fds);
 }

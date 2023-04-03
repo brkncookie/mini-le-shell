@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/01 15:45:02 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 13:02:51 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
 # include <sys/stat.h>
 # include "dirent.h"
 # include <sys/errno.h>
-# include <readline/history.h>
-# include <readline/readline.h>
+# define READLINE_LIBRARY 1
+# include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/history.h"
+# include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/readline.h"
 
 typedef struct s_var
 {
@@ -57,5 +58,6 @@ void	free_dblarr(char **arr, int i);
 char	*ft_getenvi(char *key, t_list *vars, int *len);
 size_t	ft_strlcat(char *dest, const char *src, size_t size);
 void	expand(t_tree *cmdtree, t_list **vars_lst);
+void	file_close(int *redr_fds);
 
 #endif
