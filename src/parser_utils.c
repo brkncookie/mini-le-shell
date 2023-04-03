@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/01 15:35:09 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/02 18:02:28 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,29 @@ int	count_arg(t_tkns *tkn)
 	return (cnt);
 }
 
-int	make_arg(t_tkns *tkn, char **arg, int i, int *error)
+int	make_arg(t_tkns **tkn, char **arg, int i, int *error)
 {
-	arg[i] = ft_strndup(tkn->val, tkn->len);
+	arg[i] = ft_strndup((*tkn)->val, (*tkn)->len);
 	if (!arg[i])
 		return (*error = 1, 0);
-	while (tkn && !(tkn->type & WHITE_SPC) && tkn->next
-		&& tkn->next->type & (QUOTE | DQUOTE))
+	while ((*tkn) && !((*tkn)->type & WHITE_SPC) && (*tkn)->next
+		&& (*tkn)->next->type & (QUOTE | DQUOTE))
 	{
-		tkn = tkn->next->next;
-		while (tkn && (tkn->stat & (IN_QUOTE | IN_DQUOTE)
-				|| tkn->type & (VAR | WORD | QUOTE | DQUOTE)))
+		(*tkn) = (*tkn)->next->next;
+		while ((*tkn) && ((*tkn)->stat & (IN_QUOTE | IN_DQUOTE)
+				|| (*tkn)->type & (VAR | WORD | QUOTE | DQUOTE)))
 		{
-			ft_strlcat(arg[i], tkn->val, tkn->len + ft_strlen(arg[i]) + 1);
-			tkn = tkn->next;
+			if (!((*tkn)->type & (QUOTE | DQUOTE)))
+				ft_strlcat(arg[i], (*tkn)->val, (*tkn)->len + ft_strlen(arg[i])
+					+ 1);
+			(*tkn) = (*tkn)->next;
 		}
 	}
-	while (tkn && !(tkn->type & WHITE_SPC) && tkn->next
-		&& tkn->next->type & (VAR | WORD))
+	while ((*tkn) && !((*tkn)->type & WHITE_SPC) && (*tkn)->next
+		&& (*tkn)->next->type & (VAR | WORD))
 	{
-		tkn = tkn->next;
-		ft_strlcat(arg[i], tkn->val, tkn->len + ft_strlen(arg[i]) + 1);
+		(*tkn) = (*tkn)->next;
+		ft_strlcat(arg[i], (*tkn)->val, (*tkn)->len + ft_strlen(arg[i]) + 1);
 	}
 	return (1);
 }
@@ -87,26 +89,8 @@ char	**get_arg(t_tkns *tkn, int *error)
 	{
 		if (tkn->type & (VAR | WORD))
 		{
-			arg[i] = ft_strndup(tkn->val, tkn->len);
-			if (!arg[i])
-				return (*error = 1, NULL);
-			while (tkn && !(tkn->type & WHITE_SPC) && tkn->next && tkn->next->type & (QUOTE | DQUOTE))
-			{
-				tkn = tkn->next->next;
-				while (tkn && (tkn->stat & (IN_QUOTE | IN_DQUOTE)
-						|| tkn->type & (VAR | WORD | QUOTE | DQUOTE)))
-				{
-					if (!(tkn->type & (QUOTE | DQUOTE)))
-						ft_strlcat(arg[i], tkn->val, tkn->len
-							+ ft_strlen(arg[i]) + 1);
-					tkn = tkn->next;
-				}
-			}
-			while (tkn && !(tkn->type & WHITE_SPC) && tkn->next && tkn->next->type & (VAR | WORD))
-			{
-				tkn = tkn->next;
-				ft_strlcat(arg[i], tkn->val, tkn->len + ft_strlen(arg[i]) + 1);
-			}
+			if (!make_arg(&tkn, arg, i, error))
+				return (fre2d(arg), freelst(&tkn), NULL);
 			i++;
 		}
 		if (tkn)

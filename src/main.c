@@ -6,14 +6,13 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/02 18:20:49 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 15:05:45 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 #include <signal.h>
 #include <stdio.h>
-#include <termios.h>
 
 extern int	g_flag[2];
 
@@ -23,11 +22,11 @@ void	action(int sig)
 	{
 		if (!g_flag[1])
 		{
-			printf("Quit: 3\n");
+			printf("Quit: \n");
 			g_flag[0] = 131;
 		}
 		else
-			return ;
+			set_term();
 	}
 	if (sig == SIGINT)
 	{
@@ -35,7 +34,7 @@ void	action(int sig)
 		if (g_flag[1])
 		{
 			rl_on_new_line();
-			rl_replace_line("", 0);
+			// rl_replace_line("", 0);
 			rl_redisplay();
 		}
 		g_flag[0] = 130;

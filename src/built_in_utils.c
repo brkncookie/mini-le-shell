@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/01 15:17:07 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 13:59:08 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,18 @@ void	swap_args(t_tree *cmdtree, int i, int num, int args_num)
 	}
 }
 
-int	fix_args(t_tree *cmdtree, int i, int args_num, int num)
+int	fix_args(t_tree *cmdtree, int i, int args_num, int n)
 {
 	DIR				*d;
 	struct dirent	*fil;
-	int				n;
 
 	d = opendir(".");
-	n = 0;
 	if (d)
 	{
 		fil = readdir(d);
 		while (fil)
 		{
-			if (fil && ft_strncmp(fil->d_name, ".", 1) && !n && ++n)
+			if (fil && ft_strncmp(fil->d_name, ".", 1) && n == args_num && n--)
 			{
 				free(cmdtree->arg[i]);
 				cmdtree->arg[i] = ft_strdup(fil->d_name);
@@ -57,7 +55,7 @@ int	fix_args(t_tree *cmdtree, int i, int args_num, int num)
 		}
 		closedir(d);
 	}
-	return (swap_args(cmdtree, i, num, args_num - 1), 1);
+	return (swap_args(cmdtree, i, n + 1, args_num - 1), 1);
 }
 
 void	expand3(t_tree *cmdtree, int i)

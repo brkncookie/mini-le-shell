@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 13:13:58 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 15:10:00 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <sys/stat.h>
 # include "dirent.h"
 # include <sys/errno.h>
+# include <sys/types.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <termios.h>
 # define READLINE_LIBRARY 1
 # include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/history.h"
 # include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/readline.h"
@@ -33,6 +37,8 @@ int		*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd);
 char	*is_vld_exc(char *path, t_list **vars_lst, \
 		char	*ppath, char	**paths);
 int		is_num(char *str);
+void	set_term(void);
+void	action(int sig);
 int		dir_exists(const char *path);
 void	executor(t_tree *cmdtree, t_list **vars_lst);
 int		pipe_close(int *pipefd, int limn);

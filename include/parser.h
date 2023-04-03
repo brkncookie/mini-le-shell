@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 13:23:15 by mnadir            #+#    #+#             */
-/*   Updated: 2023/03/31 14:10:01 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 14:05:10 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define PARSER_H
 # include "lexer.h"
 # include <stdio.h>
-# include <stdlib.h>
 
 typedef struct s_tree
 {
