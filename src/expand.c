@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:16 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/03/31 14:08:18 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 17:16:37 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst)
 		cmdtree->arg[i] = ft_realloc(cmdtree->arg[i], *j);
 		ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
 			+ ft_strlen(cmdtree->arg[i]) + 1);
-		free(val);
 	}
 	else
 		*j = *j + 1;
+	free(val);
 }

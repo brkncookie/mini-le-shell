@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 15:33:00 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 17:28:36 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 	if (!is_built_in(cmdtree))
 		return (0);
 	if (!pwd)
-		pwd = getcwd(0, 500);
+		pwd = getcwd(0, PATH_MAX);
 	bkup[0] = dup(0);
 	bkup[1] = dup(1);
 	if (dup2(redr_fds[0], 0) < 0 || dup2(redr_fds[1], 1) < 0 || bkup[0] < 0

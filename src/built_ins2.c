@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:43 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 15:50:32 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 18:05:55 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,23 @@
 
 int		g_flag[2] = {0, 1};
 
-int	dir_exists(const char *path)
+int	not_option(char *arg)
 {
-	struct stat	stats;
+	int	i;
 
-	stat(path, &stats);
-	if (S_ISDIR(stats.st_mode))
-		return (1);
-	return (0);
+	i = 0;
+	if (arg[i] == '-')
+	{
+		i++;
+		while (arg[i])
+		{
+			if (arg[i] != 'n')
+				return (1);
+			i++;
+		}
+		return (0);
+	}
+	return (1);
 }
 
 void	do_echo(t_tree *cmdtree, int *redr_fds)
@@ -38,7 +47,7 @@ void	do_echo(t_tree *cmdtree, int *redr_fds)
 	}
 	while (cmdtree->arg[i])
 	{
-		while (!d && cmdtree->arg[i] && !ft_strncmp(cmdtree->arg[i], "-n", 2))
+		while (!d && cmdtree->arg[i] && not_option(cmdtree->arg[i]))
 			i++;
 		if (cmdtree->arg[i])
 		{
@@ -69,13 +78,13 @@ void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst)
 	char	*tmp;
 
 	g_flag[0] = 0;
-	tmp = getcwd(0, 500);
+	tmp = getcwd(0, PATH_MAX);
 	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2))
 		chdir(ft_getenv("HOME", *vars_lst));
 	else if (!ft_strncmp(cmdtree->arg[1], "..", 3))
 		chdir("..");
 	else if (dir_exists(cmdtree->arg[1]) && tmp && !chdir(cmdtree->arg[1]))
-		pwd = getcwd(pwd, 500);
+		pwd = getcwd(pwd, PATH_MAX);
 	else
 	{
 		g_flag[0] = 1;
@@ -85,7 +94,7 @@ void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst)
 			printf("cd: invalid directory path\n");
 	}
 	if (tmp || !ft_strncmp(cmdtree->arg[1], "..", 3))
-		pwd = getcwd(pwd, 500);
+		pwd = getcwd(pwd, PATH_MAX);
 	free(tmp);
 }
 

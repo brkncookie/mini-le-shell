@@ -1,5 +1,0 @@
-echo -nbruuu hello
-single quote expansion causes leaks.
-cd .. doesn't work when being in invalid directory or any normal cd to anyother path
-heredoc causes a leak
-cat /etc/hosts  > /tmp/file | cat -n

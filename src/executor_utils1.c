@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils1.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnadir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 13:10:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 13:14:43 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 17:18:30 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	*here_doc(int *fds, char *file)
 			break ;
 		write(hdfds[1], buf, ft_strlen(buf));
 		write(hdfds[1], "\n", 1);
+		free(buf);
 	}
 	close(hdfds[1]);
 	fds[0] = hdfds[0];
