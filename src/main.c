@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 21:42:53 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 17:48:21 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	action(int sig)
 		if (g_flag[1])
 		{
 			rl_on_new_line();
-			// rl_replace_line("", 0);
+			rl_replace_line("", 0);
 			rl_redisplay();
 		}
 		g_flag[0] = 130;
@@ -65,6 +65,20 @@ t_list	*get_vars(char **envp)
 	return (vars_lst);
 }
 
+int	newline_pos(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\n')
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
 t_tkns	*prompt(char **cmd_buf, int *error)
 {
 	t_tkns	*tkns;
@@ -75,6 +89,8 @@ t_tkns	*prompt(char **cmd_buf, int *error)
 		do_exit(ft_itoa(g_flag[0]), 2);
 	if (ft_strlen(*cmd_buf) > 0)
 		add_history(*cmd_buf);
+	if (newline_pos(*cmd_buf))
+		*cmd_buf = ft_realloc(*cmd_buf, newline_pos(*cmd_buf));
 	tkns = tokenize(*cmd_buf, error);
 	if (!tkns || *error)
 	{

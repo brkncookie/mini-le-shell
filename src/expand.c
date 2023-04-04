@@ -6,39 +6,45 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:16 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 00:39:30 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 17:45:55 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
-int	is_inquotes(t_tree **cmdtree, char *str, int arg_num)
+int	is_inquotes(t_tree **cmdtree, char *str)
 {
 	t_tree		*tmp;
-	static int	i = 0;
-	int			arg;
+	static int	i;
+	int			j;
+	static int	quotes;
 
 	tmp = *cmdtree;
-	arg = 0;
-	while (tmp->tkn->next && arg <= arg_num)
+	while (tmp->tkn->val[i])
 	{
-		while (tmp->tkn->val[i] && tmp->tkn->val[i] != '$' && i < tmp->tkn->len)
-			i++;
-		if (!ft_strncmp2(tmp->tkn->val + i, str, ft_strlen(str) - 1)
-			&& (tmp->tkn->stat & (IN_QUOTE)))
+		if (tmp->tkn->val[i] == '\'')
+			quotes++;
+		if (tmp->tkn->val[i] == '$' && !ft_strncmp2(tmp->tkn->val + i, str,
+				ft_strlen(str) - 1) && quotes % 2)
 		{
-			while (tmp && tmp->tkn->prev)
-				tmp->tkn = tmp->tkn->prev;
-			return (i++, 1);
+			j = i;
+			while (tmp->tkn->val[++j])
+				if (tmp->tkn->val[j] == '$')
+					return (i++, 1);
+			return (i = 0, quotes = 0, 1);
 		}
-		i = 0;
-		if (tmp->tkn->val[0] == ' ')
-			arg++;
-		tmp->tkn = tmp->tkn->next;
+		else if (tmp->tkn->val[i] == '$' && !ft_strncmp2(tmp->tkn->val + i, str,
+				ft_strlen(str) - 1))
+		{
+			j = i;
+			while (tmp->tkn->val[++j])
+				if (tmp->tkn->val[j] == '$')
+					return (i++, 0);
+			return (i = 0, quotes = 0, 0);
+		}
+		i++;
 	}
-	while (tmp && tmp->tkn->prev)
-		tmp->tkn = tmp->tkn->prev;
-	return (0);
+	return (i = 0, quotes = 0, 0);
 }
 
 char	*ft_realloc(char *str, int len)
@@ -57,7 +63,7 @@ void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst)
 	int		len;
 
 	val = ft_getenvi(cmdtree->arg[i] + *j + 1, *vars_lst, &len);
-	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j, i) && val)
+	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j) && val)
 	{
 		len += *j;
 		val = ft_realloc(val, ft_strlen(val) + ft_strlen(cmdtree->arg[i] + len)

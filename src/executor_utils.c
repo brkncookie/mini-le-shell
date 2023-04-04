@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:00 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 13:15:00 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/04 18:05:20 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	pipe_close(int *pipefd, int limn)
 	return (0);
 }
 
-int	*open_files(t_tree *redr, int	*fds, char *file)
+int	*open_files(t_tree *redr, int *fds, char *file)
 {
 	if (redr->tkn->type & REDR_I)
 	{
@@ -65,10 +65,10 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 	fds[1] = 1;
 	while (redr)
 	{
-		file = ft_strndup(redr->limn->tkn->val, redr->limn->tkn->len);
-		if (!file)
-			return (NULL);
-		if (!open_files(redr, fds, file))
+		file = ft_strndup(redr->limn->tkn->val, (!redr->limn->tkn->len)
+				* ft_strlen(redr->limn->tkn->val) + !(!redr->limn->tkn->len)
+				* redr->limn->tkn->len);
+		if (!file || !open_files(redr, fds, file))
 			return (NULL);
 		if (fds[1] < 0 || fds[0] < 0)
 			return (free(file), perror("open"), NULL);
@@ -96,9 +96,9 @@ void	fre2d(char **path)
 	free(path);
 }
 
-char	*is_vld_exc(char *path, t_list **vars_lst, char	*ppath, char	**paths)
+char	*is_vld_exc(char *path, t_list **vars_lst, char *ppath, char **paths)
 {
-	int		i;
+	int	i;
 
 	if (dir_exists(path))
 		return (printf("%s: is a directory\n", path), free(path), NULL);
@@ -111,8 +111,8 @@ char	*is_vld_exc(char *path, t_list **vars_lst, char	*ppath, char	**paths)
 	i = -1;
 	while (paths && paths[++i])
 	{
-		ppath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2, \
-				sizeof(*ppath));
+		ppath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2,
+							sizeof(*ppath));
 		if (!ppath)
 			return (fre2d(paths), free(path), NULL);
 		ft_strlcpy(ppath, paths[i], ft_strlen(paths[i]) + ft_strlen(path) + 2);

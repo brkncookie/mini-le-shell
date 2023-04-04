@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 01:53:44 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 19:19:47 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,19 @@ void	expand_in_tree(t_tree *cmdtree, t_list **vars_lst)
 	int		len;
 
 	i = 0;
-	tmp = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
+	tmp = NULL;
+	if ((cmdtree->tkn->type & (VAR)))
+		tmp = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
 	if (cmdtree->limn && !cmdtree->lisr)
 		expand_in_tree(cmdtree->limn, vars_lst);
 	if (cmdtree->redr)
 		expand_in_tree(cmdtree->redr, vars_lst);
-	while (tmp[i])
+	while (tmp && tmp[i])
 	{
 		if (tmp[i] == '$')
 		{
 			val = ft_getenvi(tmp + i + 1, *vars_lst, &len);
-			if (!is_inquotes(&cmdtree, tmp + i, 1) && val)
+			if (!is_inquotes(&cmdtree, tmp + i) && val)
 			{
 				len += i;
 				val = ft_realloc(val, ft_strlen(val) + ft_strlen(tmp + len) + 1);
@@ -59,7 +61,7 @@ void	expand_in_tree(t_tree *cmdtree, t_list **vars_lst)
 				tmp = ft_realloc(tmp, ft_strlen(val) + ft_strlen(tmp) + 1);
 				ft_strlcat(tmp, val, ft_strlen(val) + ft_strlen(tmp) + 1);
 				cmdtree->tkn->val = tmp;
-				cmdtree->tkn->len = ft_strlen(tmp);
+				cmdtree->tkn->len = 0;
 			}
 			else
 				i = i + 1;

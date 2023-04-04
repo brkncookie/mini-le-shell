@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 13:23:15 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 14:05:10 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 15:11:22 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void		freetree(t_tree *tree);
 char		**get_arg(t_tkns *tkn, int *error);
 void		fre2d(char **path);
 int			skip_pars(t_tkns **tkns);
+char		*ft_realloc(char *str, int len);
 t_tree		*node_create(t_tkns **tmp, t_tkns *tkns, int *error,
 				t_tree *(*lyasar)(t_tkns *, int *),
 				t_tree *(*lyamin)(t_tkns *, int *));

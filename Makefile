@@ -27,7 +27,8 @@ $(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)*
 	$(CC) $(CC_FLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT_OBJS_DIR)
-	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -l readline
+	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -l readline -L /Volumes/reda/.brew/opt/readline/lib/
+
 
 all: $(NAME)
 

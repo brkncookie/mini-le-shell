@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/02 18:02:28 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 19:18:45 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	freelst(t_tkns **lst)
 	while (*lst)
 	{
 		tmp = (*lst)->next;
+		if ((*lst)->val && !((*lst)->len))
+			free((*lst)->val);
 		free(*lst);
 		(*lst) = tmp;
 	}
@@ -56,8 +58,10 @@ int	make_arg(t_tkns **tkn, char **arg, int i, int *error)
 				|| (*tkn)->type & (VAR | WORD | QUOTE | DQUOTE)))
 		{
 			if (!((*tkn)->type & (QUOTE | DQUOTE)))
-				ft_strlcat(arg[i], (*tkn)->val, (*tkn)->len + ft_strlen(arg[i])
-					+ 1);
+			{
+				arg[i] = ft_realloc(arg[i], ft_strlen(arg[i]) + (*tkn)->len + 1);
+				ft_strlcat(arg[i], (*tkn)->val, (*tkn)->len + ft_strlen(arg[i]) + 1);
+			}
 			(*tkn) = (*tkn)->next;
 		}
 	}
@@ -65,6 +69,7 @@ int	make_arg(t_tkns **tkn, char **arg, int i, int *error)
 		&& (*tkn)->next->type & (VAR | WORD))
 	{
 		(*tkn) = (*tkn)->next;
+		arg[i] = ft_realloc(arg[i], ft_strlen(arg[i]) + (*tkn)->len + 1);
 		ft_strlcat(arg[i], (*tkn)->val, (*tkn)->len + ft_strlen(arg[i]) + 1);
 	}
 	return (1);
