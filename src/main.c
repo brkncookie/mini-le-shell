@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 18:06:31 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/03 21:42:53 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	action(int sig)
 		if (g_flag[1])
 		{
 			rl_on_new_line();
-			rl_replace_line("", 0);
+			// rl_replace_line("", 0);
 			rl_redisplay();
 		}
 		g_flag[0] = 130;

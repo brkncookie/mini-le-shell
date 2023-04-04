@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:16 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 17:16:37 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 00:39:30 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,13 @@ void	expand2(t_tree *cmdtree, int i, int *j, t_list **vars_lst)
 	if (!is_inquotes(&cmdtree, cmdtree->arg[i] + *j, i) && val)
 	{
 		len += *j;
+		val = ft_realloc(val, ft_strlen(val) + ft_strlen(cmdtree->arg[i] + len)
+				+ 1);
 		ft_strlcat(val, cmdtree->arg[i] + len, ft_strlen(val)
 			+ ft_strlen(cmdtree->arg[i] + len) + 1);
 		cmdtree->arg[i] = ft_realloc(cmdtree->arg[i], *j);
+		cmdtree->arg[i] = ft_realloc(cmdtree->arg[i], ft_strlen(cmdtree->arg[i])
+				+ ft_strlen(val) + 1);
 		ft_strlcat(cmdtree->arg[i], val, ft_strlen(val)
 			+ ft_strlen(cmdtree->arg[i]) + 1);
 	}

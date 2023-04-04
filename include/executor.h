@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 18:06:21 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 00:39:54 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@
 # include <termios.h>
 # include <limits.h>
 # define READLINE_LIBRARY 1
-# include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/history.h"
-# include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/readline.h"
-// # include <readline/history.h>
-// # include <readline/readline.h>
+// # include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/history.h"
+// # include "/Users/mnadir/goinfre/.brew/opt/readline/include/readline/readline.h"
+# include <readline/history.h>
+# include <readline/readline.h>
 
 typedef struct s_var
 {
@@ -38,6 +38,8 @@ int		*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd);
 char	*is_vld_exc(char *path, t_list **vars_lst, \
 		char	*ppath, char	**paths);
 int		is_num(char *str);
+char	*ft_realloc(char *str, int len);
+int		is_inquotes(t_tree **cmdtree, char *str, int arg_num);
 void	set_term(void);
 void	action(int sig);
 int		dir_exists(const char *path);

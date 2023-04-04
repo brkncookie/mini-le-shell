@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:43 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 18:05:55 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 01:53:27 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	do_echo(t_tree *cmdtree, int *redr_fds)
 	}
 	while (cmdtree->arg[i])
 	{
-		while (!d && cmdtree->arg[i] && not_option(cmdtree->arg[i]))
+		while (!d && cmdtree->arg[i] && !not_option(cmdtree->arg[i]))
 			i++;
 		if (cmdtree->arg[i])
 		{
@@ -57,7 +57,7 @@ void	do_echo(t_tree *cmdtree, int *redr_fds)
 				write(redr_fds[1], " ", 1);
 		}
 	}
-	if (!cmdtree->arg[1] || ft_strncmp(cmdtree->arg[1], "-n", 2))
+	if (!cmdtree->arg[1] || not_option(cmdtree->arg[1]))
 		write(redr_fds[1], "\n", 1);
 	g_flag[0] = EXIT_SUCCESS;
 }
@@ -73,19 +73,42 @@ void	do_pwd(char *pwd)
 		g_flag[0] = EXIT_FAILURE;
 }
 
+void	replace_env(char *key, char *val, t_list **vars_lst)
+{
+	t_list	*tmp;
+	t_var	*var;
+
+	tmp = *vars_lst;
+	while (tmp)
+	{
+		var = tmp->ctnt;
+		if (!ft_strncmp(var->key, key, ft_strlen(key)))
+		{
+			free(var->val);
+			var->val = ft_strdup(val);
+			break ;
+		}
+		tmp = tmp->next;
+	}
+}
+
 void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst)
 {
 	char	*tmp;
 
 	g_flag[0] = 0;
 	tmp = getcwd(0, PATH_MAX);
-	if (!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2))
-		chdir(ft_getenv("HOME", *vars_lst));
-	else if (!ft_strncmp(cmdtree->arg[1], "..", 3))
-		chdir("..");
+	if ((!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2)) && \
+		!chdir(ft_getenv("HOME", *vars_lst)))
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
+		replace_env("PWD", pwd, vars_lst));
+	else if (!ft_strncmp(cmdtree->arg[1], "..", 3) && !chdir(".."))
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
+		replace_env("PWD", pwd, vars_lst));
 	else if (dir_exists(cmdtree->arg[1]) && tmp && !chdir(cmdtree->arg[1]))
-		pwd = getcwd(pwd, PATH_MAX);
-	else
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
+		replace_env("PWD", pwd, vars_lst));
+	else if (ft_strncmp(cmdtree->arg[1], "..", 3))
 	{
 		g_flag[0] = 1;
 		if (cmdtree->arg[2])
@@ -93,8 +116,9 @@ void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst)
 		else
 			printf("cd: invalid directory path\n");
 	}
-	if (tmp || !ft_strncmp(cmdtree->arg[1], "..", 3))
-		pwd = getcwd(pwd, PATH_MAX);
+	else
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
+		replace_env("PWD", pwd, vars_lst));
 	free(tmp);
 }
 

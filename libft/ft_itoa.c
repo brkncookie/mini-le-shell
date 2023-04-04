@@ -55,7 +55,7 @@ char	*ft_itoa(int nb)
 	}
 	k += get_num_of_digits(i);
 	arr = (char *)ft_calloc(sizeof(char), (k + 2));
-	if (arr == (NULL))
+	if (!arr)
 		return (NULL);
 	fill_string(nb, i, k, arr);
 	return (arr);

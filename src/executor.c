@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:42:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 16:34:55 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/03 23:13:05 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 	int	pid;
 	int	ordrfd[2];
 
-	ft_memcpy(ordrfd, rdrfd, sizeof(rdrfd));
+	(ft_memcpy(ordrfd, rdrfd, sizeof(rdrfd)), expand(cmdtree, vars_lst));
 	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (rslv_redr(cmdtree, rdrfd, 0, 1), errno);
 	if (cmdtree->redr && !rslv_redr(cmdtree->redr, rdrfd, 0, 1))

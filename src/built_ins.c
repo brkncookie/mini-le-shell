@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/03 17:28:36 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 01:53:44 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,44 @@ void	do_exit(char *arg, int args_num)
 	}
 }
 
+void	expand_in_tree(t_tree *cmdtree, t_list **vars_lst)
+{
+	int		i;
+	char	*tmp;
+	char	*val;
+	int		len;
+
+	i = 0;
+	tmp = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
+	if (cmdtree->limn && !cmdtree->lisr)
+		expand_in_tree(cmdtree->limn, vars_lst);
+	if (cmdtree->redr)
+		expand_in_tree(cmdtree->redr, vars_lst);
+	while (tmp[i])
+	{
+		if (tmp[i] == '$')
+		{
+			val = ft_getenvi(tmp + i + 1, *vars_lst, &len);
+			if (!is_inquotes(&cmdtree, tmp + i, 1) && val)
+			{
+				len += i;
+				val = ft_realloc(val, ft_strlen(val) + ft_strlen(tmp + len) + 1);
+				ft_strlcat(val, tmp + len, ft_strlen(val) + ft_strlen(tmp + len) + 1);
+				tmp = ft_realloc(tmp, i);
+				tmp = ft_realloc(tmp, ft_strlen(val) + ft_strlen(tmp) + 1);
+				ft_strlcat(tmp, val, ft_strlen(val) + ft_strlen(tmp) + 1);
+				cmdtree->tkn->val = tmp;
+				cmdtree->tkn->len = ft_strlen(tmp);
+			}
+			else
+				i = i + 1;
+			free(val);
+		}
+		else
+			i++;
+	}
+}
+
 void	expand(t_tree *cmdtree, t_list **vars_lst)
 {
 	int	i;
@@ -51,6 +89,10 @@ void	expand(t_tree *cmdtree, t_list **vars_lst)
 		expand3(cmdtree, i);
 		i++;
 	}
+	if (cmdtree->limn && !cmdtree->lisr)
+		expand_in_tree(cmdtree->limn, vars_lst);
+	if (cmdtree->redr)
+		expand_in_tree(cmdtree->redr, vars_lst);
 }
 
 int	built_in(t_tree *cmdtree, t_list **vars_lst, char *pwd, int *redr_fds)
@@ -103,7 +145,6 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 	int			bkup[2];
 	static char	*pwd;
 
-	expand(cmdtree, vars_lst);
 	if (!is_built_in(cmdtree))
 		return (0);
 	if (!pwd)
@@ -116,8 +157,8 @@ int	do_builtin(t_tree *cmdtree, int *redr_fds, int *oredr_fds,
 	if (built_in(cmdtree, vars_lst, pwd, redr_fds))
 	{
 		if (cmdtree->redr)
-			(file_close(redr_fds), \
-			ft_memcpy(redr_fds, oredr_fds, sizeof redr_fds));
+			(file_close(redr_fds),
+				ft_memcpy(redr_fds, oredr_fds, sizeof redr_fds));
 		if (dup2(bkup[0], 0) < 0 || dup2(bkup[1], 1) < 0)
 			return (perror("dup2"), g_flag[0] = 1);
 		return (1);
