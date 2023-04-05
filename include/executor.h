@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/05 02:18:39 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 02:19:40 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@
 # include <termios.h>
 # include <limits.h>
 # define READLINE_LIBRARY 1
-/* # include "/Volumes/reda/.brew/opt/readline/include/readline/history.h" */
-/* # include "/Volumes/reda/.brew/opt/readline/include/readline/readline.h" */
-# include "/goinfre/mnadir/.brew/opt/readline/include/readline/history.h"
-# include "/goinfre/mnadir/.brew/opt/readline/include/readline/readline.h"
+# include "/Volumes/reda/.brew/opt/readline/include/readline/history.h"
+# include "/Volumes/reda/.brew/opt/readline/include/readline/readline.h"
+// # include "/goinfre/mnadir/.brew/opt/readline/include/readline/history.h"
+// # include "/goinfre/mnadir/.brew/opt/readline/include/readline/readline.h"
 
 typedef struct s_var
 {
