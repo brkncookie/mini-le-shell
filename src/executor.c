@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:42:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/04 22:10:20 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 03:27:56 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	do_child(char *prgm, t_tree *cmdtree, t_list **vars_lst, int *redr_fds)
 
 	if (cmdtree && cmdtree->arg)
 		prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
-	if (!prgm || !*prgm)
-		return (exit(errno), 1);
 	envs = get_dblarr(vars_lst);
 	prgm = is_vld_exc(prgm, vars_lst, NULL, NULL);
 	if (!prgm)
@@ -40,11 +38,11 @@ int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 	int	ordrfd[2];
 
 	(ft_memcpy(ordrfd, rdrfd, sizeof(rdrfd)), expand(cmdtree, vars_lst));
-	if ((cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
+	if (cmdtree && (cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC)))
 		return (rslv_redr(cmdtree, rdrfd, 0, 1), errno);
-	if (cmdtree->redr && !rslv_redr(cmdtree->redr, rdrfd, 0, 1))
+	if (cmdtree && cmdtree->redr && !rslv_redr(cmdtree->redr, rdrfd, 0, 1))
 		return (errno);
-	if (do_builtin(cmdtree, rdrfd, ordrfd, vars_lst))
+	if (cmdtree && do_builtin(cmdtree, rdrfd, ordrfd, vars_lst))
 		return (pipe_close(rdrfd, limn), g_flag[0]);
 	pid = fork();
 	if (pid < 0)
@@ -52,7 +50,7 @@ int	do_cmd(t_tree *cmdtree, int *rdrfd, int limn, t_list **vars_lst)
 	if (!pid)
 		do_child(NULL, cmdtree, vars_lst, rdrfd);
 	g_flag[1] = !isatty(STDIN_FILENO);
-	if (cmdtree->redr)
+	if (cmdtree && cmdtree->redr)
 		(file_close(rdrfd), ft_memcpy(rdrfd, ordrfd, sizeof rdrfd));
 	pipe_close(rdrfd, limn);
 	if (limn > 0 || limn == -2)
@@ -69,7 +67,7 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	int	pipefd[2];
 	int	r_val;
 
-	if (!(cmdtree->tkn->type & PIPE))
+	if (!cmdtree || !(cmdtree->tkn->type & PIPE))
 		return (do_cmd(cmdtree, redr_fds, limn, vars_lst));
 	if (pipe(pipefd) < 0)
 		return (perror("pipe"), 1);
@@ -80,12 +78,13 @@ int	do_lqados(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	if (cmdtree->redr && (!rslv_redr(cmdtree->redr, &lisr_fds[0], 0, 0)
 			|| !rslv_redr(cmdtree->redr, &limn_fds[0], 1, 0)))
 		return (errno);
-	if (cmdtree->lisr->tkn->type & (VAR | WORD))
+	if (cmdtree->lisr && cmdtree->lisr->tkn->type & (VAR | WORD))
 		do_cmd(cmdtree->lisr, &lisr_fds[0], -1, vars_lst);
 	else
 		do_logops(cmdtree->lisr, &lisr_fds[0], 1, vars_lst);
 	r_val = do_logops(cmdtree->limn, &limn_fds[0], 1, vars_lst);
-	waitpid(-1, NULL, WNOHANG * !(cmdtree->lisr->tkn->type & (VAR | WORD)));
+	if (cmdtree->lisr && cmdtree->lisr->tkn->type & (VAR | WORD))
+		waitpid(-1, NULL, 0);
 	return (r_val);
 }
 
@@ -94,7 +93,7 @@ int	do_logops(t_tree *cmdtree, int *redr_fds, int limn, t_list **vars_lst)
 	int	r_lisr;
 	int	r_limn;
 
-	if (!(cmdtree->tkn->type & (OR | AND)))
+	if (!cmdtree || !(cmdtree->tkn->type & (OR | AND)))
 		return (do_lqados(cmdtree, redr_fds, limn, vars_lst));
 	if (cmdtree->redr)
 		redr_fds = rslv_redr(cmdtree->redr, redr_fds, 0, 1);

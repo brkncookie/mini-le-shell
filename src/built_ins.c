@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 21:48:54 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 04:08:01 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	expand_in_tree(t_tree *cmdtree, t_list **vars_lst)
 	tmp = NULL;
 	if (cmdtree->redr)
 		expand_in_tree(cmdtree->redr, vars_lst);
+	if (cmdtree->tkn->type & HERE_DOC)
+		return ;
 	cmdtree = cmdtree->limn;
 	tmp = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
 	while (tmp && tmp[i])
@@ -41,6 +43,8 @@ void	expand(t_tree *cmdtree, t_list **vars_lst)
 	int	i;
 	int	j;
 
+	if (!cmdtree)
+		return ;
 	i = 0;
 	while (cmdtree->arg && cmdtree->arg[i])
 	{
@@ -55,7 +59,7 @@ void	expand(t_tree *cmdtree, t_list **vars_lst)
 		expand3(cmdtree, i);
 		i++;
 	}
-	if (cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC))
+	if (cmdtree->tkn->type & (REDR_I | REDR_O | APPEND))
 		expand_in_tree(cmdtree, vars_lst);
 	else if (cmdtree->redr)
 		expand_in_tree(cmdtree->redr, vars_lst);

@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 10:16:18 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/01 17:01:07 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 03:50:37 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ t_tree	*giv_tree(t_tkns *tkns, int *error)
 			printf("Allocation Error\n");
 		return (freetree(treenode), freelst(&tkns), NULL);
 	}
-	if (!treenode)
-		return (freelst(&tkns), NULL);
 	return (treenode);
 }
 

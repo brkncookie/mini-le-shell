@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:14 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/01 14:53:41 by mnadir           ###   ########.fr       */
+/*   Updated: 2023/04/05 03:42:17 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ t_tree	*cmd(t_tkns *tkn, int *error)
 	cmd = NULL;
 	while (tkn && (tkn->type & (DQUOTE | QUOTE) || tkn->type & WHITE_SPC))
 		tkn = tkn->next;
-	if (tkn && !(tkn->type & type))
+	if (tkn && !(tkn->type & (type | OR | AND | PIPE)))
 	{
 		cmd = ft_calloc(1, sizeof(*cmd));
 		if (!cmd)

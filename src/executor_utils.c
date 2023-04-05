@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:00 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/05 02:18:03 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 03:27:52 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 
 char	*dir_or_slash(char *path)
 {
+	if (!path)
+		return (printf("Not a valid executable\n"), NULL);
 	if (dir_exists(path))
 		return (printf("%s: is a directory\n", path), free(path), NULL);
 	if (ft_strchr(path, '/') && !access(path, F_OK) && !access(path, X_OK))

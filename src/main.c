@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 21:53:07 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 03:48:08 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	main(int ac, char **av, char **envp)
 		if (!tkns || error)
 			continue ;
 		tree = giv_tree(tkns, &error);
-		if (error || !tree || !vars_lst)
+		if (error || !vars_lst)
 		{
 			g_flag[0] = 2;
 			free(cmd_buf);
