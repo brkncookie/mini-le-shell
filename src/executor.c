@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:42:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 23:13:05 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 22:10:20 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	do_child(char *prgm, t_tree *cmdtree, t_list **vars_lst, int *redr_fds)
 
 	if (cmdtree && cmdtree->arg)
 		prgm = ft_strndup(cmdtree->arg[0], ft_strlen(cmdtree->arg[0]));
-	if (!prgm)
+	if (!prgm || !*prgm)
 		return (exit(errno), 1);
 	envs = get_dblarr(vars_lst);
 	prgm = is_vld_exc(prgm, vars_lst, NULL, NULL);

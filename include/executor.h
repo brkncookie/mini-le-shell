@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/04 17:29:05 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 00:18:31 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int		*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd);
 char	*is_vld_exc(char *path, t_list **vars_lst, \
 		char	*ppath, char	**paths);
 int		is_num(char *str);
+int		newline_pos(char *str);
+void	replace_var(t_tree *cmdtree, char **tmp, int *i, t_list **vars_lst);
 int		is_inquotes(t_tree **cmdtree, char *str);
 void	set_term(void);
 void	action(int sig);

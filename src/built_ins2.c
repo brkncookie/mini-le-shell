@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:43 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 01:53:27 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 21:57:49 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,11 @@ void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst)
 	tmp = getcwd(0, PATH_MAX);
 	if ((!cmdtree->arg[1] || !ft_strncmp(cmdtree->arg[1], "~", 2)) && \
 		!chdir(ft_getenv("HOME", *vars_lst)))
-		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
-		replace_env("PWD", pwd, vars_lst));
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX));
 	else if (!ft_strncmp(cmdtree->arg[1], "..", 3) && !chdir(".."))
-		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
-		replace_env("PWD", pwd, vars_lst));
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX));
 	else if (dir_exists(cmdtree->arg[1]) && tmp && !chdir(cmdtree->arg[1]))
-		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
-		replace_env("PWD", pwd, vars_lst));
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX));
 	else if (ft_strncmp(cmdtree->arg[1], "..", 3))
 	{
 		g_flag[0] = 1;
@@ -117,29 +114,7 @@ void	do_cd(t_tree *cmdtree, char *pwd, t_list **vars_lst)
 			printf("cd: invalid directory path\n");
 	}
 	else
-		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX), \
-		replace_env("PWD", pwd, vars_lst));
+		(replace_env("OLDPWD", pwd, vars_lst), pwd = getcwd(pwd, PATH_MAX));
+	replace_env("PWD", pwd, vars_lst);
 	free(tmp);
-}
-
-void	do_env(t_tree *cmdtree, t_list **vars_lst)
-{
-	t_list	*tmp;
-
-	if (vars_lst)
-	{
-		tmp = *vars_lst;
-		if (cmdtree && !cmdtree->arg[1])
-		{
-			while (tmp)
-			{
-				printf("%s=%s\n", ((t_var *)tmp->ctnt)->key,
-					((t_var *)tmp->ctnt)->val);
-				tmp = tmp->next;
-			}
-			g_flag[0] = 0;
-		}
-	}
-	else
-		g_flag[0] = 127;
 }

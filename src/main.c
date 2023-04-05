@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 20:19:08 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 17:48:21 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 21:53:07 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,6 @@ t_list	*get_vars(char **envp)
 		i++;
 	}
 	return (vars_lst);
-}
-
-int	newline_pos(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\n')
-			return (i);
-		i++;
-	}
-	return (0);
 }
 
 t_tkns	*prompt(char **cmd_buf, int *error)

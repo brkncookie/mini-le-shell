@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:50 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 19:19:47 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 21:48:54 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,62 +14,26 @@
 
 extern int	g_flag[2];
 
-void	do_exit(char *arg, int args_num)
-{
-	if (args_num == 1)
-	{
-		printf("exit\n");
-		exit(0);
-	}
-	else if (args_num == 2 && is_num(arg))
-		exit(ft_atoi(arg));
-	else if (args_num > 2)
-		printf("exit: too many arguments\n");
-	else
-	{
-		printf("exit: numeric argument required\n");
-		exit(2);
-	}
-}
-
 void	expand_in_tree(t_tree *cmdtree, t_list **vars_lst)
 {
 	int		i;
 	char	*tmp;
-	char	*val;
-	int		len;
 
 	i = 0;
 	tmp = NULL;
-	if ((cmdtree->tkn->type & (VAR)))
-		tmp = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
-	if (cmdtree->limn && !cmdtree->lisr)
-		expand_in_tree(cmdtree->limn, vars_lst);
 	if (cmdtree->redr)
 		expand_in_tree(cmdtree->redr, vars_lst);
+	cmdtree = cmdtree->limn;
+	tmp = ft_strndup(cmdtree->tkn->val, cmdtree->tkn->len);
 	while (tmp && tmp[i])
 	{
 		if (tmp[i] == '$')
-		{
-			val = ft_getenvi(tmp + i + 1, *vars_lst, &len);
-			if (!is_inquotes(&cmdtree, tmp + i) && val)
-			{
-				len += i;
-				val = ft_realloc(val, ft_strlen(val) + ft_strlen(tmp + len) + 1);
-				ft_strlcat(val, tmp + len, ft_strlen(val) + ft_strlen(tmp + len) + 1);
-				tmp = ft_realloc(tmp, i);
-				tmp = ft_realloc(tmp, ft_strlen(val) + ft_strlen(tmp) + 1);
-				ft_strlcat(tmp, val, ft_strlen(val) + ft_strlen(tmp) + 1);
-				cmdtree->tkn->val = tmp;
-				cmdtree->tkn->len = 0;
-			}
-			else
-				i = i + 1;
-			free(val);
-		}
+			replace_var(cmdtree, &tmp, &i, vars_lst);
 		else
 			i++;
 	}
+	if (cmdtree->tkn->len)
+		free(tmp);
 }
 
 void	expand(t_tree *cmdtree, t_list **vars_lst)
@@ -91,9 +55,9 @@ void	expand(t_tree *cmdtree, t_list **vars_lst)
 		expand3(cmdtree, i);
 		i++;
 	}
-	if (cmdtree->limn && !cmdtree->lisr)
-		expand_in_tree(cmdtree->limn, vars_lst);
-	if (cmdtree->redr)
+	if (cmdtree->tkn->type & (REDR_I | REDR_O | APPEND | HERE_DOC))
+		expand_in_tree(cmdtree, vars_lst);
+	else if (cmdtree->redr)
 		expand_in_tree(cmdtree->redr, vars_lst);
 }
 

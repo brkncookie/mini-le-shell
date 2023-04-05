@@ -6,45 +6,62 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 14:08:16 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/04 17:45:55 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 02:10:41 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/executor.h"
 
+int	do_the_work(t_tree **tmp, int *fd, char *str)
+{
+	int	j;
+
+	if ((*tmp)->tkn->val[fd[0]] == '$' && !ft_strncmp2((*tmp)->tkn->val + fd[0],
+			str, ft_strlen(str) - 1) && fd[1] % 2)
+	{
+		j = fd[0];
+		while ((*tmp)->tkn->val[++j])
+			if ((*tmp)->tkn->val[j] == '$')
+				return (fd[0] = fd[0] + 1, 1);
+		return (fd[0] = 0, fd[1] = 0, 1);
+	}
+	else if ((*tmp)->tkn->val[fd[0]] == '$' && !ft_strncmp2((*tmp)->tkn->val
+			+ fd[0], str, ft_strlen(str) - 1))
+	{
+		j = fd[0];
+		while ((*tmp)->tkn->val[++j])
+			if ((*tmp)->tkn->val[j] == '$')
+				return (fd[0] = fd[0] + 1, 0);
+		return (fd[0] = 0, fd[1] = 0, 0);
+	}
+	return (2);
+}
+
 int	is_inquotes(t_tree **cmdtree, char *str)
 {
 	t_tree		*tmp;
-	static int	i;
-	int			j;
-	static int	quotes;
+	static int	fd[2];
+	static int	j;
+	int			ret;
 
 	tmp = *cmdtree;
-	while (tmp->tkn->val[i])
+	while (tmp->tkn->val[fd[0]])
 	{
-		if (tmp->tkn->val[i] == '\'')
-			quotes++;
-		if (tmp->tkn->val[i] == '$' && !ft_strncmp2(tmp->tkn->val + i, str,
-				ft_strlen(str) - 1) && quotes % 2)
+		if (tmp->tkn->val[fd[0]] == '\"' && !(fd[1] % 2))
 		{
-			j = i;
-			while (tmp->tkn->val[++j])
-				if (tmp->tkn->val[j] == '$')
-					return (i++, 1);
-			return (i = 0, quotes = 0, 1);
+			fd[0]++;
+			j = !(j) * 1;
 		}
-		else if (tmp->tkn->val[i] == '$' && !ft_strncmp2(tmp->tkn->val + i, str,
-				ft_strlen(str) - 1))
-		{
-			j = i;
-			while (tmp->tkn->val[++j])
-				if (tmp->tkn->val[j] == '$')
-					return (i++, 0);
-			return (i = 0, quotes = 0, 0);
-		}
-		i++;
+		if (!j && tmp->tkn->val[fd[0]] == '\'' && ++fd[0])
+			fd[1]++;
+		ret = do_the_work(&tmp, fd, str);
+		if (ret == 1)
+			return (1);
+		else if (ret == 0)
+			return (0);
+		fd[0]++;
 	}
-	return (i = 0, quotes = 0, 0);
+	return (fd[0] = 0, fd[1] = 0, 0);
 }
 
 char	*ft_realloc(char *str, int len)

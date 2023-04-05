@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:00 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/04 18:05:20 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/04 21:52:06 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*is_vld_exc(char *path, t_list **vars_lst, char *ppath, char **paths)
 	while (paths && paths[++i])
 	{
 		ppath = ft_calloc(ft_strlen(paths[i]) + ft_strlen(path) + 2,
-							sizeof(*ppath));
+				sizeof(*ppath));
 		if (!ppath)
 			return (fre2d(paths), free(path), NULL);
 		ft_strlcpy(ppath, paths[i], ft_strlen(paths[i]) + ft_strlen(path) + 2);
