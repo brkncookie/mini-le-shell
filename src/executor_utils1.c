@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 13:10:33 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/03 17:18:30 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 02:05:41 by mnadir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,16 @@ int	*here_doc(int *fds, char *file)
 	close(hdfds[1]);
 	fds[0] = hdfds[0];
 	return (fds);
+}
+
+void	fre2d(char **path)
+{
+	int	i;
+
+	i = 0;
+	if (!path)
+		return ;
+	while (path[i])
+		free(path[i++]);
+	free(path);
 }

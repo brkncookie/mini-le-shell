@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:43:00 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/04 21:52:06 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 02:18:03 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,25 +84,24 @@ int	*rslv_redr(t_tree *redr, int *redr_fds, int limn, int cmd)
 	return (redr_fds);
 }
 
-void	fre2d(char **path)
+char	*dir_or_slash(char *path)
 {
-	int	i;
-
-	i = 0;
-	if (!path)
-		return ;
-	while (path[i])
-		free(path[i++]);
-	free(path);
+	if (dir_exists(path))
+		return (printf("%s: is a directory\n", path), free(path), NULL);
+	if (ft_strchr(path, '/') && !access(path, F_OK) && !access(path, X_OK))
+		return (path);
+	else if (ft_strchr(path, '/'))
+		return (free(path), printf("Not a valid executable\n"), NULL);
+	return (path);
 }
 
 char	*is_vld_exc(char *path, t_list **vars_lst, char *ppath, char **paths)
 {
 	int	i;
 
-	if (dir_exists(path))
-		return (printf("%s: is a directory\n", path), free(path), NULL);
-	if (!access(path, F_OK) && !access(path, X_OK))
+	if (!dir_or_slash(path))
+		return (NULL);
+	else if (ft_strchr(path, '/'))
 		return (path);
 	ppath = ft_getenv("PATH", *vars_lst);
 	if (!ppath)
