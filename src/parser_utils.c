@@ -6,7 +6,7 @@
 /*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/05 02:19:53 by alemsafi         ###   ########.fr       */
+/*   Updated: 2023/04/05 02:28:02 by alemsafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ int	count_arg(t_tkns *tkn)
 	return (cnt);
 }
 
-int	make_arg(t_tkns **tkn, char **arg, int i, int *error)
+int	make_arg(t_tkns **tkn, char **ar, int i, int *error)
 {
-	arg[i] = ft_strndup((*tkn)->val, (*tkn)->len);
-	if (!arg[i])
+	ar[i] = ft_strndup((*tkn)->val, (*tkn)->len);
+	if (!ar[i])
 		return (*error = 1, 0);
 	while ((*tkn) && !((*tkn)->type & WHITE_SPC) && (*tkn)->next
 		&& (*tkn)->next->type & (QUOTE | DQUOTE))
@@ -58,10 +58,9 @@ int	make_arg(t_tkns **tkn, char **arg, int i, int *error)
 				|| (*tkn)->type & (VAR | WORD | QUOTE | DQUOTE)))
 		{
 			if (!((*tkn)->type & (QUOTE | DQUOTE)))
-			{
-				arg[i] = ft_realloc(arg[i], ft_strlen(arg[i]) + (*tkn)->len + 1);
-				ft_strlcat(arg[i], (*tkn)->val, (*tkn)->len + ft_strlen(arg[i]) + 1);
-			}
+				(void)((ar[i] = ft_realloc(ar[i], ft_strlen(ar[i]) + (*tkn)->len
+								+ 1)) + ft_strlcat(ar[i], (*tkn)->val,
+							(*tkn)->len + ft_strlen(ar[i]) + 1));
 			(*tkn) = (*tkn)->next;
 		}
 	}
@@ -69,8 +68,8 @@ int	make_arg(t_tkns **tkn, char **arg, int i, int *error)
 		&& (*tkn)->next->type & (VAR | WORD))
 	{
 		(*tkn) = (*tkn)->next;
-		arg[i] = ft_realloc(arg[i], ft_strlen(arg[i]) + (*tkn)->len + 1);
-		ft_strlcat(arg[i], (*tkn)->val, (*tkn)->len + ft_strlen(arg[i]) + 1);
+		ar[i] = ft_realloc(ar[i], ft_strlen(ar[i]) + (*tkn)->len + 1);
+		ft_strlcat(ar[i], (*tkn)->val, (*tkn)->len + ft_strlen(ar[i]) + 1);
 	}
 	return (1);
 }
