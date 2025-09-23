@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 11:07:57 by alemsafi          #+#    #+#             */
-/*   Updated: 2023/04/05 03:49:39 by mnadir           ###   ########.fr       */
+/*   Updated: 2025/09/23 14:34:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,10 @@ int	make_arg(t_tkns **tkn, char **ar, int i, int *error)
 				|| (*tkn)->type & (VAR | WORD | QUOTE | DQUOTE)))
 		{
 			if (!((*tkn)->type & (QUOTE | DQUOTE)))
-				(void)((ar[i] = ft_realloc(ar[i], ft_strlen(ar[i]) + (*tkn)->len
-								+ 1)) + ft_strlcat(ar[i], (*tkn)->val,
-							(*tkn)->len + ft_strlen(ar[i]) + 1));
+			{
+				ar[i] = ft_realloc(ar[i], ft_strlen(ar[i]) + (*tkn)->len + 1);
+				ft_strlcat(ar[i], (*tkn)->val, (*tkn)->len + ft_strlen(ar[i]) + 1);
+			}
 			(*tkn) = (*tkn)->next;
 		}
 	}

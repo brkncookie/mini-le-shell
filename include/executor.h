@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alemsafi <alemsafi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 12:27:09 by mnadir            #+#    #+#             */
-/*   Updated: 2023/04/05 02:19:40 by alemsafi         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:34:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,8 @@
 # include <termios.h>
 # include <limits.h>
 # define READLINE_LIBRARY 1
-# include "/Volumes/reda/.brew/opt/readline/include/readline/history.h"
-# include "/Volumes/reda/.brew/opt/readline/include/readline/readline.h"
-// # include "/goinfre/mnadir/.brew/opt/readline/include/readline/history.h"
-// # include "/goinfre/mnadir/.brew/opt/readline/include/readline/readline.h"
+# include <readline/history.h>
+# include <readline/readline.h>
 
 typedef struct s_var
 {

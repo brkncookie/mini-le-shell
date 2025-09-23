@@ -1,3 +1,14 @@
+ifeq ($(shell uname), Darwin)
+    # macOS with Homebrew
+    BREW_PREFIX := $(shell brew --prefix 2>/dev/null || echo "/usr/local")
+    READLINE_INCLUDE := $(BREW_PREFIX)/opt/readline/include
+    READLINE_LIB := $(BREW_PREFIX)/opt/readline/lib
+else
+    # Linux (Ubuntu/Debian)
+    READLINE_INCLUDE := /usr/include
+    READLINE_LIB := /usr/lib
+endif
+
 LIBFT_SRCS = $(shell cat libft/Makefile | grep "SRCS " | cut -d '=' -f 2)
 
 LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
@@ -12,7 +23,7 @@ SRCS_DIR = src/
 
 HEADER = include/
 
-CC_FLAGS = -Wall -Wextra -Werror -g -I $(HEADER)
+CC_FLAGS = -Wall -Wextra -Werror -g -I $(HEADER) -I $(READLINE_INCLUDE)
 
 OBJS_NAMES = $(SRCS_NAMES:c=o)
 
@@ -27,12 +38,20 @@ $(OBJS_DIR)%.o : $(SRCS_DIR)%.c $(HEADER)*
 	$(CC) $(CC_FLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT_OBJS_DIR)
-	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -l readline -L /Volumes/reda/.brew/opt/readline/lib/
-	# $(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -l readline -L /goinfre/mnadir/.brew/opt/readline/lib
+	$(CC) $(CC_FLAGS) $(OBJS) libft/libft.a -o $(NAME) -lreadline -L $(READLINE_LIB)
 
 
 
-all: $(NAME)
+all: check-readline $(NAME)
+
+check-readline:
+	@echo "🔍 Checking readline..."
+	@if [ ! -f "$(READLINE_INCLUDE)/readline/readline.h" ]; then \
+		echo "❌ readline not found, installing..."; \
+		./setup_readline.sh; \
+	else \
+		echo "✅ readline found in $(READLINE_INCLUDE)"; \
+	fi
 
 libft/%.o:libft/%.c
 	@make -s --directory=libft
@@ -46,4 +65,4 @@ fclean: clean
 
 re:	fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re check-readline
