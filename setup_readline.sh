@@ -36,7 +36,7 @@ install_readline_ubuntu() {
     echo "✅ readline installed successfully"
 }
 
-# Fonction pour installer readline sur macOS
+# Function to install readline on macOS
 install_readline_macos() {
     echo "🔧 Installing readline on macOS..."
     
