@@ -40,7 +40,7 @@ install_readline_ubuntu() {
 install_readline_macos() {
     echo "🔧 Installing readline on macOS..."
     
-    # Vérifier si Homebrew est installé
+    # Check if Homebrew is installed
     if ! command -v brew >/dev/null 2>&1; then
         echo "📦 Installing Homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
