@@ -46,7 +46,7 @@ install_readline_macos() {
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
     
-    # Installer readline via Homebrew
+    # Install readline via Homebrew
     if brew list readline >/dev/null 2>&1; then
         echo "✅ readline is already installed"
     else
