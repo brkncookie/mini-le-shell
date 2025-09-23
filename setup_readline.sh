@@ -23,7 +23,7 @@ detect_os() {
 install_readline_ubuntu() {
     echo "🔧 Installing readline on Ubuntu/Debian..."
     
-    # Vérifier si readline est déjà installé
+    # Check if readline is already installed
     if dpkg -l | grep -q libreadline-dev; then
         echo "✅ readline is already installed"
         return 0
