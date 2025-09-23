@@ -29,7 +29,7 @@ install_readline_ubuntu() {
         return 0
     fi
     
-    # Mettre à jour les paquets et installer readline
+    # Update packages and install readline
     sudo apt-get update -qq
     sudo apt-get install -y libreadline-dev
 
