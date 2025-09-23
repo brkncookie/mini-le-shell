@@ -60,7 +60,7 @@ detect_readline_paths() {
     
     case $os in
         "ubuntu"|"linux")
-            # In Ubuntu/Debian, readline is usually located in /usr/include and /usr/lib
+            # On Ubuntu/Debian, readline is usually located in /usr/include and /usr/lib
             READLINE_INCLUDE="/usr/include"
             READLINE_LIB="/usr/lib"
 
